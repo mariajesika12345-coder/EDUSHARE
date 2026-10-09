@@ -46,13 +46,13 @@ function LandingPage({ onLogin }) {
         </div>
 
         {/* Login */}
-        <button
-          type="button"
-          onClick={onLogin}
-          className="shrink-0 px-5 py-2.5 rounded-lg bg-[#6A89A7] text-white text-sm font-semibold shadow-sm hover:bg-[#394959] transition"
-        >
-          Login Guru
-        </button>
+       <button
+  type="button"
+  onClick={onLogin}
+  className="rounded-lg bg-[#6A89A7] px-6 py-3 font-semibold text-white hover:bg-[#394959]"
+>
+  Login Guru
+</button>
       </nav>
 
       {/* ================= HERO ================= */}
