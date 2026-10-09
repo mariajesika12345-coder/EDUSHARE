@@ -10,7 +10,7 @@ function LandingPage({ onLogin }) {
           <img
             src="/logo-edushare.png"
             alt="EDUSHARE"
-            className="w-36 h-auto"
+            className="h-20 w-auto object-contain -translate-y-2"
           />
         </div>
 
@@ -50,7 +50,7 @@ function LandingPage({ onLogin }) {
             onClick={onLogin}
             className="hidden sm:block text-sm font-semibold text-[#394959] hover:text-[#6A89A7]"
           >
-            Masuk Guru
+          
           </button>
 
           <button
@@ -207,7 +207,7 @@ function LandingPage({ onLogin }) {
                   </p>
 
                   <p className="text-2xl font-bold text-[#394959]">
-                    320+
+                    
                   </p>
                 </div>
 
@@ -217,7 +217,7 @@ function LandingPage({ onLogin }) {
                   </p>
 
                   <p className="text-2xl font-bold text-[#6A89A7]">
-                    85+
+                    
                   </p>
                 </div>
 
@@ -233,7 +233,7 @@ function LandingPage({ onLogin }) {
                   </span>
 
                   <span className="font-bold text-[#6A89A7]">
-                    92%
+                    
                   </span>
                 </div>
 
