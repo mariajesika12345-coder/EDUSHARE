@@ -8,20 +8,25 @@ function LoginGuru({ onLogin, onBack, onRegister }) {
   const [remember, setRemember] = useState(false);
   const [error, setError] = useState("");
 
-  function handleSubmit(e) {
-    e.preventDefault();
+  
+function handleSubmit(e) {
+  e.preventDefault();
 
-    if (!email.trim() || !password) {
-      setError("Email/NIP dan password wajib diisi.");
-      return;
-    }
-
-    setError("");
-
-    if (onLogin) {
-      onLogin({ email, remember });
-    }
+  if (!email.trim() || !password) {
+    setError("Email dan password wajib diisi.");
+    return;
   }
+
+  setError("");
+
+  if (onLogin) {
+    onLogin({
+      email: email.trim(),
+      password,
+      remember,
+    });
+  }
+}
 
   return (
     <div className="min-h-screen bg-[#F8FBFE] flex items-center justify-center p-6">

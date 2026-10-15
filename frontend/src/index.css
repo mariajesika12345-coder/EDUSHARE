@@ -1,1 +1,15 @@
+
 @import "tailwindcss";
+
+@theme {
+  --color-storm-50: #F8FBFE;
+  --color-storm-100: #BDDDFC;
+  --color-storm-200: #A8D0F5;
+  --color-storm-300: #88BDF2;
+  --color-storm-400: #7AA8CD;
+  --color-storm-500: #6A89A7;
+  --color-storm-600: #56748F;
+  --color-storm-700: #4A6178;
+  --color-storm-800: #394959;
+  --color-storm-900: #293746;
+}

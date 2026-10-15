@@ -1,75 +1,133 @@
 
 function LandingPage({ onLogin }) {
+  const karya = [
+    {
+      judul: "Media Ajar Interaktif",
+      kategori: "Media Pembelajaran",
+      simbol: "💻",
+      likes: 12,
+    },
+    {
+      judul: "Modul Pembelajaran Digital",
+      kategori: "Modul Pembelajaran",
+      simbol: "📘",
+      likes: 8,
+    },
+    {
+      judul: "Kuis Interaktif",
+      kategori: "Evaluasi Pembelajaran",
+      simbol: "💡",
+      likes: 15,
+    },
+  ];
+
+  const berita = [
+    {
+      kategori: "Pelatihan",
+      judul: "Dokumentasi Pelatihan Guru SMKN 1 Batam",
+      deskripsi:
+        "Informasi dan dokumentasi kegiatan pelatihan guru yang tersimpan dalam EDUSHARE.",
+      simbol: "📰",
+    },
+    {
+      kategori: "Agenda",
+      judul: "Pelatihan dan Pengembangan Kompetensi Guru",
+      deskripsi:
+        "Informasi agenda pelatihan untuk mendukung peningkatan kompetensi guru.",
+      simbol: "📅",
+    },
+  ];
+
+  const galeri = [
+    { judul: "Kegiatan Pelatihan Guru", simbol: "📸" },
+    { judul: "Penyampaian Materi", simbol: "🎓" },
+    { judul: "Diskusi dan Praktik", simbol: "👥" },
+  ];
+
+  const testimoni = [
+    {
+      kutipan:
+        "Kegiatan pelatihan memberikan wawasan dan pengalaman baru yang dapat dimanfaatkan dalam pembelajaran.",
+      nama: "Peserta Pelatihan",
+      peran: "Guru SMKN 1 Batam",
+    },
+    {
+      kutipan:
+        "Dokumentasi materi membantu peserta menemukan kembali informasi pelatihan dengan lebih mudah.",
+      nama: "Peserta Pelatihan",
+      peran: "Guru SMKN 1 Batam",
+    },
+  ];
+
+  const skill = [
+    {
+      simbol: "🖥️",
+      judul: "Media Ajar Digital",
+      deskripsi:
+        "Mengenal pembuatan media ajar yang menarik dan interaktif.",
+    },
+    {
+      simbol: "📚",
+      judul: "Modul Pembelajaran",
+      deskripsi:
+        "Mengembangkan dan mendokumentasikan modul pembelajaran.",
+    },
+    {
+      simbol: "✨",
+      judul: "Pemanfaatan Teknologi",
+      deskripsi:
+        "Mengeksplorasi teknologi untuk mendukung proses belajar mengajar.",
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-[#F8FBFE] text-[#394959]">
+      {/* NAVBAR */}
+      <nav className="sticky top-0 z-50 border-b border-[#BDDDFC] bg-white/95 px-6 backdrop-blur md:px-10 lg:px-16">
+        <div className="mx-auto flex min-h-20 max-w-7xl items-center justify-between gap-4">
+          <a href="#beranda" className="flex shrink-0 items-center">
+            <img
+              src="/logo-edushare.png"
+              alt="EDUSHARE"
+              className="h-16 w-auto object-contain md:h-20"
+            />
+          </a>
 
-      {/* ================= NAVBAR ================= */}
-      <nav className="sticky top-0 z-50 min-h-20 bg-white border-b border-[#BDDDFC] flex items-center justify-between gap-4 px-6 lg:px-16">
+          <div className="hidden items-center gap-1 text-sm lg:flex">
+            <NavLink href="#beranda" active>
+              Beranda
+            </NavLink>
+            <NavLink href="#tentang">Tentang</NavLink>
+            <NavLink href="#fitur">Fitur</NavLink>
+            <NavLink href="#hasil-karya">Hasil Karya</NavLink>
+            <NavLink href="#berita">Berita & Agenda</NavLink>
+            <NavLink href="#galeri">Galeri</NavLink>
+            <NavLink href="#kontak">Kontak</NavLink>
+          </div>
 
-        {/* Logo */}
-        <a href="#beranda" className="flex items-center shrink-0">
-          <img
-            src="/logo-edushare.png"
-            alt="EDUSHARE"
-            className="h-16 md:h-20 w-auto object-contain"
-          />
-        </a>
-
-        {/* Menu */}
-        <div className="hidden lg:flex items-center gap-6 text-sm">
-          <a
-            href="#beranda"
-            className="px-4 py-2 rounded-lg bg-[#BDDDFC] font-semibold"
+          <button
+            type="button"
+            onClick={onLogin}
+            className="shrink-0 rounded-lg bg-[#6A89A7] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#394959] md:px-6"
           >
-            Beranda
-          </a>
-
-          <a href="#tentang" className="hover:text-[#6A89A7] transition">
-            Tentang
-          </a>
-
-          <a href="#fitur" className="hover:text-[#6A89A7] transition">
-            Fitur
-          </a>
-
-          <a href="#hasil-karya" className="hover:text-[#6A89A7] transition">
-            Hasil Karya
-          </a>
-
-          <a href="#berita" className="hover:text-[#6A89A7] transition">
-            Berita & Agenda
-          </a>
-
-          <a href="#kontak" className="hover:text-[#6A89A7] transition">
-            Kontak
-          </a>
+            Login Guru
+          </button>
         </div>
-
-        {/* Login */}
-       <button
-  type="button"
-  onClick={onLogin}
-  className="rounded-lg bg-[#6A89A7] px-6 py-3 font-semibold text-white hover:bg-[#394959]"
->
-  Login Guru
-</button>
       </nav>
 
-      {/* ================= HERO ================= */}
+      {/* HERO */}
       <section
         id="beranda"
-        className="scroll-mt-20 px-6 lg:px-16 py-16 lg:py-20 bg-gradient-to-br from-[#F8FBFE] via-[#F8FBFE] to-[#BDDDFC]"
+        className="scroll-mt-20 bg-gradient-to-br from-[#F8FBFE] via-[#F8FBFE] to-[#BDDDFC] px-6 py-16 lg:px-16 lg:py-20"
       >
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-
-          {/* LEFT */}
+        <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-2 lg:gap-16">
           <div>
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#BDDDFC] text-[#394959] text-xs font-semibold mb-6">
-              <span className="w-2 h-2 rounded-full bg-[#6A89A7]" />
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-[#BDDDFC] px-4 py-2 text-xs font-semibold">
+              <span className="h-2 w-2 rounded-full bg-[#6A89A7]" />
               SMKN 1 BATAM • PUSAT DOKUMENTASI PELATIHAN
             </div>
 
-            <h1 className="text-4xl lg:text-5xl font-bold leading-tight text-[#394959]">
+            <h1 className="text-4xl font-bold leading-tight text-[#394959] lg:text-5xl">
               Platform Digital
               <br />
               Dokumentasi &
@@ -85,329 +143,508 @@ function LandingPage({ onLogin }) {
               SMKN 1 Batam secara terstruktur dan mudah diakses.
             </p>
 
-            {/* Buttons */}
-            <div className="flex flex-wrap gap-4 mt-8">
+            <div className="mt-8 flex flex-wrap gap-4">
               <button
                 type="button"
                 onClick={onLogin}
-                className="px-7 py-3.5 rounded-lg bg-[#6A89A7] text-white font-semibold shadow-md hover:bg-[#394959] transition"
+                className="rounded-lg bg-[#6A89A7] px-7 py-3.5 font-semibold text-white shadow-md transition hover:bg-[#394959]"
               >
                 Masuk Portal →
               </button>
 
               <a
                 href="#fitur"
-                className="px-7 py-3.5 rounded-lg bg-white border border-[#BDDDFC] text-[#394959] font-semibold hover:bg-[#BDDDFC] transition"
+                className="rounded-lg border border-[#BDDDFC] bg-white px-7 py-3.5 font-semibold transition hover:bg-[#BDDDFC]"
               >
-                Jelajahi Materi
+                Jelajahi Fitur
               </a>
             </div>
 
-            {/* Community Information */}
-            <div className="flex flex-wrap items-center gap-3 mt-8">
+            <div className="mt-8 flex flex-wrap items-center gap-3">
               <div className="flex -space-x-2">
-                <div className="w-9 h-9 rounded-full bg-[#394959] border-2 border-white flex items-center justify-center text-xs text-white">
+                <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-[#394959] text-xs text-white">
                   G
                 </div>
-
-                <div className="w-9 h-9 rounded-full bg-[#6A89A7] border-2 border-white flex items-center justify-center text-xs text-white">
+                <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-[#6A89A7] text-xs text-white">
                   P
                 </div>
-
-                <div className="w-9 h-9 rounded-full bg-[#88BDF2] border-2 border-white flex items-center justify-center text-xs text-[#394959]">
+                <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-[#88BDF2] text-xs">
                   +
                 </div>
               </div>
-
               <p className="text-xs text-gray-500">
                 Terhubung dengan komunitas guru dan peserta pelatihan
               </p>
             </div>
           </div>
 
-          {/* RIGHT - VISUAL CARD */}
+          {/* KARTU DOKUMENTASI PELATIHAN */}
           <div className="relative">
-            <div className="bg-white rounded-2xl shadow-xl border border-[#BDDDFC] p-5 max-w-lg mx-auto">
-
-              {/* Card Header */}
-              <div className="flex items-center justify-between gap-3 mb-4">
+            <div className="mx-auto max-w-lg rounded-2xl border border-[#BDDDFC] bg-white p-5 shadow-xl">
+              <div className="mb-4 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-[#BDDDFC] flex items-center justify-center text-xl">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#BDDDFC] text-xl">
                     📚
                   </div>
-
                   <div>
-                    <p className="font-bold text-[#394959]">
-                      Pelatihan Guru
-                    </p>
+                    <p className="font-bold">Pelatihan Guru</p>
                     <p className="text-xs text-gray-500">
                       Dokumentasi EDUSHARE
                     </p>
                   </div>
                 </div>
-
-                <span className="px-3 py-1 rounded-full bg-[#BDDDFC] text-[#394959] text-[10px] font-bold">
+                <span className="rounded-full bg-[#BDDDFC] px-3 py-1 text-[10px] font-bold">
                   DOKUMENTASI
                 </span>
               </div>
 
-              {/* Training Photo */}
               <div className="overflow-hidden rounded-xl bg-[#BDDDFC]">
                 <img
                   src="/pelatihan-guru.jpg"
                   alt="Dokumentasi pelatihan guru SMKN 1 Batam"
-                  className="w-full h-52 object-cover"
+                  className="h-52 w-full object-cover"
                 />
               </div>
 
-              {/* Information Cards */}
-              <div className="grid grid-cols-2 gap-3 mt-4">
-                <div className="rounded-xl bg-[#F8FBFE] border border-[#BDDDFC] p-4">
-                  <p className="text-xs text-gray-500">
-                    Materi Pelatihan
-                  </p>
-                  <p className="mt-1 text-sm font-semibold text-[#394959]">
+              <div className="mt-4 grid grid-cols-2 gap-3">
+                <div className="rounded-xl border border-[#BDDDFC] bg-[#F8FBFE] p-4">
+                  <p className="text-xs text-gray-500">Materi Pelatihan</p>
+                  <p className="mt-1 text-sm font-semibold">
                     Dokumentasi Materi
                   </p>
                 </div>
-
-                <div className="rounded-xl bg-[#F8FBFE] border border-[#BDDDFC] p-4">
-                  <p className="text-xs text-gray-500">
-                    Hasil Karya
-                  </p>
+                <div className="rounded-xl border border-[#BDDDFC] bg-[#F8FBFE] p-4">
+                  <p className="text-xs text-gray-500">Hasil Karya</p>
                   <p className="mt-1 text-sm font-semibold text-[#6A89A7]">
                     Karya Guru
                   </p>
                 </div>
               </div>
 
-              {/* Description */}
               <div className="mt-5">
-                <p className="text-xs text-gray-500 mb-2">
+                <p className="mb-2 text-xs text-gray-500">
                   Pusat Dokumentasi Pelatihan Guru
                 </p>
-
-                <div className="w-full h-2 rounded-full bg-[#BDDDFC]">
+                <div className="h-2 w-full rounded-full bg-[#BDDDFC]">
                   <div className="h-2 w-2/3 rounded-full bg-[#6A89A7]" />
                 </div>
               </div>
             </div>
 
-            {/* Floating Information */}
-            <div className="absolute -bottom-5 right-0 lg:-right-4 bg-white rounded-xl shadow-lg border border-[#BDDDFC] px-4 py-3">
+            <div className="absolute -bottom-5 right-0 rounded-xl border border-[#BDDDFC] bg-white px-4 py-3 shadow-lg lg:-right-4">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-[#BDDDFC] flex items-center justify-center">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#BDDDFC]">
                   ✓
                 </div>
-
                 <div>
-                  <p className="text-xs text-gray-500">
-                    Platform
-                  </p>
-                  <p className="font-bold text-[#394959]">
-                    EDUSHARE
-                  </p>
+                  <p className="text-xs text-gray-500">Platform</p>
+                  <p className="font-bold">EDUSHARE</p>
                 </div>
               </div>
             </div>
           </div>
-
         </div>
       </section>
 
-      {/* ================= STATISTICS ================= */}
-      <section className="px-6 lg:px-16 py-10 bg-white">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-
+      {/* RINGKASAN */}
+      <section className="bg-white px-6 py-10 lg:px-16">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           <StatCard
             icon="👥"
             title="Guru dan Peserta"
-            description="Pengguna platform"
+            description="Komunitas pelatihan"
           />
-
           <StatCard
             icon="📁"
             title="Materi Pelatihan"
-            description="Dokumentasi materi"
+            description="Slide, modul, dan video"
           />
-
           <StatCard
             icon="💡"
             title="Hasil Karya"
             description="Karya peserta pelatihan"
           />
-
           <StatCard
-            icon="✓"
+            icon="📷"
             title="Dokumentasi"
-            description="Informasi kegiatan"
+            description="Galeri kegiatan"
           />
-
         </div>
       </section>
 
-      {/* ================= FITUR ================= */}
+      {/* TENTANG */}
+      <section
+        id="tentang"
+        className="scroll-mt-24 bg-[#F8FBFE] px-6 py-16 lg:px-16"
+      >
+        <div className="mx-auto max-w-4xl text-center">
+          <p className="mb-3 text-sm font-semibold text-[#6A89A7]">
+            TENTANG EDUSHARE
+          </p>
+          <h2 className="text-3xl font-bold leading-tight">
+            Pusat Dokumentasi Hasil Pelatihan Guru
+          </h2>
+          <p className="mx-auto mt-5 max-w-3xl leading-7 text-gray-600">
+            EDUSHARE merupakan website untuk mendukung dokumentasi dan
+            publikasi hasil pelatihan guru SMKN 1 Batam. Materi, hasil
+            karya, dokumentasi kegiatan, dan informasi pelatihan
+            diorganisasi agar lebih mudah ditemukan dan dimanfaatkan kembali.
+          </p>
+        </div>
+      </section>
+
+      {/* FITUR UTAMA */}
       <section
         id="fitur"
-        className="scroll-mt-20 px-6 lg:px-16 py-20 bg-[#F8FBFE]"
+        className="scroll-mt-20 bg-white px-6 py-20 lg:px-16"
       >
-        <div className="max-w-7xl mx-auto">
+        <div className="mx-auto max-w-7xl">
+          <SectionHeading
+            eyebrow="FITUR EDUSHARE"
+            title="Fitur untuk Mendukung Pelatihan"
+            description="Fitur utama EDUSHARE untuk mengakses materi, mempublikasikan karya, serta mengikuti informasi dan kegiatan pelatihan."
+          />
 
-          <div className="mb-10">
-            <div className="flex items-center gap-2 text-xs font-semibold text-[#6A89A7] mb-3">
-              <span className="w-2 h-2 rounded-full bg-[#6A89A7]" />
-              EKOSISTEM EDUSHARE
-            </div>
-
-            <h2 className="text-3xl font-bold text-[#394959]">
-              Dokumentasi Pelatihan
-              <br />
-              Guru yang Terstruktur
-            </h2>
-
-            <p className="mt-3 text-sm text-gray-600 max-w-xl">
-              Semua hasil pelatihan dapat disimpan, dikelola,
-              dan dibagikan dalam satu platform yang mudah diakses.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             <FeatureCard
               icon="📚"
               title="Materi Pelatihan"
-              description="Mengakses slide, modul, dan berbagai materi yang digunakan dalam kegiatan pelatihan."
+              description="Mengakses slide, presentasi, modul, dan video pelatihan."
             />
-
             <FeatureCard
               icon="💡"
-              title="Hasil Karya Guru"
-              description="Mendokumentasikan dan melihat berbagai hasil karya yang dibuat oleh peserta pelatihan."
-              id="hasil-karya"
+              title="Hasil Karya dan Like"
+              description="Melihat hasil karya peserta dan memberikan apresiasi melalui fitur suka."
             />
-
+            <FeatureCard
+              icon="📝"
+              title="Pendaftaran Pelatihan"
+              description="Melihat informasi pelatihan dan mendaftar sebagai peserta melalui portal guru."
+            />
+            <FeatureCard
+              icon="🏅"
+              title="Sertifikat Pelatihan"
+              description="Mengakses dan mengunduh sertifikat pelatihan yang telah diperoleh."
+            />
+            <FeatureCard
+              icon="⭐"
+              title="Evaluasi Kegiatan"
+              description="Memberikan penilaian dan saran untuk peningkatan kualitas pelatihan."
+            />
+            <FeatureCard
+              icon="📰"
+              title="Berita dan Agenda"
+              description="Mendapatkan informasi berita, kegiatan, dan agenda pelatihan."
+            />
             <FeatureCard
               icon="📷"
-              title="Dokumentasi Kegiatan"
-              description="Menyimpan dokumentasi kegiatan pelatihan secara terstruktur dan mudah ditemukan."
+              title="Galeri Kegiatan"
+              description="Melihat dokumentasi foto kegiatan pelatihan guru."
+            />
+            <FeatureCard
+              icon="💬"
+              title="Testimoni Peserta"
+              description="Membaca pengalaman dan tanggapan peserta mengenai pelatihan."
+            />
+            <FeatureCard
+              icon="📈"
+              title="Pengembangan Skill"
+              description="Menjelajahi topik pembelajaran untuk mendukung peningkatan keterampilan guru."
             />
           </div>
         </div>
       </section>
 
-      {/* ================= TENTANG ================= */}
+      {/* HASIL KARYA */}
       <section
-        id="tentang"
-        className="scroll-mt-20 px-6 lg:px-16 py-20 bg-white"
+        id="hasil-karya"
+        className="scroll-mt-20 bg-[#F8FBFE] px-6 py-20 lg:px-16"
       >
-        <div className="max-w-5xl mx-auto text-center">
-          <p className="text-sm font-semibold text-[#6A89A7] mb-3">
-            TENTANG EDUSHARE
-          </p>
+        <div className="mx-auto max-w-7xl">
+          <SectionHeading
+            eyebrow="PUBLIKASI KARYA"
+            title="Hasil Karya Guru"
+            description="Contoh kategori karya yang dapat dipublikasikan dan diapresiasi melalui EDUSHARE."
+          />
 
-          <h2 className="text-3xl font-bold text-[#394959]">
-            Edukasi, Dokumentasi, dan Sharing
-          </h2>
-
-          <p className="mt-5 text-gray-600 leading-7 max-w-3xl mx-auto">
-            EDUSHARE hadir sebagai wadah digital untuk mendukung
-            dokumentasi dan publikasi hasil pelatihan guru SMKN 1 Batam.
-            Platform ini membantu mengorganisasi materi, hasil karya,
-            dokumentasi kegiatan, dan informasi pelatihan agar lebih
-            mudah diakses dan dimanfaatkan kembali.
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {karya.map((item) => (
+              <article
+                key={item.judul}
+                className="overflow-hidden rounded-2xl border border-[#BDDDFC] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+              >
+                <div className="flex h-40 items-center justify-center bg-gradient-to-br from-[#BDDDFC] to-[#F8FBFE] text-5xl">
+                  {item.simbol}
+                </div>
+                <div className="p-5">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-[#6A89A7]">
+                    {item.kategori}
+                  </p>
+                  <h3 className="mt-2 text-lg font-bold">{item.judul}</h3>
+                  <p className="mt-2 text-sm text-gray-500">
+                    Karya Peserta Pelatihan
+                  </p>
+                  <div className="mt-4 flex items-center justify-between border-t border-[#E5EFF8] pt-4">
+                    <span className="text-sm text-gray-600">
+                      ♡ {item.likes} suka
+                    </span>
+                    <span className="rounded-lg bg-[#F8FBFE] px-3 py-1.5 text-xs font-semibold text-[#6A89A7]">
+                      Contoh karya
+                    </span>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+          <p className="mt-4 text-xs text-gray-500">
+            Data karya dan jumlah suka di atas masih berupa contoh tampilan.
           </p>
         </div>
       </section>
 
-      {/* ================= BERITA ================= */}
+      {/* BERITA DAN AGENDA */}
       <section
         id="berita"
-        className="scroll-mt-20 px-6 lg:px-16 py-16 bg-[#F8FBFE]"
+        className="scroll-mt-20 bg-white px-6 py-20 lg:px-16"
       >
-        <div className="max-w-7xl mx-auto">
-          <p className="text-sm font-semibold text-[#6A89A7] mb-3">
-            INFORMASI TERBARU
-          </p>
+        <div className="mx-auto max-w-7xl">
+          <SectionHeading
+            eyebrow="INFORMASI TERBARU"
+            title="Berita & Agenda Pelatihan"
+            description="Informasi kegiatan dan agenda pelatihan untuk guru SMKN 1 Batam."
+          />
 
-          <h2 className="text-3xl font-bold text-[#394959]">
-            Berita & Agenda Pelatihan
-          </h2>
-
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-gray-600">
-            Informasi dan dokumentasi kegiatan pelatihan guru akan
-            ditampilkan di bagian ini.
+          <div className="grid gap-6 md:grid-cols-2">
+            {berita.map((item) => (
+              <article
+                key={item.judul}
+                className="flex flex-col gap-4 rounded-2xl border border-[#BDDDFC] bg-[#F8FBFE] p-6 sm:flex-row"
+              >
+                <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl bg-[#BDDDFC] text-3xl">
+                  {item.simbol}
+                </div>
+                <div>
+                  <span className="rounded-full bg-[#EAF4FE] px-3 py-1 text-xs font-semibold text-[#6A89A7]">
+                    {item.kategori}
+                  </span>
+                  <h3 className="mt-3 text-lg font-bold">{item.judul}</h3>
+                  <p className="mt-2 text-sm leading-6 text-gray-600">
+                    {item.deskripsi}
+                  </p>
+                </div>
+              </article>
+            ))}
+          </div>
+          <p className="mt-4 text-xs text-gray-500">
+            Berita dan agenda di atas masih berupa contoh tampilan.
           </p>
         </div>
       </section>
 
-      {/* ================= FOOTER ================= */}
+      {/* GALERI KEGIATAN */}
+      <section
+        id="galeri"
+        className="scroll-mt-20 bg-[#F8FBFE] px-6 py-20 lg:px-16"
+      >
+        <div className="mx-auto max-w-7xl">
+          <SectionHeading
+            eyebrow="DOKUMENTASI KEGIATAN"
+            title="Galeri Pelatihan"
+            description="Dokumentasi kegiatan pelatihan dan aktivitas berbagi pengalaman guru."
+          />
+
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {galeri.map((item, index) => (
+              <article
+                key={item.judul}
+                className="overflow-hidden rounded-2xl border border-[#BDDDFC] bg-white"
+              >
+                {index === 0 ? (
+                  <img
+                    src="/pelatihan-guru.jpg"
+                    alt={item.judul}
+                    className="h-48 w-full object-cover"
+                  />
+                ) : (
+                  <div className="flex h-48 items-center justify-center bg-gradient-to-br from-[#BDDDFC] to-[#F8FBFE] text-5xl">
+                    {item.simbol}
+                  </div>
+                )}
+                <div className="p-4">
+                  <h3 className="font-semibold">{item.judul}</h3>
+                  <p className="mt-1 text-xs text-gray-500">
+                    Dokumentasi pelatihan guru
+                  </p>
+                </div>
+              </article>
+            ))}
+          </div>
+          <p className="mt-4 text-xs text-gray-500">
+            Foto dan simbol merupakan contoh rancangan galeri.
+          </p>
+        </div>
+      </section>
+
+      {/* TESTIMONI */}
+      <section
+        id="testimoni"
+        className="scroll-mt-20 bg-white px-6 py-20 lg:px-16"
+      >
+        <div className="mx-auto max-w-7xl">
+          <SectionHeading
+            eyebrow="PENGALAMAN PESERTA"
+            title="Testimoni Peserta"
+            description="Tanggapan peserta dapat menjadi masukan untuk kegiatan pelatihan berikutnya."
+          />
+
+          <div className="grid gap-6 md:grid-cols-2">
+            {testimoni.map((item) => (
+              <article
+                key={item.kutipan}
+                className="rounded-2xl border border-[#BDDDFC] bg-[#F8FBFE] p-7"
+              >
+                <div className="text-3xl text-[#6A89A7]">“</div>
+                <p className="mt-2 leading-7 text-gray-600">
+                  {item.kutipan}
+                </p>
+                <div className="mt-6 flex items-center gap-3 border-t border-[#E5EFF8] pt-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#BDDDFC] font-bold">
+                    P
+                  </div>
+                  <div>
+                    <p className="font-semibold">{item.nama}</p>
+                    <p className="text-xs text-gray-500">{item.peran}</p>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+          <p className="mt-4 text-xs text-gray-500">
+            Testimoni di atas merupakan contoh teks, bukan kutipan peserta terverifikasi.
+          </p>
+        </div>
+      </section>
+
+      {/* PENGEMBANGAN SKILL */}
+      <section
+        id="pengembangan-skill"
+        className="scroll-mt-20 bg-[#F8FBFE] px-6 py-20 lg:px-16"
+      >
+        <div className="mx-auto max-w-7xl">
+          <SectionHeading
+            eyebrow="BELAJAR DAN BERKEMBANG"
+            title="Pengembangan Skill Guru"
+            description="Topik pembelajaran yang dapat mendukung peningkatan keterampilan dan kualitas pembelajaran."
+          />
+
+          <div className="grid gap-6 md:grid-cols-3">
+            {skill.map((item) => (
+              <article
+                key={item.judul}
+                className="rounded-2xl border border-[#BDDDFC] bg-white p-6 transition hover:-translate-y-1 hover:shadow-md"
+              >
+                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-[#BDDDFC] text-2xl">
+                  {item.simbol}
+                </div>
+                <h3 className="text-lg font-bold">{item.judul}</h3>
+                <p className="mt-3 text-sm leading-6 text-gray-600">
+                  {item.deskripsi}
+                </p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FOOTER */}
       <footer
         id="kontak"
-        className="scroll-mt-20 px-6 lg:px-16 py-8 bg-[#394959] text-white"
+        className="scroll-mt-20 bg-[#394959] px-6 py-10 text-white lg:px-16"
       >
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-4">
+        <div className="mx-auto flex max-w-7xl flex-col justify-between gap-6 md:flex-row">
           <div>
             <h3 className="text-xl font-bold">EDUSHARE</h3>
-
-            <p className="text-sm text-[#BDDDFC] mt-1">
-              Edukasi, Dokumentasi, dan Sharing
-            </p>
-
-            <p className="text-sm text-[#BDDDFC] mt-3">
+            <p className="mt-2 max-w-lg text-sm leading-6 text-[#BDDDFC]">
               Website dokumentasi dan publikasi hasil pelatihan guru
               SMKN 1 Batam.
             </p>
+            <a
+              href="#beranda"
+              className="mt-4 inline-block text-sm font-semibold underline decoration-[#88BDF2] underline-offset-4"
+            >
+              Kembali ke atas ↑
+            </a>
           </div>
 
-          <p className="text-sm text-[#BDDDFC]">
-            © 2026 EDUSHARE — SMKN 1 Batam
-          </p>
+          <div className="md:text-right">
+            <p className="text-sm text-[#BDDDFC]">Kontak Pengelola</p>
+            <p className="mt-2 text-sm">
+              Informasi kontak dapat ditambahkan di sini.
+            </p>
+            <p className="mt-6 text-xs text-[#BDDDFC]">
+              © 2026 EDUSHARE — SMKN 1 Batam
+            </p>
+          </div>
         </div>
       </footer>
-
     </div>
   );
 }
 
-/* ================= COMPONENTS ================= */
-
-function StatCard({ icon, title, description }) {
+function NavLink({ href, active = false, children }) {
   return (
-    <div className="flex items-center gap-4 p-5 rounded-xl bg-[#F8FBFE] border border-[#BDDDFC]">
-      <div className="w-12 h-12 shrink-0 rounded-xl bg-[#BDDDFC] flex items-center justify-center text-xl">
-        {icon}
-      </div>
-
-      <div>
-        <p className="font-bold text-[#394959]">
-          {title}
-        </p>
-
-        <p className="mt-1 text-xs text-gray-500">
-          {description}
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function FeatureCard({ icon, title, description, id }) {
-  return (
-    <div
-      id={id}
-      className="scroll-mt-24 p-7 rounded-2xl bg-white border border-[#BDDDFC] shadow-sm hover:shadow-md transition"
+    <a
+      href={href}
+      className={`rounded-lg px-3 py-2 transition ${
+        active
+          ? "bg-[#BDDDFC] font-semibold text-[#394959]"
+          : "text-[#394959] hover:bg-[#F8FBFE] hover:text-[#6A89A7]"
+      }`}
     >
-      <div className="w-12 h-12 rounded-xl bg-[#BDDDFC] flex items-center justify-center text-xl mb-5">
-        {icon}
-      </div>
+      {children}
+    </a>
+  );
+}
 
-      <h3 className="text-xl font-bold text-[#394959]">
+function SectionHeading({ eyebrow, title, description }) {
+  return (
+    <div className="mb-10">
+      <p className="mb-3 text-xs font-bold tracking-widest text-[#6A89A7]">
+        {eyebrow}
+      </p>
+      <h2 className="text-3xl font-bold leading-tight text-[#394959]">
         {title}
-      </h3>
-
-      <p className="mt-3 text-sm leading-6 text-gray-600">
+      </h2>
+      <p className="mt-3 max-w-2xl text-sm leading-6 text-gray-600">
         {description}
       </p>
     </div>
+  );
+}
+
+function StatCard({ icon, title, description }) {
+  return (
+    <div className="flex items-center gap-4 rounded-xl border border-[#BDDDFC] bg-[#F8FBFE] p-5">
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#BDDDFC] text-xl">
+        {icon}
+      </div>
+      <div>
+        <p className="font-bold text-[#394959]">{title}</p>
+        <p className="mt-1 text-xs text-gray-500">{description}</p>
+      </div>
+    </div>
+  );
+}
+
+function FeatureCard({ icon, title, description }) {
+  return (
+    <article className="rounded-2xl border border-[#BDDDFC] bg-[#F8FBFE] p-6 transition hover:-translate-y-1 hover:shadow-md">
+      <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-[#BDDDFC] text-xl">
+        {icon}
+      </div>
+      <h3 className="text-lg font-bold text-[#394959]">{title}</h3>
+      <p className="mt-3 text-sm leading-6 text-gray-600">{description}</p>
+    </article>
   );
 }
 
