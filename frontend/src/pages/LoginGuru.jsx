@@ -51,46 +51,48 @@ function LoginGuru({ onLogin, onBack, onRegister }) {
   `,
 }}
         >
-          {/* Konten panel kiri */}
-          <div className="relative z-10 mt-auto">
-            <h1 className="text-[38px] font-extrabold leading-tight tracking-tight text-white drop-shadow-md sm:text-[46px] lg:text-[52px]">
-               EDUSHARE
-              </h1>
+        
+{/* Judul EDUSHARE */}
 
-            <h2 className="mt-2 text-xl font-bold leading-snug text-white drop-shadow-md sm:text-[26px] lg:text-[29px]">
-            Edukasi, Dokumentasi, dan Sharing
-             </h2>
+{/* Konten EDUSHARE */}
+<div className="relative z-10 mt-16 md:mt-0">
+  <h1 className="!text-white text-[30px] font-extrabold leading-tight drop-shadow-md sm:text-[36px]">
+    EDUSHARE
+  </h1>
 
-            <p className="mt-6 max-w-[590px] text-base leading-8 text-white font-medium drop-shadow-sm sm:text-lg">
-           Selamat datang di platform dokumentasi dan publikasi hasil
-           pelatihan guru SMKN 1 Batam.
-          </p>
+  <h2 className="mt-2 !text-white text-[18px] font-bold leading-snug sm:text-[22px]">
+    Edukasi, Dokumentasi, dan Sharing
+  </h2>
 
-            {/* Informasi tambahan */}
-            <div className="mt-8 flex items-center gap-5 rounded-2xl border border-white/30 bg-white/10 p-5 backdrop-blur-sm">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="42"
-                height="42"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="shrink-0"
-              >
-                <path d="m2 10 10-6 10 6-10 6-10-6Z" />
-                <path d="M6 12.5V17c3.5 3 8.5 3 12 0v-4.5" />
-                <path d="M22 10v6" />
-              </svg>
+  <p className="mt-4 max-w-[500px] !text-white text-[14px] font-medium leading-[1.7] sm:text-[15px]">
+    Selamat datang di platform dokumentasi dan publikasi hasil
+    pelatihan guru SMKN 1 Batam.
+  </p>
 
-              <p className="text-sm font-medium leading-7 text-white drop-shadow-sm sm:text-base">
-              Temukan materi pelatihan, dokumentasi kegiatan, dan hasil
-              karya guru dalam satu platform.
-               </p>
-            </div>
-          </div>
+  {/* Kotak informasi */}
+  <div className="mt-6 flex max-w-[500px] items-center gap-4 rounded-xl border border-white/40 bg-blue-700/65 px-4 py-4 shadow-lg sm:px-5">
+    <svg
+      viewBox="0 0 48 48"
+      className="h-8 w-8 shrink-0 text-white sm:h-9 sm:w-9"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="m4 17 20-10 20 10-20 10L4 17Z" />
+      <path d="M12 21v11c7 7 17 7 24 0V21" />
+      <path d="M44 18v13" />
+      <circle cx="44" cy="34" r="2" />
+    </svg>
+
+    <p className="!text-white text-[12px] font-medium leading-[1.7] sm:text-[13px]">
+      Temukan materi pelatihan, dokumentasi kegiatan, dan hasil
+      karya guru dalam satu platform.
+    </p>
+  </div>
+</div>
 
           {/* Dekorasi gelombang */}
           <div className="pointer-events-none absolute -bottom-28 -left-16 h-56 w-[120%] rotate-[-7deg] rounded-[50%] border-t border-white/30 bg-blue-500/20" />
