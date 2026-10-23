@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kuis: Memperbaiki Announcement</title>
+<style>
+  :root{
+    --board:#8C1B1B;
+    --board-dark:#6E1414;
+    --paper:#FBF3DE;
+    --paper-edge:#EADFC0;
+    --ink:#2B2620;
+    --pin:#E3453B;
+    --pin-dark:#B4231C;
+    --correct:#3E8E5B;
+    --correct-bg:#E4F4E9;
+    --wrong:#C4442D;
+    --wrong-bg:#FBE7E2;
+    --muted:#7A7364;
+  }
+
+  *{ box-sizing:border-box; }
+
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:
+      radial-gradient(ellipse at top left, rgba(255,255,255,0.04), transparent 60%),
+      var(--board);
+    background-color:var(--board);
+    font-family: Georgia, 'Times New Roman', serif;
+    color:var(--ink);
+    padding:24px;
+  }
+
+  /* subtle corkboard texture using repeating gradient, no external assets */
+  body{
+    background-image:
+      radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 14px 14px;
+    background-color: var(--board);
+  }
+
+  .board-frame{
+    width:100%;
+    max-width:640px;
+  }
+
+  .notice{
+    position:relative;
+    background:var(--paper);
+    border:1px solid var(--paper-edge);
+    border-radius:4px;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.35), inset 0 0 0 6px #FBF3DE, inset 0 0 0 7px #D9CBA0;
+    padding:44px 36px 36px;
+    min-height:420px;
+    display:flex;
+    flex-direction:column;
+  }
+
+  .pin{
+    position:absolute;
+    top:-14px;
+    left:50%;
+    transform:translateX(-50%);
+    width:26px;
+    height:26px;
+    border-radius:50%;
+    background: radial-gradient(circle at 35% 30%, #F7C878, var(--pin) 55%, var(--pin-dark) 100%);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.4);
+  }
+
+  .school-header{
+    text-align:center;
+    margin:2px 0 20px;
+  }
+
+  .school-header .school-name{
+    font-family: Verdana, Arial, sans-serif;
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:0.5px;
+    color:var(--pin-dark);
+    margin:0 0 4px;
+  }
+
+  .school-header .quiz-title{
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size:19px;
+    font-weight:700;
+    color:var(--ink);
+    margin:0;
+  }
+
+  .eyebrow-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-family: Verdana, Arial, sans-serif;
+    font-size:13px;
+    color:var(--muted);
+    margin-bottom:6px;
+  }
+
+  .dots{
+    display:flex;
+    gap:6px;
+  }
+  .dot{
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:#DCD2AE;
+    transition: background 0.25s ease, transform 0.25s ease;
+  }
+  .dot.filled{ background:var(--pin-dark); }
+  .dot.active{ transform:scale(1.3); }
+
+  h1{
+    font-size:22px;
+    line-height:1.35;
+    margin:6px 0 22px;
+    font-weight:700;
+    border-bottom: 2px solid var(--paper-edge);
+    padding-bottom:16px;
+  }
+
+  .announcement-box{
+    background:#fff;
+    border:1px dashed #C9BC90;
+    border-radius:3px;
+    padding:16px 18px;
+    font-family: Verdana, Arial, sans-serif;
+    font-size:14.5px;
+    line-height:1.65;
+    color:#3A3428;
+    margin-bottom:22px;
+    white-space:pre-line;
+  }
+
+  .announcement-box strong{
+    background: #FFF1B8;
+    padding:0 2px;
+    border-radius:2px;
+  }
+
+  .question-text{
+    font-size:17px;
+    font-weight:700;
+    margin:0 0 18px;
+    line-height:1.45;
+  }
+
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-bottom:8px;
+  }
+
+  .option{
+    font-family: Verdana, Arial, sans-serif;
+    text-align:left;
+    font-size:15px;
+    padding:13px 16px;
+    border:2px solid #D9CBA0;
+    border-radius:6px;
+    background:#fff;
+    color:var(--ink);
+    cursor:pointer;
+    transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+  }
+
+  .option:hover:not(:disabled){
+    border-color:var(--pin-dark);
+    transform:translateY(-1px);
+  }
+
+  .option:disabled{ cursor:default; }
+
+  .option.correct{
+    background:var(--correct-bg);
+    border-color:var(--correct);
+    color:#20502F;
+    font-weight:700;
+  }
+
+  .option.wrong{
+    background:var(--wrong-bg);
+    border-color:var(--wrong);
+    color:#7A2A18;
+    font-weight:700;
+  }
+
+  .feedback{
+    font-family: Verdana, Arial, sans-serif;
+    font-size:14px;
+    line-height:1.6;
+    padding:14px 16px;
+    border-radius:6px;
+    margin-top:14px;
+    display:none;
+  }
+
+  .feedback.show{ display:block; }
+
+  .feedback.correct-fb{
+    background:var(--correct-bg);
+    border-left:4px solid var(--correct);
+    color:#20502F;
+  }
+
+  .feedback.wrong-fb{
+    background:var(--wrong-bg);
+    border-left:4px solid var(--wrong);
+    color:#7A2A18;
+  }
+
+  .feedback .verdict{
+    font-weight:700;
+    display:block;
+    margin-bottom:4px;
+  }
+
+  .footer-row{
+    margin-top:auto;
+    padding-top:22px;
+    display:flex;
+    justify-content:flex-end;
+  }
+
+  button.next-btn{
+    font-family: Verdana, Arial, sans-serif;
+    font-size:15px;
+    font-weight:700;
+    padding:12px 26px;
+    background:var(--pin-dark);
+    color:#FFF7E8;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    opacity:0.4;
+    pointer-events:none;
+    transition: opacity 0.2s ease, background 0.15s ease;
+  }
+
+  button.next-btn.enabled{
+    opacity:1;
+    pointer-events:auto;
+  }
+
+  button.next-btn.enabled:hover{
+    background:#A66A18;
+  }
+
+  /* Result screen */
+  .result{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    flex:1;
+    padding-top:10px;
+  }
+
+  .score-big{
+    font-size:56px;
+    font-weight:700;
+    color:var(--pin-dark);
+    margin:6px 0 2px;
+  }
+
+  .score-label{
+    font-family: Verdana, Arial, sans-serif;
+    font-size:13px;
+    color:var(--muted);
+    margin-bottom:20px;
+  }
+
+  .motivation{
+    font-family: Verdana, Arial, sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    max-width:420px;
+    margin-bottom:26px;
+  }
+
+  .restart-btn{
+    font-family: Verdana, Arial, sans-serif;
+    font-size:14px;
+    font-weight:700;
+    padding:10px 22px;
+    background:transparent;
+    color:var(--pin-dark);
+    border:2px solid var(--pin-dark);
+    border-radius:6px;
+    cursor:pointer;
+  }
+
+  .restart-btn:hover{
+    background:var(--pin-dark);
+    color:#FFF7E8;
+  }
+
+  @media (max-width:480px){
+    .notice{ padding:36px 20px 26px; }
+    h1{ font-size:19px; }
+    .announcement-box{ font-size:13.5px; }
+    .score-big{ font-size:44px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="board-frame">
+  <div class="notice">
+    <div class="pin"></div>
+
+    <div class="school-header">
+      <p class="school-name">SMKN1 Batam</p>
+      <p class="quiz-title">Kuis Task 1 – Announcement</p>
+    </div>
+
+    <div id="quiz-screen">
+      <div class="eyebrow-row">
+        <span id="progress-text">Soal 1 dari 5</span>
+        <div class="dots" id="dots"></div>
+      </div>
+
+      <h1>Announcement: Temukan Kesalahannya</h1>
+
+      <div class="announcement-box" id="announcement-text"></div>
+
+      <div class="question-text" id="question-text"></div>
+      <div class="options" id="options-container"></div>
+      <div class="feedback" id="feedback"></div>
+
+      <div class="footer-row">
+        <button class="next-btn" id="next-btn">Selanjutnya</button>
+      </div>
+    </div>
+
+    <div id="result-screen" class="result" style="display:none;">
+      <div class="score-label">SKOR AKHIR KAMU</div>
+      <div class="score-big" id="final-score">0/5</div>
+      <div class="motivation" id="motivation-text"></div>
+      <button class="restart-btn" id="restart-btn">Ulangi Kuis</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const announcementText =
+`ANNOUNCEMENT
+
+To all student of Class X,
+
+There will be a school library visit on Monday, 15 August. All student must gathered at the school hall at 07.00 AM. Please bring your student card and a book what you have read before.
+
+The visit will conducted by the librarian, Mr. Andi. We will go to city library and back to school before lunch.
+
+If you have question, contact Mr. Andi tomorrow.`;
+
+  const questions = [
+    {
+      q: 'Perhatikan kalimat: "To all student of Class X,". Apa kesalahan tata bahasa pada kalimat ini?',
+      options: [
+        '"student" seharusnya "students" (bentuk jamak)',
+        '"Class" seharusnya ditulis huruf kecil "class"',
+        '"all" seharusnya diganti "every"',
+        'Tidak ada kesalahan'
+      ],
+      correct: 0,
+      explanation: 'Karena kata "all" menunjukkan lebih dari satu orang, kata benda setelahnya harus jamak: "students", bukan "student".'
+    },
+    {
+      q: 'Perhatikan kalimat: "All student must gathered at the school hall at 07.00 AM." Apa kesalahannya?',
+      options: [
+        '"07.00 AM" harus ditulis "AM 07.00"',
+        '"school hall" harus dibalik menjadi "hall school"',
+        '"must gathered" seharusnya "must gather" (setelah modal, kata kerja harus bentuk dasar)',
+        'Tidak ada kesalahan'
+      ],
+      correct: 2,
+      explanation: 'Setelah modal verb "must", kata kerja yang mengikuti harus dalam bentuk dasar (base form), sehingga seharusnya "must gather", bukan "must gathered".'
+    },
+    {
+      q: 'Perhatikan kalimat: "Please bring your student card and a book what you have read before." Kata "what" di sini merupakan kesalahan pilihan kata. Apa kata yang tepat menggantikannya?',
+      options: [
+        '"who"',
+        '"which" atau "that"',
+        '"where"',
+        '"when"'
+      ],
+      correct: 1,
+      explanation: 'Untuk merujuk pada benda (buku), kata penghubung yang tepat adalah "which" atau "that", bukan "what". Contoh yang benar: "...a book that/which you have read before."'
+    },
+    {
+      q: 'Perhatikan kalimat: "The visit will conducted by the librarian, Mr. Andi." Ada kata yang hilang. Apa itu?',
+      options: [
+        'Kata "be" hilang — seharusnya "will be conducted"',
+        'Kata "have" hilang — seharusnya "will have conducted"',
+        'Kata "was" hilang — seharusnya "will was conducted"',
+        'Tidak ada yang hilang'
+      ],
+      correct: 0,
+      explanation: 'Kalimat pasif dengan "will" membutuhkan struktur "will be + past participle". Yang benar adalah "will be conducted", bukan "will conducted".'
+    },
+    {
+      q: 'Bagian mana dari announcement ini yang memberikan informasi kurang jelas (tidak lengkap)?',
+      options: [
+        '"There will be a school library visit on Monday, 15 August."',
+        '"If you have question, contact Mr. Andi tomorrow." — tidak dijelaskan cara menghubungi (nomor, ruang, atau waktu)',
+        '"We will go to city library and back to school before lunch."',
+        '"Please bring your student card"'
+      ],
+      correct: 1,
+      explanation: 'Kalimat ini tidak menjelaskan bagaimana cara menghubungi Mr. Andi (misalnya nomor telepon, ruang guru, atau jam tertentu), sehingga informasinya kurang jelas bagi pembaca.'
+    }
+  ];
+
+  let current = 0;
+  let score = 0;
+  let answered = false;
+
+  const dotsEl = document.getElementById('dots');
+  const progressText = document.getElementById('progress-text');
+  const announcementEl = document.getElementById('announcement-text');
+  const questionEl = document.getElementById('question-text');
+  const optionsEl = document.getElementById('options-container');
+  const feedbackEl = document.getElementById('feedback');
+  const nextBtn = document.getElementById('next-btn');
+  const quizScreen = document.getElementById('quiz-screen');
+  const resultScreen = document.getElementById('result-screen');
+
+  function buildDots(){
+    dotsEl.innerHTML = '';
+    questions.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.className = 'dot';
+      dotsEl.appendChild(d);
+    });
+  }
+
+  function updateDots(){
+    const dots = dotsEl.querySelectorAll('.dot');
+    dots.forEach((d, i) => {
+      d.classList.toggle('filled', i < current);
+      d.classList.toggle('active', i === current);
+    });
+  }
+
+  function renderQuestion(){
+    answered = false;
+    nextBtn.classList.remove('enabled');
+    feedbackEl.className = 'feedback';
+    feedbackEl.innerHTML = '';
+
+    announcementEl.textContent = announcementText;
+    progressText.textContent = `Soal ${current + 1} dari ${questions.length}`;
+    updateDots();
+
+    const item = questions[current];
+    questionEl.textContent = item.q;
+    optionsEl.innerHTML = '';
+
+    item.options.forEach((optText, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'option';
+      btn.textContent = optText;
+      btn.addEventListener('click', () => selectAnswer(idx, btn));
+      optionsEl.appendChild(btn);
+    });
+
+    nextBtn.textContent = current === questions.length - 1 ? 'Lihat Skor' : 'Selanjutnya';
+  }
+
+  function selectAnswer(idx, btnEl){
+    if (answered) return;
+    answered = true;
+
+    const item = questions[current];
+    const allBtns = optionsEl.querySelectorAll('.option');
+    allBtns.forEach(b => b.disabled = true);
+
+    const isCorrect = idx === item.correct;
+
+    if (isCorrect){
+      btnEl.classList.add('correct');
+      score++;
+    } else {
+      btnEl.classList.add('wrong');
+      allBtns[item.correct].classList.add('correct');
+    }
+
+    feedbackEl.classList.add('show', isCorrect ? 'correct-fb' : 'wrong-fb');
+    feedbackEl.innerHTML =
+      `<span class="verdict">${isCorrect ? 'Benar!' : 'Kurang tepat.'}</span>${item.explanation}`;
+
+    nextBtn.classList.add('enabled');
+  }
+
+  nextBtn.addEventListener('click', () => {
+    if (!answered) return;
+    current++;
+    if (current < questions.length){
+      renderQuestion();
+    } else {
+      showResult();
+    }
+  });
+
+  function showResult(){
+    quizScreen.style.display = 'none';
+    resultScreen.style.display = 'flex';
+
+    document.getElementById('final-score').textContent = `${score}/${questions.length}`;
+
+    let msg = '';
+    if (score === 5){
+      msg = 'Luar biasa! Kamu sangat jeli menemukan semua kesalahan dalam announcement ini. Kemampuan proofreading-mu sudah sangat baik!';
+    } else if (score >= 3){
+      msg = 'Kerja bagus! Kamu sudah memahami sebagian besar jenis kesalahan dalam announcement. Coba baca ulang penjelasan tiap soal agar makin mantap.';
+    } else if (score >= 1){
+      msg = 'Lumayan, tapi masih ada beberapa hal yang perlu dipahami lagi. Coba baca kembali materi tentang grammar, tenses, dan pilihan kata, lalu ulangi kuisnya.';
+    } else {
+      msg = 'Jangan khawatir, ini baru awal! Pelajari kembali materi tentang cara mengecek kesalahan pada announcement, lalu coba lagi ya.';
+    }
+    document.getElementById('motivation-text').textContent = msg;
+  }
+
+  document.getElementById('restart-btn').addEventListener('click', () => {
+    current = 0;
+    score = 0;
+    resultScreen.style.display = 'none';
+    quizScreen.style.display = 'block';
+    renderQuestion();
+  });
+
+  buildDots();
+  renderQuestion();
+</script>
+
+</body>
+</html>

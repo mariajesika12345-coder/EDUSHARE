@@ -11,7 +11,7 @@ function App() {
   const handleLogin = ({ email, password }) => {
     // Login Guru
     if (
-      email === "guru@edushare.id" &&
+      email === "guru@edushare.com" &&
       password === "guru123"
     ) {
       setHalaman("dashboard-guru");
@@ -20,7 +20,7 @@ function App() {
 
     // Login Admin
     if (
-      email === "admin@edushare.id" &&
+      email === "admin@edushare.com" &&
       password === "admin123"
     ) {
       setHalaman("dashboard-admin");

@@ -8,123 +8,211 @@ function LoginGuru({ onLogin, onBack, onRegister }) {
   const [remember, setRemember] = useState(false);
   const [error, setError] = useState("");
 
-  
-function handleSubmit(e) {
-  e.preventDefault();
+  function handleSubmit(e) {
+    e.preventDefault();
 
-  if (!email.trim() || !password) {
-    setError("Email dan password wajib diisi.");
-    return;
+    if (!email.trim() || !password) {
+      setError("Email dan password wajib diisi.");
+      return;
+    }
+
+    setError("");
+
+    if (onLogin) {
+      onLogin({
+        email: email.trim(),
+        password,
+        remember,
+      });
+    }
   }
-
-  setError("");
-
-  if (onLogin) {
-    onLogin({
-      email: email.trim(),
-      password,
-      remember,
-    });
-  }
-}
 
   return (
-    <div className="min-h-screen bg-[#F8FBFE] flex items-center justify-center p-6">
-
-      <div className="w-full max-w-5xl overflow-hidden rounded-2xl bg-white shadow-lg md:grid md:grid-cols-2">
+    <div className="min-h-screen bg-[#EFF6FF] flex items-center justify-center p-4 md:p-8">
+      <div className="w-full max-w-7xl overflow-hidden rounded-2xl bg-white shadow-xl md:grid md:grid-cols-2">
 
         {/* PANEL KIRI */}
-        <div className="bg-[#6A89A7] p-10 text-white flex flex-col justify-center">
+        <div
+          className="relative flex min-h-[600px] flex-col justify-center overflow-hidden bg-cover bg-center p-8 text-white sm:p-10"
+          style={{
+  backgroundImage: `
+    linear-gradient(
+      180deg,
+      rgba(0, 63, 180, 0.30) 0%,
+      rgba(0, 52, 155, 0.48) 45%,
+      rgba(0, 48, 160, 0.90) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(0, 65, 190, 0.35),
+      rgba(0, 65, 190, 0.10)
+    ),
+    url("/login-guru.png")
+  `,
+}}
+        >
+          {/* Konten panel kiri */}
+          <div className="relative z-10 mt-auto">
+            <h1 className="text-[38px] font-extrabold leading-tight tracking-tight text-white drop-shadow-md sm:text-[46px] lg:text-[52px]">
+               EDUSHARE
+              </h1>
 
-          <h1 className="text-3xl font-bold tracking-wide">
-            EDUSHARE
-          </h1>
-
-          <p className="mt-3 text-lg font-semibold text-[#BDDDFC]">
+            <h2 className="mt-2 text-xl font-bold leading-snug text-white drop-shadow-md sm:text-[26px] lg:text-[29px]">
             Edukasi, Dokumentasi, dan Sharing
+             </h2>
+
+            <p className="mt-6 max-w-[590px] text-base leading-8 text-white font-medium drop-shadow-sm sm:text-lg">
+           Selamat datang di platform dokumentasi dan publikasi hasil
+           pelatihan guru SMKN 1 Batam.
           </p>
 
-          <p className="mt-5 leading-relaxed text-white">
-            Selamat datang di platform dokumentasi dan publikasi
-            hasil pelatihan guru SMKN 1 Batam.
-          </p>
+            {/* Informasi tambahan */}
+            <div className="mt-8 flex items-center gap-5 rounded-2xl border border-white/30 bg-white/10 p-5 backdrop-blur-sm">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="42"
+                height="42"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="shrink-0"
+              >
+                <path d="m2 10 10-6 10 6-10 6-10-6Z" />
+                <path d="M6 12.5V17c3.5 3 8.5 3 12 0v-4.5" />
+                <path d="M22 10v6" />
+              </svg>
 
-          <div className="mt-8 rounded-xl border border-white/20 bg-white/10 p-5">
-            <p className="text-sm leading-relaxed text-white/90">
-              Temukan materi pelatihan, dokumentasi kegiatan,
-              dan hasil karya guru dalam satu platform.
-            </p>
+              <p className="text-sm font-medium leading-7 text-white drop-shadow-sm sm:text-base">
+              Temukan materi pelatihan, dokumentasi kegiatan, dan hasil
+              karya guru dalam satu platform.
+               </p>
+            </div>
           </div>
 
+          {/* Dekorasi gelombang */}
+          <div className="pointer-events-none absolute -bottom-28 -left-16 h-56 w-[120%] rotate-[-7deg] rounded-[50%] border-t border-white/30 bg-blue-500/20" />
         </div>
 
         {/* PANEL LOGIN */}
-        <div className="p-8 md:p-12">
+        <div className="flex min-h-[600px] flex-col justify-center bg-white p-8 sm:p-10 md:p-12 lg:p-14">
+          {/* Tombol kembali opsional */}
+          {onBack && (
+            <button
+              type="button"
+              onClick={onBack}
+              className="mb-5 self-start text-sm font-medium text-[#3B82F6] transition hover:text-[#1D4ED8]"
+            >
+              ← Kembali
+            </button>
+          )}
 
-          <button
-            type="button"
-            onClick={onBack}
-            className="mb-6 text-sm font-medium text-[#6A89A7] transition hover:text-[#394959]"
-          >
-            
-          </button>
-
-          {/* JUDUL DI TENGAH */}
+          {/* Judul */}
           <div className="text-center">
-            <h2 className="text-2xl font-bold text-[#394959]">
+            <h2 className="text-3xl font-bold text-[#172554]">
               Login Guru
             </h2>
 
-            <p className="mt-2 text-sm text-[#6A89A7]">
+            <p className="mt-3 text-sm leading-6 text-[#64748B] sm:text-base">
               Silakan masuk untuk mengakses akun Anda.
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="mt-8 space-y-5">
-
-            {/* EMAIL ATAU NIP */}
+          <form onSubmit={handleSubmit} className="mt-10 space-y-6">
+            {/* EMAIL */}
             <div>
-              <label className="mb-2 block text-sm font-semibold text-[#394959]">
+              <label
+                htmlFor="email"
+                className="mb-3 block text-sm font-semibold text-[#334155]"
+              >
                 Email
               </label>
 
-              <input
-                type="text"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Masukkan alamat email"
-                className="w-full rounded-lg border border-[#BDDDFC] bg-white px-4 py-3 text-[#394959] outline-none transition placeholder:text-gray-400 focus:border-[#6A89A7] focus:ring-2 focus:ring-[#BDDDFC]"
-              />
+              <div className="flex items-center rounded-xl border border-[#BFDBFE] bg-white transition focus-within:border-[#3B82F6] focus-within:ring-2 focus-within:ring-[#DBEAFE]">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="ml-4 shrink-0 text-[#64748B]"
+                >
+                  <rect x="3" y="5" width="18" height="14" rx="2" />
+                  <path d="m3 7 9 6 9-6" />
+                </svg>
+
+                <input
+                  id="email"
+                  type="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Masukkan alamat email"
+                  required
+                  className="min-w-0 flex-1 rounded-xl bg-transparent px-4 py-4 text-[#1E293B] outline-none placeholder:text-[#94A3B8]"
+                />
+              </div>
             </div>
 
-            {/* PASSWORD DENGAN IKON MATA */}
+            {/* PASSWORD */}
             <div>
-              <label className="mb-2 block text-sm font-semibold text-[#394959]">
+              <label
+                htmlFor="password"
+                className="mb-3 block text-sm font-semibold text-[#334155]"
+              >
                 Password
               </label>
 
-              <div className="flex overflow-hidden rounded-lg border border-[#BDDDFC] focus-within:border-[#6A89A7] focus-within:ring-2 focus-within:ring-[#BDDDFC]">
+              <div className="flex items-center rounded-xl border border-[#BFDBFE] bg-white transition focus-within:border-[#3B82F6] focus-within:ring-2 focus-within:ring-[#DBEAFE]">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="ml-4 shrink-0 text-[#64748B]"
+                >
+                  <rect x="5" y="10" width="14" height="11" rx="2" />
+                  <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+                  <circle cx="12" cy="15" r="1" />
+                </svg>
 
                 <input
+                  id="password"
                   type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Masukkan password"
-                  className="min-w-0 flex-1 bg-white px-4 py-3 text-[#394959] outline-none placeholder:text-gray-400"
+                  required
+                  className="min-w-0 flex-1 bg-transparent px-4 py-4 text-[#1E293B] outline-none placeholder:text-[#94A3B8]"
                 />
 
                 <button
                   type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? "Sembunyikan password" : "Tampilkan password"}
-                  className="px-4 text-[#6A89A7] transition hover:text-[#394959]"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  aria-label={
+                    showPassword
+                      ? "Sembunyikan password"
+                      : "Tampilkan password"
+                  }
+                  className="px-4 text-[#64748B] transition hover:text-[#2563EB]"
                 >
                   {showPassword ? (
-                    /* IKON MATA TERTUTUP */
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="21"
-                      height="21"
+                      width="22"
+                      height="22"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
@@ -138,11 +226,10 @@ function handleSubmit(e) {
                       <path d="M6.2 6.2C3.9 7.7 2.6 9.8 2 12c.6 1.5 2.1 3.7 4.7 5.2A10.6 10.6 0 0 0 12 19c1.1 0 2.1-.2 3-.5" />
                     </svg>
                   ) : (
-                    /* IKON MATA TERBUKA */
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="21"
-                      height="21"
+                      width="22"
+                      height="22"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
@@ -155,24 +242,26 @@ function handleSubmit(e) {
                     </svg>
                   )}
                 </button>
-
               </div>
             </div>
 
             {/* INGAT SAYA */}
-            <label className="flex cursor-pointer items-center gap-2 text-sm text-[#394959]">
+            <label className="flex cursor-pointer items-center gap-3 text-sm text-[#334155]">
               <input
                 type="checkbox"
                 checked={remember}
                 onChange={(e) => setRemember(e.target.checked)}
-                className="h-4 w-4 accent-[#6A89A7]"
+                className="h-5 w-5 rounded accent-[#3B82F6]"
               />
               Ingat saya
             </label>
 
-            {/* PESAN ERROR */}
+            {/* ERROR */}
             {error && (
-              <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">
+              <p
+                role="alert"
+                className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600"
+              >
                 {error}
               </p>
             )}
@@ -180,29 +269,23 @@ function handleSubmit(e) {
             {/* TOMBOL LOGIN */}
             <button
               type="submit"
-              className="w-full rounded-lg bg-[#6A89A7] py-3 font-semibold text-white transition duration-200 hover:bg-[#394959] focus:outline-none focus:ring-2 focus:ring-[#88BDF2] focus:ring-offset-2"
+              className="w-full rounded-xl bg-[#2878F8] py-4 font-semibold text-white shadow-sm transition duration-200 hover:bg-[#1D64DB] focus:outline-none focus:ring-2 focus:ring-[#93C5FD] focus:ring-offset-2"
             >
               Login
             </button>
-
           </form>
 
           {/* BUAT AKUN */}
-          <p className="mt-6 text-center text-sm text-[#394959]">
+          <p className="mt-8 text-center text-sm text-[#475569]">
             Belum punya akun?{" "}
             <button
               type="button"
               onClick={onRegister}
-              className="font-semibold text-[#6A89A7] hover:text-[#394959] hover:underline"
+              className="font-semibold text-[#2563EB] transition hover:text-[#1D4ED8] hover:underline"
             >
               Buat akun
             </button>
           </p>
-
-          <p className="mt-6 text-center text-xs text-gray-400">
-            
-          </p>
-
         </div>
       </div>
     </div>

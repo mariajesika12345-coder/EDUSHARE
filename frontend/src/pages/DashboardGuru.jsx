@@ -11,7 +11,6 @@ import {
   Menu,
   X,
   Search,
-  FileText,
   PlayCircle,
   Presentation,
   Download,
@@ -58,62 +57,45 @@ const pelatihanData = [
   },
 ];
 
-const materiData = [
-  {
-    id: 1,
-    judul: "Slide Kurikulum Merdeka",
-    tipe: "Slide",
-    pelatihan: "Kurikulum Merdeka",
-    ukuran: "4,2 MB",
-  },
-  {
-    id: 2,
-    judul: "Modul Asesmen Formatif",
-    tipe: "Modul",
-    pelatihan: "Asesmen Berbasis Proyek",
-    ukuran: "1,8 MB",
-  },
-  {
-    id: 3,
-    judul: "Rekaman Workshop Media Ajar",
-    tipe: "Video",
-    pelatihan: "Media Ajar Interaktif",
-    ukuran: "212 MB",
-  },
-  {
-    id: 4,
-    judul: "Slide Strategi PjBL",
-    tipe: "Slide",
-    pelatihan: "Asesmen Berbasis Proyek",
-    ukuran: "3,1 MB",
-  },
-  {
-    id: 5,
-    judul: "Modul Penyusunan Modul Ajar",
-    tipe: "Modul",
-    pelatihan: "Kurikulum Merdeka",
-    ukuran: "2,6 MB",
-  },
-];
-
 const sertifikatData = [
   {
     id: 1,
-    judul: "Pelatihan Kurikulum Merdeka 2025",
-    tanggal: "12 Agustus 2025",
+    judul: "Sertifikat Pelatihan Guru",
+    tanggal: "September 2026",
     tersedia: true,
   },
   {
     id: 2,
-    judul: "Workshop Literasi Digital",
-    tanggal: "5 Maret 2026",
-    tersedia: true,
+    judul: "Sertifikat Workshop Media Ajar",
+    tanggal: "Oktober 2026",
+    tersedia: false,
+  },
+];
+
+const materiData = [
+  {
+    id: 1,
+    judul: "Announcement-PPT",
+    namaFile: "Announcement-PPT.pptx",
+    tipe: "PPT",
+    pelatihan: "Materi presentasi",
+    file: "/materi/Announcement-PPT.pptx",
+  },
+  {
+    id: 2,
+    judul: "Announcement Text Learning-Video",
+    namaFile: "Announcement Text Learning-Video.mp4",
+    tipe: "Video",
+    pelatihan: "Video pembelajaran",
+    file: "/materi/Announcement%20Text%20Learning-Video.mp4",
   },
   {
     id: 3,
-    judul: "Pelatihan Asesmen Berbasis Proyek",
-    tanggal: "3 November 2026",
-    tersedia: false,
+    judul: "Kuis Announcement HTML",
+    namaFile: "kuis_announcement-HTML.html",
+    tipe: "Kuis",
+    pelatihan: "Kuis interaktif",
+    file: "/materi/kuis_announcement-HTML.html",
   },
 ];
 
@@ -132,9 +114,9 @@ const menu = [
 ];
 
 const tipeIcon = {
-  Slide: Presentation,
-  Modul: FileText,
+  PPT: Presentation,
   Video: PlayCircle,
+  Kuis: ClipboardCheck,
 };
 
 const inputClass =
@@ -220,20 +202,29 @@ function Beranda({ nama, terdaftar, setView, jumlahKarya }) {
 
   return (
     <>
-      <section className="mb-6 rounded-2xl bg-storm-500 p-6 text-white shadow-sm sm:p-7">
-        <p className="text-sm text-storm-100">Selamat datang kembali,</p>
-        <h1 className="mt-1 text-2xl font-bold sm:text-3xl">{nama}</h1>
-        <p className="mt-2 max-w-xl text-sm leading-6 text-storm-50">
-          Temukan materi pelatihan, dokumentasi kegiatan, dan hasil karya guru
-          dalam satu platform EDUSHARE.
-        </p>
-        <button
-          onClick={() => setView("pelatihan")}
-          className="mt-5 rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-storm-700 transition hover:bg-storm-50"
-        >
-          Lihat pelatihan
-        </button>
-      </section>
+      
+<section className="mb-6 rounded-2xl bg-storm-500 p-6 text-white shadow-sm sm:p-7">
+  <p className="text-sm !text-white/90">
+    Selamat datang kembali,
+  </p>
+
+  <h1 className="mt-1 text-2xl font-bold !text-white sm:text-3xl">
+    {nama}
+  </h1>
+
+  <p className="mt-2 max-w-xl text-sm leading-6 !text-white">
+    Temukan materi pelatihan, dokumentasi kegiatan, dan hasil karya guru
+    dalam satu platform EDUSHARE.
+  </p>
+
+  <button
+    onClick={() => setView("pelatihan")}
+    className="mt-5 rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-storm-700 transition hover:bg-storm-50"
+  >
+    Lihat pelatihan
+  </button>
+</section>
+
 
       <div className="mb-7 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map(({ label, value, icon: Icon }) => (
@@ -431,14 +422,33 @@ function Materi() {
                   </p>
                   <div className="mt-2"><Badge>{m.tipe}</Badge></div>
                 </div>
-                <button
-                  type="button"
-                  className={btnOutline}
-                  aria-label={m.tipe === "Video" ? "Tonton video" : "Unduh materi"}
-                  title="Aksi materi (perlu dihubungkan ke file)"
-                >
-                  {m.tipe === "Video" ? <PlayCircle size={16} /> : <Download size={16} />}
-                </button>
+                {m.tipe === "Video" ? (
+  <a
+    href={m.file}
+    target="_blank"
+    rel="noopener noreferrer"
+    className={btnOutline}
+    aria-label="Tonton video"
+    title="Tonton video"
+  >
+    <PlayCircle size={16} />
+  </a>
+) : (
+  <a
+    href={m.file}
+    download={m.tipe === "PPT" ? m.namaFile : undefined}
+    target={m.tipe === "Kuis" ? "_blank" : undefined}
+    rel={m.tipe === "Kuis" ? "noopener noreferrer" : undefined}
+    className={btnOutline}
+    aria-label={m.tipe === "Kuis" ? "Buka kuis" : "Unduh materi"}
+    title={m.tipe === "Kuis" ? "Buka kuis" : "Unduh materi"}
+  >
+    {m.tipe === "Kuis" ? (
+ <BookOpen size={16} />    ) : (
+      <Download size={16} />
+    )}
+  </a>
+)}
               </Card>
             );
           })}
@@ -1068,11 +1078,13 @@ export default function DashboardGuru({ onLogout }) {
                     setSidebarOpen(false);
                   }}
                   aria-current={aktif ? "page" : undefined}
+                 
                   className={`flex min-h-11 w-full items-center gap-3 rounded-xl px-3.5 py-3 text-left text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-storm-300 ${
-                    aktif
-                      ? "bg-storm-500 text-white shadow-sm"
-                      : "text-storm-600 hover:bg-storm-50 hover:text-storm-800"
-                  }`}
+                     aktif
+                       ? "bg-storm-500 text-white shadow-sm"
+                       : "text-slate-600 hover:bg-storm-50 hover:text-slate-800"
+                           }`}
+
                 >
                   <Icon size={18} className="shrink-0" />
                   <span>{item.label}</span>

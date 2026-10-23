@@ -1,5 +1,5 @@
-
 function LandingPage({ onLogin }) {
+  
   const karya = [
     {
       judul: "Media Ajar Interaktif",
@@ -81,9 +81,9 @@ function LandingPage({ onLogin }) {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F8FBFE] text-[#394959]">
+    <div className="min-h-screen bg-[#F3F6FC] text-[#1E293B]">
       {/* NAVBAR */}
-      <nav className="sticky top-0 z-50 border-b border-[#BDDDFC] bg-white/95 px-6 backdrop-blur md:px-10 lg:px-16">
+      <nav className="sticky top-0 z-50 border-b border-[#BFDBFE] bg-white/95 px-6 backdrop-blur md:px-10 lg:px-16">
         <div className="mx-auto flex min-h-20 max-w-7xl items-center justify-between gap-4">
           <a href="#beranda" className="flex shrink-0 items-center">
             <img
@@ -108,8 +108,7 @@ function LandingPage({ onLogin }) {
           <button
             type="button"
             onClick={onLogin}
-            className="shrink-0 rounded-lg bg-[#6A89A7] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#394959] md:px-6"
-          >
+     className="shrink-0 rounded-lg bg-[#1D4ED8] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#1E3A8A] md:px-6"          >
             Login Guru
           </button>
         </div>
@@ -118,21 +117,21 @@ function LandingPage({ onLogin }) {
       {/* HERO */}
       <section
         id="beranda"
-        className="scroll-mt-20 bg-gradient-to-br from-[#F8FBFE] via-[#F8FBFE] to-[#BDDDFC] px-6 py-16 lg:px-16 lg:py-20"
+        className="scroll-mt-20 bg-gradient-to-br from-white via-[#F3F6FC] to-[#DBEAFE] px-6 py-16 lg:px-16 lg:py-20"
       >
         <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-2 lg:gap-16">
           <div>
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-[#BDDDFC] px-4 py-2 text-xs font-semibold">
-              <span className="h-2 w-2 rounded-full bg-[#6A89A7]" />
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-[#DBEAFE] px-4 py-2 text-xs font-semibold text-[#1D4ED8]">
+              <span className="h-2 w-2 rounded-full bg-[#FF8A24]" />
               SMKN 1 BATAM • PUSAT DOKUMENTASI PELATIHAN
             </div>
 
-            <h1 className="text-4xl font-bold leading-tight text-[#394959] lg:text-5xl">
+            <h1 className="text-4xl font-bold leading-tight text-[#1E293B] lg:text-5xl">
               Platform Digital
               <br />
               Dokumentasi &
               <br />
-              <span className="text-[#6A89A7]">
+              <span className="text-[#2563EB]">
                 Berbagi Hasil Pelatihan Guru
               </span>
             </h1>
@@ -147,14 +146,13 @@ function LandingPage({ onLogin }) {
               <button
                 type="button"
                 onClick={onLogin}
-                className="rounded-lg bg-[#6A89A7] px-7 py-3.5 font-semibold text-white shadow-md transition hover:bg-[#394959]"
-              >
+             className="rounded-lg bg-[#1D4ED8] px-7 py-3.5 font-semibold text-white shadow-md transition hover:bg-[#1E3A8A]"              >
                 Masuk Portal →
               </button>
 
               <a
                 href="#fitur"
-                className="rounded-lg border border-[#BDDDFC] bg-white px-7 py-3.5 font-semibold transition hover:bg-[#BDDDFC]"
+                className="rounded-lg border border-[#BFDBFE] bg-white px-7 py-3.5 font-semibold text-[#2563EB] transition hover:bg-[#DBEAFE]"
               >
                 Jelajahi Fitur
               </a>
@@ -162,13 +160,13 @@ function LandingPage({ onLogin }) {
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <div className="flex -space-x-2">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-[#394959] text-xs text-white">
+                <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-[#1E293B] text-xs text-white">
                   G
                 </div>
-                <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-[#6A89A7] text-xs text-white">
+                <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-[#2563EB] text-xs text-white">
                   P
                 </div>
-                <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-[#88BDF2] text-xs">
+                <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-[#FF8A24] text-xs text-white">
                   +
                 </div>
               </div>
@@ -180,10 +178,10 @@ function LandingPage({ onLogin }) {
 
           {/* KARTU DOKUMENTASI PELATIHAN */}
           <div className="relative">
-            <div className="mx-auto max-w-lg rounded-2xl border border-[#BDDDFC] bg-white p-5 shadow-xl">
+            <div className="mx-auto max-w-lg rounded-2xl border border-[#BFDBFE] bg-white p-5 shadow-xl">
               <div className="mb-4 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#BDDDFC] text-xl">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#DBEAFE] text-xl">
                     📚
                   </div>
                   <div>
@@ -193,12 +191,12 @@ function LandingPage({ onLogin }) {
                     </p>
                   </div>
                 </div>
-                <span className="rounded-full bg-[#BDDDFC] px-3 py-1 text-[10px] font-bold">
+                <span className="rounded-full bg-[#FFF7ED] px-3 py-1 text-[10px] font-bold text-[#C2410C]">
                   DOKUMENTASI
                 </span>
               </div>
 
-              <div className="overflow-hidden rounded-xl bg-[#BDDDFC]">
+              <div className="overflow-hidden rounded-xl bg-[#DBEAFE]">
                 <img
                   src="/pelatihan-guru.jpg"
                   alt="Dokumentasi pelatihan guru SMKN 1 Batam"
@@ -207,15 +205,15 @@ function LandingPage({ onLogin }) {
               </div>
 
               <div className="mt-4 grid grid-cols-2 gap-3">
-                <div className="rounded-xl border border-[#BDDDFC] bg-[#F8FBFE] p-4">
+                <div className="rounded-xl border border-[#BFDBFE] bg-[#F3F6FC] p-4">
                   <p className="text-xs text-gray-500">Materi Pelatihan</p>
                   <p className="mt-1 text-sm font-semibold">
                     Dokumentasi Materi
                   </p>
                 </div>
-                <div className="rounded-xl border border-[#BDDDFC] bg-[#F8FBFE] p-4">
+                <div className="rounded-xl border border-[#BFDBFE] bg-[#F3F6FC] p-4">
                   <p className="text-xs text-gray-500">Hasil Karya</p>
-                  <p className="mt-1 text-sm font-semibold text-[#6A89A7]">
+                  <p className="mt-1 text-sm font-semibold text-[#2563EB]">
                     Karya Guru
                   </p>
                 </div>
@@ -225,15 +223,15 @@ function LandingPage({ onLogin }) {
                 <p className="mb-2 text-xs text-gray-500">
                   Pusat Dokumentasi Pelatihan Guru
                 </p>
-                <div className="h-2 w-full rounded-full bg-[#BDDDFC]">
-                  <div className="h-2 w-2/3 rounded-full bg-[#6A89A7]" />
+                <div className="h-2 w-full rounded-full bg-[#DBEAFE]">
+                  <div className="h-2 w-2/3 rounded-full bg-[#2563EB]" />
                 </div>
               </div>
             </div>
 
-            <div className="absolute -bottom-5 right-0 rounded-xl border border-[#BDDDFC] bg-white px-4 py-3 shadow-lg lg:-right-4">
+            <div className="absolute -bottom-5 right-0 rounded-xl border border-[#BFDBFE] bg-white px-4 py-3 shadow-lg lg:-right-4">
               <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#BDDDFC]">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#FFF7ED] text-[#EA580C]">
                   ✓
                 </div>
                 <div>
@@ -275,10 +273,10 @@ function LandingPage({ onLogin }) {
       {/* TENTANG */}
       <section
         id="tentang"
-        className="scroll-mt-24 bg-[#F8FBFE] px-6 py-16 lg:px-16"
+        className="scroll-mt-24 bg-[#F3F6FC] px-6 py-16 lg:px-16"
       >
         <div className="mx-auto max-w-4xl text-center">
-          <p className="mb-3 text-sm font-semibold text-[#6A89A7]">
+          <p className="mb-3 text-sm font-semibold text-[#2563EB]">
             TENTANG EDUSHARE
           </p>
           <h2 className="text-3xl font-bold leading-tight">
@@ -358,7 +356,7 @@ function LandingPage({ onLogin }) {
       {/* HASIL KARYA */}
       <section
         id="hasil-karya"
-        className="scroll-mt-20 bg-[#F8FBFE] px-6 py-20 lg:px-16"
+        className="scroll-mt-20 bg-[#F3F6FC] px-6 py-20 lg:px-16"
       >
         <div className="mx-auto max-w-7xl">
           <SectionHeading
@@ -371,24 +369,24 @@ function LandingPage({ onLogin }) {
             {karya.map((item) => (
               <article
                 key={item.judul}
-                className="overflow-hidden rounded-2xl border border-[#BDDDFC] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+                className="overflow-hidden rounded-2xl border border-[#BFDBFE] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
               >
-                <div className="flex h-40 items-center justify-center bg-gradient-to-br from-[#BDDDFC] to-[#F8FBFE] text-5xl">
+                <div className="flex h-40 items-center justify-center bg-gradient-to-br from-[#DBEAFE] to-[#F3F6FC] text-5xl">
                   {item.simbol}
                 </div>
                 <div className="p-5">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-[#6A89A7]">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-[#2563EB]">
                     {item.kategori}
                   </p>
                   <h3 className="mt-2 text-lg font-bold">{item.judul}</h3>
                   <p className="mt-2 text-sm text-gray-500">
                     Karya Peserta Pelatihan
                   </p>
-                  <div className="mt-4 flex items-center justify-between border-t border-[#E5EFF8] pt-4">
+                  <div className="mt-4 flex items-center justify-between border-t border-[#BFDBFE] pt-4">
                     <span className="text-sm text-gray-600">
                       ♡ {item.likes} suka
                     </span>
-                    <span className="rounded-lg bg-[#F8FBFE] px-3 py-1.5 text-xs font-semibold text-[#6A89A7]">
+                    <span className="rounded-lg bg-[#FFF7ED] px-3 py-1.5 text-xs font-semibold text-[#C2410C]">
                       Contoh karya
                     </span>
                   </div>
@@ -418,13 +416,13 @@ function LandingPage({ onLogin }) {
             {berita.map((item) => (
               <article
                 key={item.judul}
-                className="flex flex-col gap-4 rounded-2xl border border-[#BDDDFC] bg-[#F8FBFE] p-6 sm:flex-row"
+                className="flex flex-col gap-4 rounded-2xl border border-[#BFDBFE] bg-[#F3F6FC] p-6 sm:flex-row"
               >
-                <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl bg-[#BDDDFC] text-3xl">
+                <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl bg-[#DBEAFE] text-3xl">
                   {item.simbol}
                 </div>
                 <div>
-                  <span className="rounded-full bg-[#EAF4FE] px-3 py-1 text-xs font-semibold text-[#6A89A7]">
+                  <span className="rounded-full bg-[#FFF7ED] px-3 py-1 text-xs font-semibold text-[#C2410C]">
                     {item.kategori}
                   </span>
                   <h3 className="mt-3 text-lg font-bold">{item.judul}</h3>
@@ -444,7 +442,7 @@ function LandingPage({ onLogin }) {
       {/* GALERI KEGIATAN */}
       <section
         id="galeri"
-        className="scroll-mt-20 bg-[#F8FBFE] px-6 py-20 lg:px-16"
+        className="scroll-mt-20 bg-[#F3F6FC] px-6 py-20 lg:px-16"
       >
         <div className="mx-auto max-w-7xl">
           <SectionHeading
@@ -457,7 +455,7 @@ function LandingPage({ onLogin }) {
             {galeri.map((item, index) => (
               <article
                 key={item.judul}
-                className="overflow-hidden rounded-2xl border border-[#BDDDFC] bg-white"
+                className="overflow-hidden rounded-2xl border border-[#BFDBFE] bg-white"
               >
                 {index === 0 ? (
                   <img
@@ -466,7 +464,7 @@ function LandingPage({ onLogin }) {
                     className="h-48 w-full object-cover"
                   />
                 ) : (
-                  <div className="flex h-48 items-center justify-center bg-gradient-to-br from-[#BDDDFC] to-[#F8FBFE] text-5xl">
+                  <div className="flex h-48 items-center justify-center bg-gradient-to-br from-[#DBEAFE] to-[#F3F6FC] text-5xl">
                     {item.simbol}
                   </div>
                 )}
@@ -501,14 +499,14 @@ function LandingPage({ onLogin }) {
             {testimoni.map((item) => (
               <article
                 key={item.kutipan}
-                className="rounded-2xl border border-[#BDDDFC] bg-[#F8FBFE] p-7"
+                className="rounded-2xl border border-[#BFDBFE] bg-[#F3F6FC] p-7"
               >
-                <div className="text-3xl text-[#6A89A7]">“</div>
+                <div className="text-3xl text-[#2563EB]">“</div>
                 <p className="mt-2 leading-7 text-gray-600">
                   {item.kutipan}
                 </p>
-                <div className="mt-6 flex items-center gap-3 border-t border-[#E5EFF8] pt-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#BDDDFC] font-bold">
+                <div className="mt-6 flex items-center gap-3 border-t border-[#BFDBFE] pt-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#DBEAFE] font-bold text-[#1D4ED8]">
                     P
                   </div>
                   <div>
@@ -528,7 +526,7 @@ function LandingPage({ onLogin }) {
       {/* PENGEMBANGAN SKILL */}
       <section
         id="pengembangan-skill"
-        className="scroll-mt-20 bg-[#F8FBFE] px-6 py-20 lg:px-16"
+        className="scroll-mt-20 bg-[#F3F6FC] px-6 py-20 lg:px-16"
       >
         <div className="mx-auto max-w-7xl">
           <SectionHeading
@@ -541,9 +539,9 @@ function LandingPage({ onLogin }) {
             {skill.map((item) => (
               <article
                 key={item.judul}
-                className="rounded-2xl border border-[#BDDDFC] bg-white p-6 transition hover:-translate-y-1 hover:shadow-md"
+                className="rounded-2xl border border-[#BFDBFE] bg-white p-6 transition hover:-translate-y-1 hover:shadow-md"
               >
-                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-[#BDDDFC] text-2xl">
+                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-[#DBEAFE] text-2xl">
                   {item.simbol}
                 </div>
                 <h3 className="text-lg font-bold">{item.judul}</h3>
@@ -559,29 +557,29 @@ function LandingPage({ onLogin }) {
       {/* FOOTER */}
       <footer
         id="kontak"
-        className="scroll-mt-20 bg-[#394959] px-6 py-10 text-white lg:px-16"
+        className="scroll-mt-20 bg-[#1E293B] px-6 py-10 text-white lg:px-16"
       >
         <div className="mx-auto flex max-w-7xl flex-col justify-between gap-6 md:flex-row">
           <div>
             <h3 className="text-xl font-bold">EDUSHARE</h3>
-            <p className="mt-2 max-w-lg text-sm leading-6 text-[#BDDDFC]">
+            <p className="mt-2 max-w-lg text-sm leading-6 text-[#DBEAFE]">
               Website dokumentasi dan publikasi hasil pelatihan guru
               SMKN 1 Batam.
             </p>
             <a
               href="#beranda"
-              className="mt-4 inline-block text-sm font-semibold underline decoration-[#88BDF2] underline-offset-4"
+              className="mt-4 inline-block text-sm font-semibold underline decoration-[#FF8A24] underline-offset-4 hover:text-[#FFB36B]"
             >
               Kembali ke atas ↑
             </a>
           </div>
 
           <div className="md:text-right">
-            <p className="text-sm text-[#BDDDFC]">Kontak Pengelola</p>
+            <p className="text-sm text-[#DBEAFE]">Kontak Pengelola</p>
             <p className="mt-2 text-sm">
               Informasi kontak dapat ditambahkan di sini.
             </p>
-            <p className="mt-6 text-xs text-[#BDDDFC]">
+            <p className="mt-6 text-xs text-[#DBEAFE]">
               © 2026 EDUSHARE — SMKN 1 Batam
             </p>
           </div>
@@ -597,8 +595,8 @@ function NavLink({ href, active = false, children }) {
       href={href}
       className={`rounded-lg px-3 py-2 transition ${
         active
-          ? "bg-[#BDDDFC] font-semibold text-[#394959]"
-          : "text-[#394959] hover:bg-[#F8FBFE] hover:text-[#6A89A7]"
+          ? "bg-[#DBEAFE] font-semibold text-[#1D4ED8]"
+          : "text-[#1E293B] hover:bg-[#F3F6FC] hover:text-[#2563EB]"
       }`}
     >
       {children}
@@ -609,10 +607,10 @@ function NavLink({ href, active = false, children }) {
 function SectionHeading({ eyebrow, title, description }) {
   return (
     <div className="mb-10">
-      <p className="mb-3 text-xs font-bold tracking-widest text-[#6A89A7]">
+      <p className="mb-3 text-xs font-bold tracking-widest text-[#2563EB]">
         {eyebrow}
       </p>
-      <h2 className="text-3xl font-bold leading-tight text-[#394959]">
+      <h2 className="text-3xl font-bold leading-tight text-[#1E293B]">
         {title}
       </h2>
       <p className="mt-3 max-w-2xl text-sm leading-6 text-gray-600">
@@ -624,12 +622,12 @@ function SectionHeading({ eyebrow, title, description }) {
 
 function StatCard({ icon, title, description }) {
   return (
-    <div className="flex items-center gap-4 rounded-xl border border-[#BDDDFC] bg-[#F8FBFE] p-5">
-      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#BDDDFC] text-xl">
+    <div className="flex items-center gap-4 rounded-xl border border-[#BFDBFE] bg-[#F3F6FC] p-5">
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#DBEAFE] text-xl">
         {icon}
       </div>
       <div>
-        <p className="font-bold text-[#394959]">{title}</p>
+        <p className="font-bold text-[#1E293B]">{title}</p>
         <p className="mt-1 text-xs text-gray-500">{description}</p>
       </div>
     </div>
@@ -638,11 +636,11 @@ function StatCard({ icon, title, description }) {
 
 function FeatureCard({ icon, title, description }) {
   return (
-    <article className="rounded-2xl border border-[#BDDDFC] bg-[#F8FBFE] p-6 transition hover:-translate-y-1 hover:shadow-md">
-      <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-[#BDDDFC] text-xl">
+    <article className="rounded-2xl border border-[#BFDBFE] bg-[#F3F6FC] p-6 transition hover:-translate-y-1 hover:border-[#93C5FD] hover:shadow-md">
+      <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-[#DBEAFE] text-xl">
         {icon}
       </div>
-      <h3 className="text-lg font-bold text-[#394959]">{title}</h3>
+      <h3 className="text-lg font-bold text-[#1E293B]">{title}</h3>
       <p className="mt-3 text-sm leading-6 text-gray-600">{description}</p>
     </article>
   );

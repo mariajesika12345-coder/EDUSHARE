@@ -2,14 +2,68 @@
 @import "tailwindcss";
 
 @theme {
-  --color-storm-50: #F8FBFE;
-  --color-storm-100: #BDDDFC;
-  --color-storm-200: #A8D0F5;
-  --color-storm-300: #88BDF2;
-  --color-storm-400: #7AA8CD;
-  --color-storm-500: #6A89A7;
-  --color-storm-600: #56748F;
-  --color-storm-700: #4A6178;
-  --color-storm-800: #394959;
-  --color-storm-900: #293746;
+  /* Warna biru EDUSHARE */
+  --color-storm-50: #EFF6FF;
+  --color-storm-100: #DBEAFE;
+  --color-storm-200: #BFDBFE;
+  --color-storm-300: #93C5FD;
+  --color-storm-400: #60A5FA;
+  --color-storm-500: #3B82F6;
+  --color-storm-600: #2563EB;
+  --color-storm-700: #1D4ED8;
+  --color-storm-800: #1E40AF;
+  --color-storm-900: #1E3A8A;
+
+  /* Warna oranye untuk aksen */
+  --color-orange-50: #FFF7ED;
+  --color-orange-100: #FFEDD5;
+  --color-orange-200: #FED7AA;
+  --color-orange-300: #FDBA74;
+  --color-orange-400: #FB923C;
+  --color-orange-500: #FF8A24;
+  --color-orange-600: #EA580C;
+  --color-orange-700: #C2410C;
+
+  /* Warna teks */
+  --color-text-primary: #1E293B;
+  --color-text-secondary: #475569;
+}
+
+/* Pengaturan dasar website */
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #F3F6FC;
+  color: #1E293B;
+}
+
+/* Warna teks default */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #1E293B;
+}
+
+p,
+label,
+small {
+  color: #475569;
+}
+
+/* Input agar teks tetap nyaman dibaca */
+input,
+textarea,
+select {
+  color: #1E293B;
+}
+
+/* Placeholder input */
+input::placeholder,
+textarea::placeholder {
+  color: #94A3B8;
 }
