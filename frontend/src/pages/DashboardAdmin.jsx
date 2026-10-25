@@ -19,74 +19,41 @@ import {
   FileText,
   Search,
   Upload,
+  ExternalLink,
+  Play,
+  Presentation,
+  Gamepad2,
 } from "lucide-react";
 
-const initialGuru = [
-  { id: 1, nama: "Guru Produktif", email: "guru1@smkn1batam.sch.id", peran: "Guru" },
-  { id: 2, nama: "Guru Informatika", email: "guru2@smkn1batam.sch.id", peran: "Guru" },
-  { id: 3, nama: "Peserta Pelatihan", email: "peserta@smkn1batam.sch.id", peran: "Peserta" },
-];
+const initialGuru = [];
+const initialPelatihan = [];
+const initialKarya = [];
+const initialBerita = [];
 
-const initialPelatihan = [
+const initialMateri = [
   {
     id: 1,
-    judul: "Pelatihan Kurikulum Merdeka untuk Guru Produktif",
-    tanggal: "20 Oktober 2026",
-    lokasi: "Aula SMKN 1 Batam",
-    peserta: 32,
-    kuota: 40,
+    judul: "Announcement-PPT",
+    namaFile: "Announcement-PPT.pptx",
+    tipe: "PPT",
+    pelatihan: "Materi presentasi",
+    file: "/materi/Announcement-PPT.pptx",
   },
   {
     id: 2,
-    judul: "Workshop Pembuatan Media Ajar Interaktif",
-    tanggal: "27 Oktober 2026",
-    lokasi: "Lab Komputer 2",
-    peserta: 30,
-    kuota: 30,
+    judul: "Announcement Text Learning-Video",
+    namaFile: "Announcement Text Learning-Video.mp4",
+    tipe: "Video",
+    pelatihan: "Video pembelajaran",
+    file: "/materi/Announcement%20Text%20Learning-Video.mp4",
   },
   {
     id: 3,
-    judul: "Asesmen Berbasis Proyek",
-    tanggal: "3 November 2026",
-    lokasi: "Ruang Rapat Utama",
-    peserta: 18,
-    kuota: 50,
-  },
-];
-
-const initialMateri = [
-  { id: 1, judul: "Slide Kurikulum Merdeka", tipe: "Slide" },
-  { id: 2, judul: "Modul Asesmen Formatif", tipe: "Modul" },
-  { id: 3, judul: "Rekaman Workshop Media Ajar", tipe: "Video" },
-];
-
-const initialKarya = [
-  {
-    id: 1,
-    judul: "Modul Ajar Dasar Desain Grafis",
-    pembuat: "Guru Produktif",
-    status: "Menunggu verifikasi",
-  },
-  {
-    id: 2,
-    judul: "Media Ajar Interaktif",
-    pembuat: "Peserta Pelatihan",
-    status: "Dipublikasikan",
-  },
-];
-
-const initialBerita = [
-  {
-    id: 1,
-    judul: "Dokumentasi Pelatihan Guru",
-    tanggal: "September 2026",
-    isi: "Informasi kegiatan pelatihan guru SMKN 1 Batam.",
-  },
-  {
-    id: 2,
-    judul: "Publikasi Hasil Karya Peserta",
-    tanggal: "Oktober 2026",
-    isi: "Kumpulan hasil karya pembelajaran peserta pelatihan.",
+    judul: "Kuis Announcement HTML",
+    namaFile: "kuis_announcement-HTML.html",
+    tipe: "Kuis",
+    pelatihan: "Kuis interaktif",
+    file: "/materi/kuis_announcement-HTML.html",
   },
 ];
 
@@ -143,19 +110,27 @@ function Badge({ children, success = false }) {
   );
 }
 
-function BerandaAdmin({
-  guru,
-  pelatihan,
-  materi,
-  karya,
-  setView,
-}) {
+function EmptyState({ icon: Icon, title, desc }) {
+  return (
+    <Card className="py-10 text-center">
+      <Icon size={38} className="mx-auto text-storm-400" />
+      <h3 className="mt-4 font-semibold text-storm-800">{title}</h3>
+      <p className="mt-2 text-sm leading-6 text-storm-500">{desc}</p>
+    </Card>
+  );
+}
+
+function BerandaAdmin({ guru, pelatihan, materi, karya, setView }) {
   const stats = [
     { label: "Guru & Peserta", value: guru.length, icon: Users },
     { label: "Pelatihan", value: pelatihan.length, icon: CalendarDays },
     { label: "Materi", value: materi.length, icon: BookOpen },
     { label: "Hasil Karya", value: karya.length, icon: Heart },
   ];
+
+  const karyaMenunggu = karya.filter(
+    (item) => item.status === "Menunggu verifikasi"
+  ).length;
 
   return (
     <>
@@ -167,10 +142,10 @@ function BerandaAdmin({
           guru SMKN 1 Batam melalui satu platform.
         </p>
         <button
-          onClick={() => setView("pelatihan")}
+          onClick={() => setView("materi")}
           className="mt-5 rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-storm-700 hover:bg-storm-50"
         >
-          Kelola pelatihan
+          Lihat materi
         </button>
       </section>
 
@@ -192,14 +167,14 @@ function BerandaAdmin({
         <section>
           <SectionTitle
             title="Aktivitas terbaru"
-            desc="Ringkasan yang membutuhkan perhatian admin."
+            desc="Ringkasan aktivitas yang perlu diperhatikan."
           />
           <Card className="space-y-4">
             <div className="flex items-center gap-3">
               <Clock className="text-amber-500" size={20} />
               <div>
                 <p className="text-sm font-semibold text-storm-800">
-                  {karya.filter((k) => k.status === "Menunggu verifikasi").length} karya menunggu verifikasi
+                  {karyaMenunggu} karya menunggu verifikasi
                 </p>
                 <p className="text-xs text-storm-500">
                   Periksa karya yang dikirim peserta.
@@ -212,19 +187,20 @@ function BerandaAdmin({
                 Lihat
               </button>
             </div>
+
             <div className="flex items-center gap-3">
-              <CalendarDays className="text-storm-500" size={20} />
+              <BookOpen className="text-storm-500" size={20} />
               <div>
                 <p className="text-sm font-semibold text-storm-800">
-                  {pelatihan.length} pelatihan tercatat
+                  {materi.length} materi tersedia
                 </p>
                 <p className="text-xs text-storm-500">
-                  Perbarui informasi kegiatan.
+                  PPT, video pembelajaran, dan kuis interaktif.
                 </p>
               </div>
               <button
                 className="ml-auto text-sm font-semibold text-storm-600"
-                onClick={() => setView("pelatihan")}
+                onClick={() => setView("materi")}
               >
                 Lihat
               </button>
@@ -233,10 +209,7 @@ function BerandaAdmin({
         </section>
 
         <section>
-          <SectionTitle
-            title="Akses cepat"
-            desc="Buka fitur pengelolaan."
-          />
+          <SectionTitle title="Akses cepat" desc="Buka fitur pengelolaan." />
           <Card className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             {menu.slice(1, 5).map(({ key, label, icon: Icon }) => (
               <button
@@ -270,7 +243,8 @@ function KelolaPengguna({ data, setData }) {
         title="Guru & Peserta"
         desc="Lihat daftar pengguna yang tercatat pada sistem."
       />
-      <div className="mb-4 relative">
+
+      <div className="relative mb-4">
         <Search
           size={17}
           className="absolute left-3 top-1/2 -translate-y-1/2 text-storm-400"
@@ -282,47 +256,58 @@ function KelolaPengguna({ data, setData }) {
           className={`${inputClass} pl-9`}
         />
       </div>
-      <Card className="overflow-x-auto">
-        <table className="w-full min-w-[600px] text-left text-sm">
-          <thead>
-            <tr className="border-b border-storm-100 text-storm-500">
-              <th className="p-3">Nama</th>
-              <th className="p-3">Email</th>
-              <th className="p-3">Peran</th>
-              <th className="p-3">Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {hasil.map((item) => (
-              <tr key={item.id} className="border-b border-storm-50">
-                <td className="p-3 font-medium text-storm-800">{item.nama}</td>
-                <td className="p-3 text-storm-500">{item.email}</td>
-                <td className="p-3"><Badge>{item.peran}</Badge></td>
-                <td className="p-3">
-                  <button
-                    className="rounded-lg p-2 text-rose-600 hover:bg-rose-50"
-                    title="Hapus pengguna contoh"
-                    aria-label={`Hapus ${item.nama}`}
-                    onClick={() =>
-                      setData((prev) => prev.filter((u) => u.id !== item.id))
-                    }
-                  >
-                    <Trash2 size={17} />
-                  </button>
-                </td>
+
+      {hasil.length === 0 ? (
+        <EmptyState
+          icon={Users}
+          title={q ? "Pengguna tidak ditemukan" : "Belum ada data pengguna"}
+          desc={
+            q
+              ? "Coba gunakan kata kunci pencarian lain."
+              : "Daftar guru dan peserta akan ditampilkan setelah datanya tersedia."
+          }
+        />
+      ) : (
+        <Card className="overflow-x-auto">
+          <table className="w-full min-w-[600px] text-left text-sm">
+            <thead>
+              <tr className="border-b border-storm-100 text-storm-500">
+                <th className="p-3">Nama</th>
+                <th className="p-3">Email</th>
+                <th className="p-3">Peran</th>
+                <th className="p-3">Aksi</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        {hasil.length === 0 && (
-          <p className="py-8 text-center text-sm text-storm-500">
-            Pengguna tidak ditemukan.
-          </p>
-        )}
-      </Card>
-      <p className="mt-3 text-xs text-storm-500">
-        Data ini masih berupa contoh lokal, belum terhubung ke database.
-      </p>
+            </thead>
+            <tbody>
+              {hasil.map((item) => (
+                <tr key={item.id} className="border-b border-storm-50">
+                  <td className="p-3 font-medium text-storm-800">
+                    {item.nama}
+                  </td>
+                  <td className="p-3 text-storm-500">{item.email}</td>
+                  <td className="p-3">
+                    <Badge>{item.peran}</Badge>
+                  </td>
+                  <td className="p-3">
+                    <button
+                      className="rounded-lg p-2 text-rose-600 hover:bg-rose-50"
+                      title="Hapus pengguna"
+                      aria-label={`Hapus ${item.nama}`}
+                      onClick={() =>
+                        setData((prev) =>
+                          prev.filter((u) => u.id !== item.id)
+                        )
+                      }
+                    >
+                      <Trash2 size={17} />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </Card>
+      )}
     </>
   );
 }
@@ -336,6 +321,7 @@ function KelolaPelatihan({ data, setData }) {
 
   const tambah = (e) => {
     e.preventDefault();
+
     if (!judul.trim() || !tanggal || !lokasi.trim() || Number(kuota) < 1) {
       return;
     }
@@ -383,7 +369,9 @@ function KelolaPelatihan({ data, setData }) {
         <Card className="mb-5 max-w-2xl">
           <form onSubmit={tambah} className="space-y-4">
             <div>
-              <label className="mb-1 block text-sm font-medium">Judul pelatihan</label>
+              <label className="mb-1 block text-sm font-medium">
+                Judul pelatihan
+              </label>
               <input
                 required
                 value={judul}
@@ -392,6 +380,7 @@ function KelolaPelatihan({ data, setData }) {
                 placeholder="Masukkan judul pelatihan"
               />
             </div>
+
             <div>
               <label className="mb-1 block text-sm font-medium">Tanggal</label>
               <input
@@ -402,6 +391,7 @@ function KelolaPelatihan({ data, setData }) {
                 className={inputClass}
               />
             </div>
+
             <div>
               <label className="mb-1 block text-sm font-medium">Lokasi</label>
               <input
@@ -412,8 +402,11 @@ function KelolaPelatihan({ data, setData }) {
                 placeholder="Masukkan lokasi kegiatan"
               />
             </div>
+
             <div>
-              <label className="mb-1 block text-sm font-medium">Kuota peserta</label>
+              <label className="mb-1 block text-sm font-medium">
+                Kuota peserta
+              </label>
               <input
                 required
                 min="1"
@@ -423,6 +416,7 @@ function KelolaPelatihan({ data, setData }) {
                 className={inputClass}
               />
             </div>
+
             <button type="submit" className={btnPrimary}>
               Simpan pelatihan
             </button>
@@ -430,69 +424,139 @@ function KelolaPelatihan({ data, setData }) {
         </Card>
       )}
 
-      <div className="space-y-4">
-        {data.map((item) => (
-          <Card key={item.id} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="min-w-0">
-              <h3 className="font-semibold text-storm-800">{item.judul}</h3>
-              <p className="mt-2 text-sm text-storm-500">
-                <CalendarDays size={15} className="mr-1 inline" />
-                {item.tanggal}
-              </p>
-              <p className="mt-1 text-sm text-storm-500">{item.lokasi}</p>
-              <p className="mt-1 text-sm text-storm-500">
-                Peserta: {item.peserta}/{item.kuota}
-              </p>
-            </div>
-            <button
-              className={`${btnOutline} text-rose-600`}
-              onClick={() =>
-                setData((prev) => prev.filter((p) => p.id !== item.id))
-              }
+      {data.length === 0 ? (
+        <EmptyState
+          icon={CalendarDays}
+          title="Belum ada data pelatihan"
+          desc="Klik Tambah pelatihan untuk memasukkan informasi kegiatan."
+        />
+      ) : (
+        <div className="space-y-4">
+          {data.map((item) => (
+            <Card
+              key={item.id}
+              className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
             >
-              <Trash2 size={16} />
-              Hapus
-            </button>
-          </Card>
-        ))}
-      </div>
+              <div className="min-w-0">
+                <h3 className="font-semibold text-storm-800">{item.judul}</h3>
+                <p className="mt-2 text-sm text-storm-500">
+                  <CalendarDays size={15} className="mr-1 inline" />
+                  {item.tanggal}
+                </p>
+                <p className="mt-1 text-sm text-storm-500">{item.lokasi}</p>
+                <p className="mt-1 text-sm text-storm-500">
+                  Peserta: {item.peserta}/{item.kuota}
+                </p>
+              </div>
+
+              <button
+                className={`${btnOutline} text-rose-600`}
+                onClick={() =>
+                  setData((prev) => prev.filter((p) => p.id !== item.id))
+                }
+              >
+                <Trash2 size={16} />
+                Hapus
+              </button>
+            </Card>
+          ))}
+        </div>
+      )}
     </>
   );
 }
 
 function KelolaMateri({ data, setData }) {
   const [judul, setJudul] = useState("");
-  const [tipe, setTipe] = useState("Modul");
+  const [namaFile, setNamaFile] = useState("");
+  const [tipe, setTipe] = useState("PPT");
+  const [pelatihan, setPelatihan] = useState("");
+  const [file, setFile] = useState("");
 
   const tambah = (e) => {
     e.preventDefault();
-    if (!judul.trim()) return;
+
+    if (!judul.trim() || !namaFile.trim() || !pelatihan.trim() || !file.trim()) {
+      return;
+    }
 
     setData((prev) => [
       ...prev,
-      { id: Date.now(), judul: judul.trim(), tipe },
+      {
+        id: Date.now(),
+        judul: judul.trim(),
+        namaFile: namaFile.trim(),
+        tipe,
+        pelatihan: pelatihan.trim(),
+        file: file.trim(),
+      },
     ]);
+
     setJudul("");
+    setNamaFile("");
+    setTipe("PPT");
+    setPelatihan("");
+    setFile("");
+  };
+
+  const ikonMateri = (tipe) => {
+    if (tipe === "Video") return Play;
+    if (tipe === "Kuis") return Gamepad2;
+    if (tipe === "PPT") return Presentation;
+    return FileText;
   };
 
   return (
     <>
       <SectionTitle
         title="Kelola Materi"
-        desc="Catat dan kelola daftar slide, modul, serta video pelatihan."
+        desc="Kelola file presentasi, video pembelajaran, dan kuis interaktif."
       />
-      <Card className="mb-5 max-w-2xl">
-        <form onSubmit={tambah} className="space-y-4">
+
+      <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        {["PPT", "Video", "Kuis"].map((tipe) => {
+          const jumlah = data.filter((item) => item.tipe === tipe).length;
+          const Icon = ikonMateri(tipe);
+
+          return (
+            <Card key={tipe} className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-storm-100 text-storm-600">
+                <Icon size={21} />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-storm-800">{jumlah}</p>
+                <p className="text-sm text-storm-500">{tipe}</p>
+              </div>
+            </Card>
+          );
+        })}
+      </div>
+
+      <Card className="mb-5">
+        <h3 className="mb-4 font-semibold text-storm-800">Tambah materi</h3>
+        <form onSubmit={tambah} className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
-            <label className="mb-1 block text-sm font-medium">Nama materi</label>
+            <label className="mb-1 block text-sm font-medium">Judul materi</label>
             <input
               required
               value={judul}
               onChange={(e) => setJudul(e.target.value)}
               className={inputClass}
-              placeholder="Masukkan nama materi"
+              placeholder="Contoh: Materi Announcement"
             />
           </div>
+
+          <div>
+            <label className="mb-1 block text-sm font-medium">Nama file</label>
+            <input
+              required
+              value={namaFile}
+              onChange={(e) => setNamaFile(e.target.value)}
+              className={inputClass}
+              placeholder="Contoh: materi.pptx"
+            />
+          </div>
+
           <div>
             <label className="mb-1 block text-sm font-medium">Jenis materi</label>
             <select
@@ -500,42 +564,144 @@ function KelolaMateri({ data, setData }) {
               onChange={(e) => setTipe(e.target.value)}
               className={inputClass}
             >
-              <option>Slide</option>
-              <option>Modul</option>
-              <option>Video</option>
+              <option value="PPT">PPT</option>
+              <option value="Video">Video</option>
+              <option value="Kuis">Kuis</option>
+              <option value="Modul">Modul</option>
+              <option value="Lainnya">Lainnya</option>
             </select>
           </div>
-          <button className={btnPrimary} type="submit">
-            <Plus size={16} />
-            Tambah materi
-          </button>
+
+          <div>
+            <label className="mb-1 block text-sm font-medium">Kategori materi</label>
+            <input
+              required
+              value={pelatihan}
+              onChange={(e) => setPelatihan(e.target.value)}
+              className={inputClass}
+              placeholder="Contoh: Materi presentasi"
+            />
+          </div>
+
+          <div className="md:col-span-2">
+            <label className="mb-1 block text-sm font-medium">
+              Lokasi file di folder public
+            </label>
+            <input
+              required
+              value={file}
+              onChange={(e) => setFile(e.target.value)}
+              className={inputClass}
+              placeholder="/materi/nama-file.pptx"
+            />
+            <p className="mt-1 text-xs text-storm-500">
+              Contoh: /materi/materi.pptx
+            </p>
+          </div>
+
+          <div className="md:col-span-2">
+            <button type="submit" className={btnPrimary}>
+              <Plus size={16} />
+              Tambah materi
+            </button>
+          </div>
         </form>
       </Card>
 
-      <div className="space-y-3">
-        {data.map((item) => (
-          <Card key={item.id} className="flex items-center gap-3">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-storm-100 text-storm-600">
-              <FileText size={21} />
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="font-semibold text-storm-800">{item.judul}</p>
-              <div className="mt-1"><Badge>{item.tipe}</Badge></div>
-            </div>
-            <button
-              className="rounded-lg p-2 text-rose-600 hover:bg-rose-50"
-              aria-label={`Hapus ${item.judul}`}
-              onClick={() =>
-                setData((prev) => prev.filter((m) => m.id !== item.id))
-              }
-            >
-              <Trash2 size={17} />
-            </button>
-          </Card>
-        ))}
-      </div>
-      <p className="mt-3 text-xs text-storm-500">
-        Pengelolaan ini belum mengunggah file ke server.
+      <SectionTitle
+        title="Daftar Materi"
+        desc={`${data.length} materi tersedia di Dashboard Admin.`}
+      />
+
+      {data.length === 0 ? (
+        <EmptyState
+          icon={BookOpen}
+          title="Belum ada materi"
+          desc="Tambahkan materi menggunakan formulir di atas."
+        />
+      ) : (
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+          {data.map((item) => {
+            const Icon = ikonMateri(item.tipe);
+
+            return (
+              <Card key={item.id} className="flex min-w-0 flex-col">
+                <div className="flex min-w-0 items-start gap-3">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-storm-100 text-storm-600">
+                    <Icon size={23} />
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    <h3 className="break-words font-semibold text-storm-800">
+                      {item.judul}
+                    </h3>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      <Badge>{item.tipe}</Badge>
+                      <Badge>{item.pelatihan}</Badge>
+                    </div>
+                  </div>
+
+                  <button
+                    className="shrink-0 rounded-lg p-2 text-rose-600 hover:bg-rose-50"
+                    aria-label={`Hapus ${item.judul}`}
+                    title="Hapus materi"
+                    onClick={() =>
+                      setData((prev) => prev.filter((m) => m.id !== item.id))
+                    }
+                  >
+                    <Trash2 size={17} />
+                  </button>
+                </div>
+
+                <div className="mt-4 rounded-lg bg-storm-50 p-3">
+                  <p className="break-all text-xs text-storm-600">
+                    <FileText size={14} className="mr-1 inline" />
+                    {item.namaFile || item.file}
+                  </p>
+                </div>
+
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {item.tipe === "Video" ? (
+                    <a
+                      href={item.file}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={btnPrimary}
+                    >
+                      <Play size={16} />
+                      Putar Video
+                      <ExternalLink size={14} />
+                    </a>
+                  ) : (
+                    <a
+                      href={item.file}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={btnPrimary}
+                    >
+                      <ExternalLink size={16} />
+                      {item.tipe === "Kuis" ? "Buka Kuis" : "Buka Materi"}
+                    </a>
+                  )}
+
+                  <a
+                    href={item.file}
+                    download={item.tipe === "Kuis" ? undefined : item.namaFile}
+                    className={btnOutline}
+                  >
+                    Unduh File
+                  </a>
+                </div>
+              </Card>
+            );
+          })}
+        </div>
+      )}
+
+      <p className="mt-4 text-xs leading-5 text-storm-500">
+        File harus tersedia di folder public/materi agar tautan dapat dibuka.
+        Penambahan melalui formulir hanya mencatat lokasi file, bukan
+        mengunggah file ke server.
       </p>
     </>
   );
@@ -544,7 +710,7 @@ function KelolaMateri({ data, setData }) {
 function KelolaKarya({ data, setData }) {
   const ubahStatus = (id, status) => {
     setData((prev) =>
-      prev.map((item) => item.id === id ? { ...item, status } : item)
+      prev.map((item) => (item.id === id ? { ...item, status } : item))
     );
   };
 
@@ -554,56 +720,62 @@ function KelolaKarya({ data, setData }) {
         title="Kelola Hasil Karya"
         desc="Tinjau hasil karya peserta sebelum dipublikasikan."
       />
-      <div className="space-y-4">
-        {data.map((item) => (
-          <Card key={item.id}>
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-              <div>
-                <h3 className="font-semibold text-storm-800">{item.judul}</h3>
-                <p className="mt-1 text-sm text-storm-500">
-                  Pengirim: {item.pembuat}
-                </p>
-                <div className="mt-3">
-                  <Badge success={item.status === "Dipublikasikan"}>
-                    {item.status}
-                  </Badge>
-                </div>
-              </div>
-              <button
-                className={`${btnOutline} text-rose-600`}
-                aria-label={`Hapus karya ${item.judul}`}
-                onClick={() =>
-                  setData((prev) => prev.filter((k) => k.id !== item.id))
-                }
-              >
-                <Trash2 size={16} />
-                Hapus
-              </button>
-            </div>
 
-            <div className="mt-4 flex flex-wrap gap-2 border-t border-storm-100 pt-4">
-              <button
-                className={btnPrimary}
-                onClick={() => ubahStatus(item.id, "Dipublikasikan")}
-              >
-                <CheckCircle2 size={16} />
-                Publikasikan
-              </button>
-              <button
-                className={btnOutline}
-                onClick={() => ubahStatus(item.id, "Perlu revisi")}
-              >
-                Perlu revisi
-              </button>
-            </div>
-          </Card>
-        ))}
-        {data.length === 0 && (
-          <Card className="py-8 text-center text-sm text-storm-500">
-            Belum ada hasil karya.
-          </Card>
-        )}
-      </div>
+      {data.length === 0 ? (
+        <EmptyState
+          icon={Heart}
+          title="Belum ada hasil karya"
+          desc="Hasil karya yang dikirim peserta akan ditampilkan di sini."
+        />
+      ) : (
+        <div className="space-y-4">
+          {data.map((item) => (
+            <Card key={item.id}>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <h3 className="font-semibold text-storm-800">{item.judul}</h3>
+                  <p className="mt-1 text-sm text-storm-500">
+                    Pengirim: {item.pembuat}
+                  </p>
+                  <div className="mt-3">
+                    <Badge success={item.status === "Dipublikasikan"}>
+                      {item.status}
+                    </Badge>
+                  </div>
+                </div>
+
+                <button
+                  className={`${btnOutline} text-rose-600`}
+                  aria-label={`Hapus karya ${item.judul}`}
+                  onClick={() =>
+                    setData((prev) => prev.filter((k) => k.id !== item.id))
+                  }
+                >
+                  <Trash2 size={16} />
+                  Hapus
+                </button>
+              </div>
+
+              <div className="mt-4 flex flex-wrap gap-2 border-t border-storm-100 pt-4">
+                <button
+                  className={btnPrimary}
+                  onClick={() => ubahStatus(item.id, "Dipublikasikan")}
+                >
+                  <CheckCircle2 size={16} />
+                  Publikasikan
+                </button>
+
+                <button
+                  className={btnOutline}
+                  onClick={() => ubahStatus(item.id, "Perlu revisi")}
+                >
+                  Perlu revisi
+                </button>
+              </div>
+            </Card>
+          ))}
+        </div>
+      )}
     </>
   );
 }
@@ -629,6 +801,7 @@ function KelolaBerita({ data, setData }) {
       },
       ...prev,
     ]);
+
     setJudul("");
     setIsi("");
   };
@@ -639,6 +812,7 @@ function KelolaBerita({ data, setData }) {
         title="Kelola Berita"
         desc="Tambahkan informasi dan berita kegiatan pelatihan."
       />
+
       <Card className="mb-5 max-w-2xl">
         <form onSubmit={tambah} className="space-y-4">
           <div>
@@ -651,6 +825,7 @@ function KelolaBerita({ data, setData }) {
               placeholder="Masukkan judul berita"
             />
           </div>
+
           <div>
             <label className="mb-1 block text-sm font-medium">Isi berita</label>
             <textarea
@@ -662,6 +837,7 @@ function KelolaBerita({ data, setData }) {
               placeholder="Tuliskan informasi kegiatan"
             />
           </div>
+
           <button type="submit" className={btnPrimary}>
             <Plus size={16} />
             Tambah berita
@@ -669,28 +845,39 @@ function KelolaBerita({ data, setData }) {
         </form>
       </Card>
 
-      <div className="space-y-4">
-        {data.map((item) => (
-          <Card key={item.id}>
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <h3 className="font-semibold text-storm-800">{item.judul}</h3>
-                <p className="mt-1 text-xs text-storm-500">{item.tanggal}</p>
-                <p className="mt-3 text-sm leading-6 text-storm-600">{item.isi}</p>
+      {data.length === 0 ? (
+        <EmptyState
+          icon={Newspaper}
+          title="Belum ada berita"
+          desc="Berita yang ditambahkan akan ditampilkan di sini."
+        />
+      ) : (
+        <div className="space-y-4">
+          {data.map((item) => (
+            <Card key={item.id}>
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <h3 className="font-semibold text-storm-800">{item.judul}</h3>
+                  <p className="mt-1 text-xs text-storm-500">{item.tanggal}</p>
+                  <p className="mt-3 text-sm leading-6 text-storm-600">
+                    {item.isi}
+                  </p>
+                </div>
+
+                <button
+                  className="rounded-lg p-2 text-rose-600 hover:bg-rose-50"
+                  aria-label={`Hapus berita ${item.judul}`}
+                  onClick={() =>
+                    setData((prev) => prev.filter((b) => b.id !== item.id))
+                  }
+                >
+                  <Trash2 size={17} />
+                </button>
               </div>
-              <button
-                className="rounded-lg p-2 text-rose-600 hover:bg-rose-50"
-                aria-label={`Hapus berita ${item.judul}`}
-                onClick={() =>
-                  setData((prev) => prev.filter((b) => b.id !== item.id))
-                }
-              >
-                <Trash2 size={17} />
-              </button>
-            </div>
-          </Card>
-        ))}
-      </div>
+            </Card>
+          ))}
+        </div>
+      )}
     </>
   );
 }
@@ -700,28 +887,13 @@ function EvaluasiAdmin() {
     <>
       <SectionTitle
         title="Evaluasi Kegiatan"
-        desc="Ringkasan contoh evaluasi kegiatan pelatihan."
+        desc="Lihat hasil evaluasi kegiatan pelatihan."
       />
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Card>
-          <p className="text-sm text-storm-500">Total evaluasi</p>
-          <p className="mt-2 text-3xl font-bold text-storm-800">24</p>
-          <p className="mt-1 text-xs text-storm-500">Data contoh</p>
-        </Card>
-        <Card>
-          <p className="text-sm text-storm-500">Rata-rata penilaian</p>
-          <p className="mt-2 text-3xl font-bold text-storm-800">4,5 / 5</p>
-          <p className="mt-1 text-xs text-storm-500">Data contoh</p>
-        </Card>
-      </div>
-      <Card className="mt-5">
-        <h3 className="font-semibold text-storm-800">Catatan evaluasi</h3>
-        <p className="mt-2 text-sm leading-6 text-storm-500">
-          Hasil evaluasi dapat digunakan untuk meninjau kualitas materi,
-          penyampaian pelatihan, dan kebutuhan pengembangan guru. Hubungkan
-          bagian ini ke database untuk menampilkan tanggapan yang sebenarnya.
-        </p>
-      </Card>
+      <EmptyState
+        icon={ClipboardCheck}
+        title="Belum ada data evaluasi"
+        desc="Hasil evaluasi akan ditampilkan setelah peserta mengisi evaluasi kegiatan."
+      />
     </>
   );
 }
@@ -731,6 +903,7 @@ function DokumentasiAdmin() {
 
   const pilihFoto = (e) => {
     const files = Array.from(e.target.files || []);
+
     setFoto((prev) => [
       ...prev,
       ...files.map((file) => ({
@@ -739,6 +912,7 @@ function DokumentasiAdmin() {
         url: URL.createObjectURL(file),
       })),
     ]);
+
     e.target.value = "";
   };
 
@@ -748,6 +922,7 @@ function DokumentasiAdmin() {
         title="Dokumentasi & Galeri"
         desc="Tambahkan foto kegiatan untuk pratinjau galeri."
       />
+
       <Card>
         <label className={`${btnPrimary} cursor-pointer`}>
           <Upload size={17} />
@@ -760,42 +935,46 @@ function DokumentasiAdmin() {
             onChange={pilihFoto}
           />
         </label>
+
         <p className="mt-3 text-xs leading-5 text-storm-500">
-          Foto hanya ditampilkan sementara di browser. File belum diunggah ke server.
+          Foto hanya ditampilkan sementara di browser. File belum diunggah ke
+          server.
         </p>
       </Card>
 
-      <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        {foto.map((item) => (
-          <Card key={item.id}>
-            <img
-              src={item.url}
-              alt={item.nama}
-              className="h-44 w-full rounded-lg object-cover"
-            />
-            <p className="mt-3 break-all text-sm font-medium text-storm-800">
-              {item.nama}
-            </p>
-            <button
-              className={`${btnOutline} mt-3 w-full text-rose-600`}
-              onClick={() => {
-                URL.revokeObjectURL(item.url);
-                setFoto((prev) => prev.filter((f) => f.id !== item.id));
-              }}
-            >
-              <Trash2 size={16} />
-              Hapus foto
-            </button>
-          </Card>
-        ))}
-      </div>
-      {foto.length === 0 && (
-        <Card className="mt-5 py-10 text-center">
-          <Images size={36} className="mx-auto text-storm-400" />
-          <p className="mt-3 text-sm text-storm-500">
-            Belum ada foto yang dipilih.
-          </p>
-        </Card>
+      {foto.length === 0 ? (
+        <div className="mt-5">
+          <EmptyState
+            icon={Images}
+            title="Belum ada dokumentasi"
+            desc="Pilih foto kegiatan untuk menampilkannya di galeri."
+          />
+        </div>
+      ) : (
+        <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {foto.map((item) => (
+            <Card key={item.id}>
+              <img
+                src={item.url}
+                alt={item.nama}
+                className="h-44 w-full rounded-lg object-cover"
+              />
+              <p className="mt-3 break-all text-sm font-medium text-storm-800">
+                {item.nama}
+              </p>
+              <button
+                className={`${btnOutline} mt-3 w-full text-rose-600`}
+                onClick={() => {
+                  URL.revokeObjectURL(item.url);
+                  setFoto((prev) => prev.filter((f) => f.id !== item.id));
+                }}
+              >
+                <Trash2 size={16} />
+                Hapus foto
+              </button>
+            </Card>
+          ))}
+        </div>
       )}
     </>
   );
@@ -804,6 +983,7 @@ function DokumentasiAdmin() {
 export default function DashboardAdmin({ onLogout }) {
   const [view, setView] = useState("beranda");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showLogout, setShowLogout] = useState(false);
 
   const [guru, setGuru] = useState(initialGuru);
   const [pelatihan, setPelatihan] = useState(initialPelatihan);
@@ -822,9 +1002,7 @@ export default function DashboardAdmin({ onLogout }) {
       />
     ),
     pengguna: <KelolaPengguna data={guru} setData={setGuru} />,
-    pelatihan: (
-      <KelolaPelatihan data={pelatihan} setData={setPelatihan} />
-    ),
+    pelatihan: <KelolaPelatihan data={pelatihan} setData={setPelatihan} />,
     materi: <KelolaMateri data={materi} setData={setMateri} />,
     karya: <KelolaKarya data={karya} setData={setKarya} />,
     berita: <KelolaBerita data={berita} setData={setBerita} />,
@@ -857,6 +1035,7 @@ export default function DashboardAdmin({ onLogout }) {
             </h1>
             <p className="mt-0.5 text-xs text-storm-500">Portal Admin</p>
           </div>
+
           <button
             onClick={() => setSidebarOpen(false)}
             className="rounded-lg p-2 text-storm-600 hover:bg-storm-50 lg:hidden"
@@ -870,6 +1049,7 @@ export default function DashboardAdmin({ onLogout }) {
           <p className="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-storm-400">
             Menu utama
           </p>
+
           <nav className="space-y-1.5" aria-label="Menu admin">
             {menu.map((item) => {
               const Icon = item.icon;
@@ -899,7 +1079,7 @@ export default function DashboardAdmin({ onLogout }) {
 
         <div className="shrink-0 border-t border-storm-100 p-4">
           <button
-            onClick={onLogout}
+            onClick={() => setShowLogout(true)}
             className="flex w-full items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-medium text-storm-600 hover:bg-storm-50 hover:text-storm-800"
           >
             <LogOut size={19} />
@@ -918,6 +1098,7 @@ export default function DashboardAdmin({ onLogout }) {
             >
               <Menu size={22} />
             </button>
+
             <div className="min-w-0">
               <p className="text-sm text-storm-500">Halaman Admin</p>
               <h2 className="truncate font-semibold text-storm-800">
@@ -941,10 +1122,56 @@ export default function DashboardAdmin({ onLogout }) {
           {halaman[view]}
 
           <footer className="mt-10 border-t border-storm-100 py-5 text-center text-xs leading-5 text-storm-500">
-            © 2026 EDUSHARE — Dokumentasi dan Publikasi Hasil Pelatihan Guru SMKN 1 Batam
+            © 2026 EDUSHARE — Dokumentasi dan Publikasi Hasil Pelatihan Guru
+            SMKN 1 Batam
           </footer>
         </main>
       </div>
+
+      {showLogout && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="logout-title"
+        >
+          <div className="w-full max-w-sm rounded-2xl bg-white p-6 text-center shadow-xl">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-orange-100">
+              <LogOut size={28} className="text-orange-600" />
+            </div>
+
+            <h2
+              id="logout-title"
+              className="mb-2 text-xl font-bold text-storm-800"
+            >
+              Konfirmasi Logout
+            </h2>
+
+            <p className="mb-6 text-sm leading-6 text-storm-500">
+              Apakah Anda yakin ingin keluar dari akun EDUSHARE?
+            </p>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowLogout(false)}
+                className="flex-1 rounded-lg border border-storm-200 px-4 py-2.5 text-sm font-semibold text-storm-700 hover:bg-storm-50"
+              >
+                Batal
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowLogout(false);
+                  onLogout?.();
+                }}
+                className="flex-1 rounded-lg bg-storm-500 px-4 py-2.5 text-sm font-semibold text-white hover:bg-storm-600"
+              >
+                Ya, Keluar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -82,9 +82,10 @@ function LandingPage({ onLogin }) {
 
   return (
     <div className="min-h-screen bg-[#F3F6FC] text-[#1E293B]">
+      
       {/* NAVBAR */}
-      <nav className="sticky top-0 z-50 border-b border-[#BFDBFE] bg-white/95 px-6 backdrop-blur md:px-10 lg:px-16">
-        <div className="mx-auto flex min-h-20 max-w-7xl items-center justify-between gap-4">
+      <nav className="sticky top-0 z-50 border-b border-[#BFDBFE] bg-white/95 px-6 backdrop-blur md:px-8 lg:px-10">
+        <div className="flex min-h-20 items-center justify-between gap-4">
           <a href="#beranda" className="flex shrink-0 items-center">
             <img
               src="/logo-edushare.png"
@@ -94,9 +95,9 @@ function LandingPage({ onLogin }) {
           </a>
 
           <div className="hidden items-center gap-1 text-sm lg:flex">
-            <NavLink href="#beranda" active>
-              Beranda
-            </NavLink>
+            <NavLink href="#beranda">
+                    Beranda
+                  </NavLink>
             <NavLink href="#tentang">Tentang</NavLink>
             <NavLink href="#fitur">Fitur</NavLink>
             <NavLink href="#hasil-karya">Hasil Karya</NavLink>
@@ -108,11 +109,13 @@ function LandingPage({ onLogin }) {
           <button
             type="button"
             onClick={onLogin}
-     className="shrink-0 rounded-lg bg-[#1D4ED8] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#1E3A8A] md:px-6"          >
+            className="shrink-0 rounded-lg bg-[#1D4ED8] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#1E3A8A] md:px-6"
+          >
             Login Guru
           </button>
         </div>
       </nav>
+
 
       {/* HERO */}
       <section
@@ -589,20 +592,18 @@ function LandingPage({ onLogin }) {
   );
 }
 
-function NavLink({ href, active = false, children }) {
+
+function NavLink({ href, children }) {
   return (
     <a
       href={href}
-      className={`rounded-lg px-3 py-2 transition ${
-        active
-          ? "bg-[#DBEAFE] font-semibold text-[#1D4ED8]"
-          : "text-[#1E293B] hover:bg-[#F3F6FC] hover:text-[#2563EB]"
-      }`}
+      className="rounded-lg px-3 py-2 text-[#1E293B] transition hover:bg-[#F3F6FC] hover:text-[#2563EB]"
     >
       {children}
     </a>
   );
 }
+
 
 function SectionHeading({ eyebrow, title, description }) {
   return (
