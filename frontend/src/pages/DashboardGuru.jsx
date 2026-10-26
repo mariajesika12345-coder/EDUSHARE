@@ -26,9 +26,16 @@ import {
   Sparkles,
 } from "lucide-react";
 
-const pelatihanData = [];
+const pelatihanData = [
+  { id: 1, judul: "Pemanfaatan Generative AI untuk Pembelajaran", tanggal: "3 September 2026", waktu: "09.00–12.00 WIB", lokasi: "SMKN 1 Batam", kuota: 40, terisi: 32, status: "Selesai" },
+  { id: 2, judul: "Pembuatan Media Ajar Digital", tanggal: "27 Oktober 2026", waktu: "09.00–12.00 WIB", lokasi: "Lab Komputer 2, SMKN 1 Batam", kuota: 30, terisi: 18, status: "Pendaftaran dibuka" },
+  { id: 3, judul: "Pengembangan Modul Pembelajaran Interaktif", tanggal: "3 November 2026", waktu: "10.00–13.00 WIB", lokasi: "Ruang Rapat Utama, SMKN 1 Batam", kuota: 50, terisi: 18, status: "Pendaftaran dibuka" },
+];
 
-const sertifikatData = [];
+const sertifikatData = [
+  { id: 1, judul: "Sertifikat Pelatihan Pemanfaatan Generative AI", tanggal: "3 September 2026", tersedia: true },
+  { id: 2, judul: "Sertifikat Pembuatan Media Ajar Digital", tanggal: "27 Oktober 2026", tersedia: false },
+];
 
 const materiData = [
   {
@@ -265,13 +272,40 @@ function Beranda({ nama, terdaftar, setView, jumlahKarya }) {
 
 // PENDAFTARAN PELATIHAN
 function Pelatihan() {
+  const [terdaftarLokal, setTerdaftarLokal] = useState([]);
   return (
     <>
       <SectionTitle
         title="Pelatihan dan Pendaftaran"
         desc="Lihat informasi pelatihan dan daftarkan diri sebagai peserta."
       />
-      <EmptyState pesan="Informasi pelatihan akan ditampilkan setelah data tersedia." />
+      <div className="space-y-4">
+        {pelatihanData.map((p) => {
+          const sudahDaftar = terdaftarLokal.includes(p.id);
+          return (
+            <Card key={p.id}>
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0">
+                  <Badge tone={p.status === "Selesai" ? "default" : "success"}>{p.status}</Badge>
+                  <h3 className="mt-3 font-semibold text-storm-800">{p.judul}</h3>
+                  <p className="mt-2 text-sm text-storm-500"><CalendarDays size={15} className="mr-1 inline" />{p.tanggal} · {p.waktu}</p>
+                  <p className="mt-1 text-sm text-storm-500"><MapPin size={15} className="mr-1 inline" />{p.lokasi}</p>
+                  <p className="mt-2 text-sm text-storm-500">Peserta: {p.terisi}/{p.kuota}</p>
+                </div>
+                <button
+                  type="button"
+                  disabled={p.status === "Selesai" || sudahDaftar}
+                  onClick={() => setTerdaftarLokal((prev) => [...prev, p.id])}
+                  className={btnPrimary}
+                >
+                  {p.status === "Selesai" ? "Pelatihan selesai" : sudahDaftar ? "Sudah terdaftar" : "Daftar pelatihan"}
+                </button>
+              </div>
+            </Card>
+          );
+        })}
+      </div>
+      <p className="mt-4 text-xs text-storm-500">Data pelatihan dan pendaftaran ini hanya contoh sementara.</p>
     </>
   );
 }
@@ -616,7 +650,11 @@ function Sertifikat() {
 }
 
 // GALERI KEGIATAN
-const galeriData = [];
+const galeriData = [
+  { id: 1, judul: "Pelatihan Guru SMKN 1 Batam", keterangan: "Kegiatan pelatihan pemanfaatan teknologi digital." },
+  { id: 2, judul: "Praktik Pembuatan Media Ajar", keterangan: "Peserta mencoba membuat media pembelajaran." },
+  { id: 3, judul: "Presentasi Hasil Karya", keterangan: "Guru membagikan hasil karya dari kegiatan pelatihan." },
+];
 
 function Galeri() {
   return (
@@ -761,7 +799,10 @@ function Evaluasi() {
 }
 
 // BERITA
-const beritaData = [];
+const beritaData = [
+  { id: 1, kategori: "Kegiatan", judul: "Pelatihan Guru SMKN 1 Batam Berjalan dengan Baik", tanggal: "3 September 2026", isi: "Kegiatan pelatihan memperkenalkan pemanfaatan teknologi digital dan Generative AI untuk mendukung pembuatan media pembelajaran." },
+  { id: 2, kategori: "Informasi", judul: "Kumpulan Hasil Karya Peserta Pelatihan", tanggal: "10 September 2026", isi: "Hasil karya peserta dapat didokumentasikan dan dibagikan agar bisa menjadi inspirasi bagi guru lainnya." },
+];
 
 function Berita() {
   return (
@@ -792,7 +833,10 @@ function Berita() {
 function Testimoni() {
   const [nama, setNama] = useState("");
   const [isi, setIsi] = useState("");
-  const [daftar, setDaftar] = useState([]);
+  const [daftar, setDaftar] = useState([
+    { id: 201, nama: "Siti Rahmawati", isi: "Materi pelatihan mudah dipahami dan bisa diterapkan saat membuat media pembelajaran." },
+    { id: 202, nama: "Andi Saputra", isi: "Kegiatan ini menambah ide baru untuk membuat pembelajaran lebih menarik." },
+  ]);
 
   const kirim = (e) => {
     e.preventDefault();
@@ -877,7 +921,11 @@ function Testimoni() {
 }
 
 // PENGEMBANGAN SKILL
-const skillData = [];
+const skillData = [
+  { id: 1, kategori: "Media Pembelajaran", judul: "Membuat Kuis Interaktif", deskripsi: "Mempelajari cara menyusun kuis sederhana untuk membantu siswa memahami materi." },
+  { id: 2, kategori: "Teknologi Digital", judul: "Menyusun Modul Digital", deskripsi: "Mengembangkan modul pembelajaran yang rapi, mudah dibaca, dan dapat dibagikan." },
+  { id: 3, kategori: "Generative AI", judul: "Membuat Konten Pembelajaran", deskripsi: "Mengenal pemanfaatan alat digital untuk membantu menyiapkan ide dan konten pembelajaran." },
+];
 
 function PengembanganSkill() {
   return (
@@ -914,7 +962,11 @@ function PengembanganSkill() {
 export default function DashboardGuru({ onLogout }) {
   const [view, setView] = useState("beranda");
   const [sidebarOpen, setSidebarOpen] = useState(false);
-const [terdaftar] = useState([1]);  const [daftarKarya, setDaftarKarya] = useState([]);
+const [terdaftar] = useState([1, 2]);
+  const [daftarKarya, setDaftarKarya] = useState([
+    { id: 101, judul: "Kuis Interaktif Materi Bahasa Inggris", pembuat: "Siti Rahmawati", deskripsi: "Kuis singkat untuk menguji pemahaman siswa tentang announcement text.", tanggal: "10 September 2026", status: "Dipublikasikan", fileNama: "kuis-bahasa-inggris.html", likes: 8 },
+    { id: 102, judul: "Modul Pembelajaran Digital", pembuat: "Andi Saputra", deskripsi: "Modul digital sebagai bahan belajar mandiri bagi siswa.", tanggal: "12 September 2026", status: "Dipublikasikan", fileNama: "modul-digital.pdf", likes: 5 },
+  ]);
 
   const nama = "Guru";
 
