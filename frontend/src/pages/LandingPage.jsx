@@ -41,7 +41,7 @@ function LandingPage({ onLogin }) {
   const galeri = [
     { judul: "Kegiatan Pelatihan Guru", simbol: "📸" },
     { judul: "Penyampaian Materi", simbol: "🎓" },
-    { judul: "Diskusi dan Praktik", simbol: "👥" },
+    { judul: "diskusi dan Praktik", simbol: "👥" },
   ];
 
   const testimoni = [
