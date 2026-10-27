@@ -72,7 +72,34 @@ const initialMateri = [
     file: "/materi/kuis_announcement-HTML.html",
   },
 ];
-
+const initialSertifikat = [
+  {
+    id: 1,
+    judul: "Pemanfaatan Generative AI untuk Pembelajaran",
+    tanggal: "3 September 2026",
+    status: "Sertifikat tersedia",
+    peserta: [
+      "Siti Rahmawati",
+      "Andi Saputra",
+      "Dewi Lestari",
+      "Budi Santoso",
+    ],
+  },
+  {
+    id: 2,
+    judul: "Pembuatan Media Ajar Digital",
+    tanggal: "27 Oktober 2026",
+    status: "Menunggu pelatihan selesai",
+    peserta: ["Siti Rahmawati", "Andi Saputra"],
+  },
+  {
+    id: 3,
+    judul: "Pengembangan Modul Pembelajaran Interaktif",
+    tanggal: "3 November 2026",
+    status: "Menunggu pelatihan selesai",
+    peserta: ["Dewi Lestari", "Budi Santoso"],
+  },
+];
 const menu = [
   { key: "beranda", label: "Beranda", icon: LayoutDashboard },
   { key: "pengguna", label: "Guru & Peserta", icon: Users },
@@ -529,29 +556,7 @@ function KelolaMateri({ data, setData }) {
 
   return (
     <>
-      <SectionTitle
-        title="Kelola Materi"
-        desc="Kelola file presentasi, video pembelajaran, dan kuis interaktif."
-      />
-
-      <div className="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
-        {["PPT", "Video", "Kuis"].map((tipe) => {
-          const jumlah = data.filter((item) => item.tipe === tipe).length;
-          const Icon = ikonMateri(tipe);
-
-          return (
-            <Card key={tipe} className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-storm-100 text-slate-600">
-                <Icon size={21} />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-slate-800">{jumlah}</p>
-                <p className="text-sm text-slate-500">{tipe}</p>
-              </div>
-            </Card>
-          );
-        })}
-      </div>
+            <SectionTitle title="Kelola Materi" />
 
       <Card className="mb-5">
         <h3 className="mb-4 font-semibold text-slate-800">Tambah materi</h3>
@@ -950,6 +955,91 @@ function DataSederhanaAdmin({ title, desc, items }) {
   );
 }
 
+function KelolaSertifikat({ data }) {
+  const [pelatihanTerpilih, setPelatihanTerpilih] = useState(null);
+
+  return (
+    <>
+      <SectionTitle
+        title="Kelola Sertifikat Peserta"
+        desc="Pantau sertifikat dan peserta yang berhak menerimanya."
+      />
+
+      <div className="space-y-4">
+        {data.map((item) => {
+          const tersedia = item.status === "Sertifikat tersedia";
+          const terbuka = pelatihanTerpilih === item.id;
+
+          return (
+            <Card key={item.id}>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h3 className="font-semibold text-slate-800">
+                    {item.judul}
+                  </h3>
+                  <p className="mt-2 text-sm text-slate-500">
+                    <CalendarDays size={15} className="mr-1 inline" />
+                    {item.tanggal}
+                  </p>
+                  <p className="mt-1 text-sm text-slate-500">
+                    {item.peserta.length} peserta
+                  </p>
+                  <div className="mt-3">
+                    <Badge success={tersedia}>{item.status}</Badge>
+                  </div>
+                </div>
+
+                <button
+                  className={btnOutline}
+                  onClick={() =>
+                    setPelatihanTerpilih(terbuka ? null : item.id)
+                  }
+                >
+                  <Users size={16} />
+                  {terbuka ? "Tutup Daftar" : "Lihat Peserta"}
+                </button>
+              </div>
+
+              {terbuka && (
+                <div className="mt-4 border-t border-storm-100 pt-4">
+                  {item.peserta.map((nama, index) => (
+                    <div
+                      key={`${item.id}-${nama}`}
+                      className="flex items-center justify-between gap-3 border-b border-storm-50 py-3 last:border-0"
+                    >
+                      <div>
+                        <p className="text-sm font-medium text-slate-800">
+                          {nama}
+                        </p>
+                        <p className="text-xs text-slate-500">
+                          Peserta {index + 1}
+                        </p>
+                      </div>
+                      <Badge success={tersedia}>
+                        {tersedia ? "Tersedia" : "Belum tersedia"}
+                      </Badge>
+                    </div>
+                  ))}
+
+                  <p className="mt-3 rounded-lg bg-storm-50 p-3 text-sm leading-6 text-slate-600">
+                    Sertifikat tersedia setelah pelatihan selesai dan peserta
+                    memenuhi persyaratan.
+                  </p>
+                </div>
+              )}
+            </Card>
+          );
+        })}
+      </div>
+
+      <p className="mt-4 text-xs leading-5 text-slate-500">
+        Data peserta masih berupa contoh. Pembuatan dan unduhan sertifikat PDF
+        otomatis memerlukan integrasi backend Laravel.
+      </p>
+    </>
+  );
+}
+
 function DokumentasiAdmin() {
   const [foto, setFoto] = useState([
     { id: "dummy-1", nama: "Dokumentasi Pelatihan Guru", url: "/pelatihan-guru.jpg" },
@@ -1044,6 +1134,7 @@ export default function DashboardAdmin({ onLogout }) {
   const [materi, setMateri] = useState(initialMateri);
   const [karya, setKarya] = useState(initialKarya);
   const [berita, setBerita] = useState(initialBerita);
+  const [sertifikat] = useState(initialSertifikat);
 
   const halaman = {
     beranda: (
@@ -1063,8 +1154,7 @@ export default function DashboardAdmin({ onLogout }) {
     karya: <KelolaKarya data={karya} setData={setKarya} />,
     berita: <KelolaBerita data={berita} setData={setBerita} />,
     evaluasi: <EvaluasiAdmin />,
-    sertifikat: <DataSederhanaAdmin title="Kelola Sertifikat Peserta" desc="Pantau sertifikat yang tersedia untuk peserta pelatihan." items={[{ judul: "Sertifikat Pemanfaatan Generative AI", keterangan: "Pelatihan 3 September 2026 · Sertifikat tersedia untuk peserta yang menyelesaikan kegiatan." }, { judul: "Sertifikat Pembuatan Media Ajar Digital", keterangan: "Pelatihan 27 Oktober 2026 · Sertifikat diterbitkan setelah pelatihan selesai." }]} />,
-    galeri: <DokumentasiAdmin />,
+    sertifikat: <KelolaSertifikat data={sertifikat} />,    galeri: <DokumentasiAdmin />,
     testimoni: <DataSederhanaAdmin title="Kelola Testimoni Peserta" desc="Lihat testimoni yang dibagikan guru setelah mengikuti pelatihan." items={[{ judul: "Siti Rahmawati", keterangan: "Materi pelatihan mudah dipahami dan bisa diterapkan saat membuat media pembelajaran." }, { judul: "Andi Saputra", keterangan: "Kegiatan membantu saya mendapatkan ide baru untuk membuat media ajar digital." }]} />,
     skill: <DataSederhanaAdmin title="Pengembangan Skill" desc="Kelola informasi pengembangan keterampilan guru." items={[{ judul: "Membuat Media Ajar Digital", keterangan: "Latihan membuat kuis, modul, dan presentasi untuk pembelajaran." }, { judul: "Pemanfaatan Teknologi Pembelajaran", keterangan: "Informasi pengembangan keterampilan menggunakan teknologi untuk kegiatan belajar mengajar." }]} />,
   };
@@ -1187,22 +1277,11 @@ export default function DashboardAdmin({ onLogout }) {
         </main>
       </div>
 
+     
       {showLogout && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="logout-title"
-        >
-          <div className="w-full max-w-sm rounded-2xl bg-white p-6 text-center shadow-xl">
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-orange-100">
-              <LogOut size={28} className="text-orange-600" />
-            </div>
-
-            <h2
-              id="logout-title"
-              className="mb-2 text-xl font-bold text-slate-800"
-            >
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 p-4">
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+            <h2 className="mb-3 text-lg font-bold text-slate-800">
               Konfirmasi Logout
             </h2>
 
@@ -1231,6 +1310,6 @@ export default function DashboardAdmin({ onLogout }) {
           </div>
         </div>
       )}
-    </div>
+      </div>
   );
 }

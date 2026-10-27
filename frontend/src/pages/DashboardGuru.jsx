@@ -18,7 +18,6 @@ import {
   CheckCircle2,
   MapPin,
   Images,
-  Newspaper,
   MessageSquareQuote,
   TrendingUp,
   Heart,
@@ -73,7 +72,6 @@ const menu = [
   { key: "sertifikat", label: "Sertifikat", icon: Award },
   { key: "galeri", label: "Galeri Kegiatan", icon: Images },
   { key: "evaluasi", label: "Evaluasi Kegiatan", icon: ClipboardCheck },
-  { key: "berita", label: "Berita", icon: Newspaper },
   { key: "testimoni", label: "Testimoni Peserta", icon: MessageSquareQuote },
   { key: "skill", label: "Pengembangan Skill", icon: TrendingUp },
 ];
@@ -271,41 +269,246 @@ function Beranda({ nama, terdaftar, setView, jumlahKarya }) {
 }
 
 // PENDAFTARAN PELATIHAN
+
 function Pelatihan() {
   const [terdaftarLokal, setTerdaftarLokal] = useState([]);
+  const [pelatihanDipilih, setPelatihanDipilih] = useState(null);
+  const [namaLengkap, setNamaLengkap] = useState("");
+  const [instansi, setInstansi] = useState("");
+  const [email, setEmail] = useState("");
+  const [pesan, setPesan] = useState("");
+
+  const tutupForm = () => {
+    setPelatihanDipilih(null);
+    setNamaLengkap("");
+    setInstansi("");
+    setEmail("");
+    setPesan("");
+  };
+
+  const kirimPendaftaran = (e) => {
+    e.preventDefault();
+
+    if (!pelatihanDipilih) return;
+
+    if (terdaftarLokal.includes(pelatihanDipilih.id)) {
+      setPesan("Kamu sudah terdaftar pada pelatihan ini.");
+      return;
+    }
+
+    setTerdaftarLokal((prev) => [...prev, pelatihanDipilih.id]);
+    setPesan("Pendaftaran berhasil!");
+  };
+
   return (
     <>
       <SectionTitle
         title="Pelatihan dan Pendaftaran"
         desc="Lihat informasi pelatihan dan daftarkan diri sebagai peserta."
       />
+
       <div className="space-y-4">
         {pelatihanData.map((p) => {
           const sudahDaftar = terdaftarLokal.includes(p.id);
+          const selesai = p.status === "Selesai";
+
           return (
             <Card key={p.id}>
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div className="min-w-0">
-                  <Badge tone={p.status === "Selesai" ? "default" : "success"}>{p.status}</Badge>
-                  <h3 className="mt-3 font-semibold text-storm-800">{p.judul}</h3>
-                  <p className="mt-2 text-sm text-storm-500"><CalendarDays size={15} className="mr-1 inline" />{p.tanggal} · {p.waktu}</p>
-                  <p className="mt-1 text-sm text-storm-500"><MapPin size={15} className="mr-1 inline" />{p.lokasi}</p>
-                  <p className="mt-2 text-sm text-storm-500">Peserta: {p.terisi}/{p.kuota}</p>
+                  <Badge tone={selesai ? "default" : "success"}>
+                    {p.status}
+                  </Badge>
+
+                  <h3 className="mt-3 font-semibold text-storm-800">
+                    {p.judul}
+                  </h3>
+
+                  <p className="mt-2 text-sm text-storm-500">
+                    <CalendarDays size={15} className="mr-1 inline" />
+                    {p.tanggal} · {p.waktu}
+                  </p>
+
+                  <p className="mt-1 text-sm text-storm-500">
+                    <MapPin size={15} className="mr-1 inline" />
+                    {p.lokasi}
+                  </p>
+
+                  <p className="mt-2 text-sm text-storm-500">
+                    Peserta: {p.terisi}/{p.kuota}
+                  </p>
                 </div>
+
                 <button
                   type="button"
-                  disabled={p.status === "Selesai" || sudahDaftar}
-                  onClick={() => setTerdaftarLokal((prev) => [...prev, p.id])}
+                  disabled={selesai || sudahDaftar || p.terisi >= p.kuota}
+                  onClick={() => {
+                    setPesan("");
+                    setPelatihanDipilih(p);
+                  }}
                   className={btnPrimary}
                 >
-                  {p.status === "Selesai" ? "Pelatihan selesai" : sudahDaftar ? "Sudah terdaftar" : "Daftar pelatihan"}
+                  {selesai
+                    ? "Pelatihan selesai"
+                    : sudahDaftar
+                    ? "Sudah terdaftar"
+                    : p.terisi >= p.kuota
+                    ? "Kuota penuh"
+                    : "Daftar Pelatihan"}
                 </button>
               </div>
             </Card>
           );
         })}
       </div>
-      <p className="mt-4 text-xs text-storm-500">Data pelatihan dan pendaftaran ini hanya contoh sementara.</p>
+
+      {pelatihanDipilih && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto bg-black/50 p-4"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) tutupForm();
+          }}
+        >
+          <div
+            className="my-auto w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="judul-form-pendaftaran"
+          >
+            <div className="mb-5 flex items-start justify-between gap-3">
+              <div>
+                <h3
+                  id="judul-form-pendaftaran"
+                  className="text-lg font-bold text-storm-800"
+                >
+                  Form Pendaftaran Pelatihan
+                </h3>
+
+                <p className="mt-2 text-sm font-medium text-storm-700">
+                  {pelatihanDipilih.judul}
+                </p>
+
+                <p className="mt-1 text-xs text-storm-500">
+                  {pelatihanDipilih.tanggal} · {pelatihanDipilih.waktu}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={tutupForm}
+                className="rounded-lg p-2 text-storm-500 hover:bg-storm-100"
+                aria-label="Tutup formulir"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {pesan === "Pendaftaran berhasil!" ? (
+              <div className="rounded-xl bg-emerald-50 p-5 text-center">
+                <CheckCircle2
+                  size={42}
+                  className="mx-auto text-emerald-600"
+                />
+
+                <h4 className="mt-3 font-semibold text-emerald-800">
+                  Pendaftaran berhasil!
+                </h4>
+
+                <p className="mt-2 text-sm text-emerald-700">
+                  Kamu berhasil mendaftar pada pelatihan ini.
+                </p>
+
+                <button
+                  type="button"
+                  onClick={tutupForm}
+                  className={`${btnPrimary} mt-4`}
+                >
+                  Selesai
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={kirimPendaftaran} className="space-y-4">
+                <div>
+                  <label
+                    htmlFor="nama-peserta"
+                    className="mb-1 block text-sm font-medium text-storm-800"
+                  >
+                    Nama Lengkap dan Gelar
+                  </label>
+
+                  <input
+                    id="nama-peserta"
+                    type="text"
+                    required
+                    value={namaLengkap}
+                    onChange={(e) => setNamaLengkap(e.target.value)}
+                    placeholder="Masukkan nama lengkap"
+                    className={inputClass}
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="instansi-peserta"
+                    className="mb-1 block text-sm font-medium text-storm-800"
+                  >
+                    Asal Instansi / Sekolah
+                  </label>
+
+                  <input
+                    id="instansi-peserta"
+                    type="text"
+                    required
+                    value={instansi}
+                    onChange={(e) => setInstansi(e.target.value)}
+                    placeholder="Contoh: SMKN 1 Batam"
+                    className={inputClass}
+                  />
+                </div>
+
+                <div>
+  <label className="mb-1 block text-sm font-medium text-storm-700">
+    Email
+  </label>
+  <input
+    type="email"
+    name="email"
+    value={email}
+    onChange={(e) => setEmail(e.target.value)}
+    required
+    placeholder="Contoh: nama@email.com"
+    className={inputClass}
+  />
+</div>
+                {pesan && (
+                  <p role="alert" className="text-sm text-red-600">
+                    {pesan}
+                  </p>
+                )}
+
+                <div className="flex flex-col-reverse gap-2 pt-2 sm:flex-row sm:justify-end">
+                  <button
+                    type="button"
+                    onClick={tutupForm}
+                    className={btnOutline}
+                  >
+                    Batal
+                  </button>
+
+                  <button type="submit" className={btnPrimary}>
+                    <CheckCircle2 size={16} />
+                    Kirim &amp; Daftar
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
+
+      <p className="mt-4 text-xs text-storm-500">
+        Data pendaftaran saat ini masih tersimpan sementara di dashboard.
+      </p>
     </>
   );
 }
@@ -553,9 +756,25 @@ function PublikasiKarya({ daftar }) {
 
             return (
               <Card key={item.id}>
-                <div className="mb-4 flex h-36 items-center justify-center rounded-xl bg-storm-50">
-                  <BookOpen size={42} className="text-storm-400" />
-                </div>
+                <div className="mb-4 h-48 overflow-hidden rounded-xl bg-storm-50">
+  {item.fileNama === "kuis-bahasa-inggris.html" ? (
+    <img
+      src="/Kuis-guru.jpg"
+      alt={item.judul}
+      className="h-full w-full object-cover"
+    />
+  ) : item.judul === "Modul Pembelajaran Digital" ? (
+    <img
+      src="/Kuis-siswa.jpg"
+      alt={item.judul}
+      className="h-full w-full object-cover"
+    />
+  ) : (
+    <div className="flex h-full items-center justify-center">
+      <BookOpen size={42} className="text-storm-400" />
+    </div>
+  )}
+</div>
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <p className="text-xs text-storm-500">
                     {item.pembuat || "Peserta Pelatihan"}
@@ -651,9 +870,24 @@ function Sertifikat() {
 
 // GALERI KEGIATAN
 const galeriData = [
-  { id: 1, judul: "Pelatihan Guru SMKN 1 Batam", keterangan: "Kegiatan pelatihan pemanfaatan teknologi digital." },
-  { id: 2, judul: "Praktik Pembuatan Media Ajar", keterangan: "Peserta mencoba membuat media pembelajaran." },
-  { id: 3, judul: "Presentasi Hasil Karya", keterangan: "Guru membagikan hasil karya dari kegiatan pelatihan." },
+  {
+    id: 1,
+    judul: "Pelatihan Guru SMKN 1 Batam",
+    keterangan: "Kegiatan pelatihan pemanfaatan teknologi digital.",
+    gambar: "/pelatihan-guru.jpg",
+  },
+  {
+    id: 2,
+    judul: "Praktik Pembuatan Media Ajar",
+    keterangan: "Peserta mencoba membuat media pembelajaran.",
+    gambar: "/praktik-guru.jpg",
+  },
+  {
+    id: 3,
+    judul: "Presentasi Hasil Karya",
+    keterangan: "Guru membagikan hasil karya dari kegiatan pelatihan.",
+    gambar: "/presentasi-karya.jpg",
+  },
 ];
 
 function Galeri() {
@@ -663,17 +897,34 @@ function Galeri() {
         title="Galeri Kegiatan"
         desc="Dokumentasi kegiatan pelatihan guru SMKN 1 Batam."
       />
+
       {galeriData.length === 0 ? (
         <EmptyState pesan="Dokumentasi kegiatan akan ditampilkan setelah tersedia." />
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {galeriData.map((item) => (
             <Card key={item.id}>
-              <div className="flex h-40 items-center justify-center rounded-xl bg-storm-50">
-                <Images size={42} className="text-storm-400" />
+              <div className="h-40 overflow-hidden rounded-xl bg-storm-50">
+                {item.gambar ? (
+                  <img
+                    src={item.gambar}
+                    alt={item.judul}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center">
+                    <Images size={42} className="text-storm-300" />
+                  </div>
+                )}
               </div>
-              <h3 className="mt-4 font-semibold text-storm-800">{item.judul}</h3>
-              <p className="mt-1 text-sm text-storm-500">{item.keterangan}</p>
+
+              <h3 className="mt-4 font-semibold text-storm-800">
+                {item.judul}
+              </h3>
+
+              <p className="mt-1 text-sm text-storm-500">
+                {item.keterangan}
+              </p>
             </Card>
           ))}
         </div>
@@ -798,36 +1049,7 @@ function Evaluasi() {
   );
 }
 
-// BERITA
-const beritaData = [
-  { id: 1, kategori: "Kegiatan", judul: "Pelatihan Guru SMKN 1 Batam Berjalan dengan Baik", tanggal: "3 September 2026", isi: "Kegiatan pelatihan memperkenalkan pemanfaatan teknologi digital dan Generative AI untuk mendukung pembuatan media pembelajaran." },
-  { id: 2, kategori: "Informasi", judul: "Kumpulan Hasil Karya Peserta Pelatihan", tanggal: "10 September 2026", isi: "Hasil karya peserta dapat didokumentasikan dan dibagikan agar bisa menjadi inspirasi bagi guru lainnya." },
-];
 
-function Berita() {
-  return (
-    <>
-      <SectionTitle
-        title="Berita dan Informasi"
-        desc="Informasi seputar kegiatan dan publikasi hasil pelatihan."
-      />
-      {beritaData.length === 0 ? (
-        <EmptyState pesan="Berita dan informasi akan ditampilkan setelah tersedia." />
-      ) : (
-        <div className="space-y-4">
-          {beritaData.map((item) => (
-            <Card key={item.id}>
-              <Badge>{item.kategori}</Badge>
-              <h3 className="mt-3 font-semibold text-storm-800">{item.judul}</h3>
-              <p className="mt-1 text-xs text-storm-500">{item.tanggal}</p>
-              <p className="mt-3 text-sm leading-6 text-storm-600">{item.isi}</p>
-            </Card>
-          ))}
-        </div>
-      )}
-    </>
-  );
-}
 
 // TESTIMONI PESERTA
 function Testimoni() {
@@ -958,14 +1180,35 @@ function PengembanganSkill() {
   );
 }
 
-// DASHBOARD GURU
+
+ // DASHBOARD GURU
 export default function DashboardGuru({ onLogout }) {
   const [view, setView] = useState("beranda");
   const [sidebarOpen, setSidebarOpen] = useState(false);
-const [terdaftar] = useState([1, 2]);
+  const [terdaftar] = useState([1, 2]);
+  const [showLogout, setShowLogout] = useState(false);
+
   const [daftarKarya, setDaftarKarya] = useState([
-    { id: 101, judul: "Kuis Interaktif Materi Bahasa Inggris", pembuat: "Siti Rahmawati", deskripsi: "Kuis singkat untuk menguji pemahaman siswa tentang announcement text.", tanggal: "10 September 2026", status: "Dipublikasikan", fileNama: "kuis-bahasa-inggris.html", likes: 8 },
-    { id: 102, judul: "Modul Pembelajaran Digital", pembuat: "Andi Saputra", deskripsi: "Modul digital sebagai bahan belajar mandiri bagi siswa.", tanggal: "12 September 2026", status: "Dipublikasikan", fileNama: "modul-digital.pdf", likes: 5 },
+    {
+      id: 101,
+      judul: "Kuis Interaktif Materi Bahasa Inggris",
+      pembuat: "Siti Rahmawati",
+      deskripsi: "Kuis singkat untuk menguji pemahaman siswa tentang announcement text.",
+      tanggal: "10 September 2026",
+      status: "Dipublikasikan",
+      fileNama: "kuis-bahasa-inggris.html",
+      likes: 8,
+    },
+    {
+      id: 102,
+      judul: "Modul Pembelajaran Digital",
+      pembuat: "Andi Saputra",
+      deskripsi: "Modul digital sebagai bahan belajar mandiri bagi siswa.",
+      tanggal: "12 September 2026",
+      status: "Dipublikasikan",
+      fileNama: "modul-digital.pdf",
+      likes: 5,
+    },
   ]);
 
   const nama = "Guru";
@@ -986,7 +1229,6 @@ const [terdaftar] = useState([1, 2]);
     sertifikat: <Sertifikat />,
     galeri: <Galeri />,
     evaluasi: <Evaluasi />,
-    berita: <Berita />,
     testimoni: <Testimoni />,
     skill: <PengembanganSkill />,
   };
@@ -1058,7 +1300,7 @@ const [terdaftar] = useState([1, 2]);
 
         <div className="shrink-0 border-t border-storm-100 p-4">
           <button
-            onClick={onLogout}
+            onClick={() => setShowLogout(true)}
             className="flex w-full items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-medium text-storm-600 transition hover:bg-storm-50 hover:text-storm-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-storm-300"
           >
             <LogOut size={19} />
@@ -1105,6 +1347,48 @@ const [terdaftar] = useState([1, 2]);
           </footer>
         </main>
       </div>
+
+      {/* Popup Konfirmasi Logout */}
+      {showLogout && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 p-4">
+          <div
+            className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="judul-konfirmasi-logout"
+          >
+            <h2
+              id="judul-konfirmasi-logout"
+              className="mb-3 text-lg font-bold text-slate-800"
+            >
+              Konfirmasi Logout
+            </h2>
+
+            <p className="mb-6 text-sm leading-6 text-slate-500">
+              Apakah Anda yakin ingin keluar dari akun EDUSHARE?
+            </p>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowLogout(false)}
+                className="flex-1 rounded-lg border border-storm-200 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-storm-50"
+              >
+                Batal
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowLogout(false);
+                  onLogout?.();
+                }}
+                className="flex-1 rounded-lg bg-storm-500 px-4 py-2.5 text-sm font-semibold text-white hover:bg-storm-600"
+              >
+                Ya, Keluar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

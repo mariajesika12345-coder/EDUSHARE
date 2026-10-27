@@ -22,27 +22,31 @@ function LandingPage({ onLogin }) {
   ];
 
   const berita = [
-    {
-      kategori: "Pelatihan",
-      judul: "Dokumentasi Pelatihan Guru SMKN 1 Batam",
-      deskripsi:
-        "Informasi dan dokumentasi kegiatan pelatihan guru yang tersimpan dalam EDUSHARE.",
-      simbol: "📰",
-    },
-    {
-      kategori: "Agenda",
-      judul: "Pelatihan dan Pengembangan Kompetensi Guru",
-      deskripsi:
-        "Informasi agenda pelatihan untuk mendukung peningkatan kompetensi guru.",
-      simbol: "📅",
-    },
-  ];
+  {
+    kategori: "Berita Pelatihan",
+    judul:
+      "PKM Polibatam Latih Guru SMKN 1 Batam Manfaatkan Generative AI",
+    deskripsi:
+      "Berita tentang pelatihan yang dilakukan Polibatam untuk guru SMKN 1 Batam.",
+    simbol: "📰",
+    tanggal: "3 September 2026",
+    link: "https://smkn1batam.sch.id/pkm-polibatam-latih-guru-smkn-1-batam-manfaatkan-generative-ai-batam-pos/",
+  },
+  {
+    kategori: "Agenda",
+    judul: "Pelatihan dan Pengembangan Kompetensi Guru",
+    deskripsi:
+      "Informasi agenda pelatihan untuk mendukung peningkatan kompetensi guru.",
+    simbol: "📅",
+  },
+];
+  
+const galeri = [
+  { judul: "Kegiatan Pelatihan Guru", simbol: "📸" },
+  { judul: "Penyampaian Materi", simbol: "🎓" },
+  { judul: "Diskusi dan Praktik", simbol: "👥" },
+];
 
-  const galeri = [
-    { judul: "Kegiatan Pelatihan Guru", simbol: "📸" },
-    { judul: "Penyampaian Materi", simbol: "🎓" },
-    { judul: "diskusi dan Praktik", simbol: "👥" },
-  ];
 
   const testimoni = [
     {
@@ -273,26 +277,60 @@ function LandingPage({ onLogin }) {
         </div>
       </section>
 
-      {/* TENTANG */}
-      <section
-        id="tentang"
-        className="scroll-mt-24 bg-[#F3F6FC] px-6 py-16 lg:px-16"
-      >
-        <div className="mx-auto max-w-4xl text-center">
-          <p className="mb-3 text-sm font-semibold text-[#2563EB]">
-            TENTANG EDUSHARE
-          </p>
-          <h2 className="text-3xl font-bold leading-tight">
-            Pusat Dokumentasi Hasil Pelatihan Guru
-          </h2>
-          <p className="mx-auto mt-5 max-w-3xl leading-7 text-gray-600">
-            EDUSHARE merupakan website untuk mendukung dokumentasi dan
-            publikasi hasil pelatihan guru SMKN 1 Batam. Materi, hasil
-            karya, dokumentasi kegiatan, dan informasi pelatihan
-            diorganisasi agar lebih mudah ditemukan dan dimanfaatkan kembali.
-          </p>
-        </div>
-      </section>
+      
+{/* TENTANG */}
+<section
+  id="tentang"
+  className="scroll-mt-24 bg-[#F3F6FC] px-6 py-16 lg:px-16"
+>
+  <div className="mx-auto max-w-4xl text-center">
+    <p className="mb-3 text-sm font-semibold text-[#2563EB]">
+      TENTANG EDUSHARE
+    </p>
+
+    <h2 className="text-3xl font-bold leading-tight text-[#1E293B]">
+    
+    </h2>
+
+    <p className="mx-auto mt-5 max-w-3xl leading-7 text-gray-600">
+      EDUSHARE merupakan website dokumentasi dan publikasi hasil
+      pelatihan guru SMKN 1 Batam. Website ini dikembangkan untuk
+      membantu menyimpan dan mengelola materi serta hasil kegiatan
+      pelatihan agar lebih teratur dan mudah diakses.
+    </p>
+
+    <p className="mx-auto mt-4 max-w-3xl leading-7 text-gray-600">
+      Melalui EDUSHARE, guru dapat melihat materi pelatihan,
+      mengakses dokumentasi kegiatan, serta membagikan hasil karya
+      yang telah dibuat selama pelatihan.
+    </p>
+
+    <div className="mt-10 grid gap-5 text-left sm:grid-cols-2">
+      <div className="rounded-2xl border border-[#BFDBFE] bg-white p-6">
+        <div className="mb-3 text-3xl">📁</div>
+        <h3 className="text-lg font-bold text-[#1E293B]">
+          Dokumentasi Terpusat
+        </h3>
+        <p className="mt-2 text-sm leading-6 text-gray-600">
+          Materi, hasil karya, dan dokumentasi pelatihan tersusun
+          dalam satu website sehingga lebih mudah ditemukan.
+        </p>
+      </div>
+
+      <div className="rounded-2xl border border-[#BFDBFE] bg-white p-6">
+        <div className="mb-3 text-3xl">📚</div>
+        <h3 className="text-lg font-bold text-[#1E293B]">
+          Mudah Diakses
+        </h3>
+        <p className="mt-2 text-sm leading-6 text-gray-600">
+          Guru dapat melihat kembali materi dan hasil pelatihan
+          sebagai referensi untuk kegiatan pembelajaran.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
 
       {/* FITUR UTAMA */}
       <section
@@ -403,88 +441,120 @@ function LandingPage({ onLogin }) {
         </div>
       </section>
 
-      {/* BERITA DAN AGENDA */}
-      <section
-        id="berita"
-        className="scroll-mt-20 bg-white px-6 py-20 lg:px-16"
-      >
-        <div className="mx-auto max-w-7xl">
-          <SectionHeading
-            eyebrow="INFORMASI TERBARU"
-            title="Berita & Agenda Pelatihan"
-            description="Informasi kegiatan dan agenda pelatihan untuk guru SMKN 1 Batam."
-          />
+      
 
-          <div className="grid gap-6 md:grid-cols-2">
-            {berita.map((item) => (
-              <article
-                key={item.judul}
-                className="flex flex-col gap-4 rounded-2xl border border-[#BFDBFE] bg-[#F3F6FC] p-6 sm:flex-row"
-              >
-                <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl bg-[#DBEAFE] text-3xl">
-                  {item.simbol}
-                </div>
-                <div>
-                  <span className="rounded-full bg-[#FFF7ED] px-3 py-1 text-xs font-semibold text-[#C2410C]">
-                    {item.kategori}
-                  </span>
-                  <h3 className="mt-3 text-lg font-bold">{item.judul}</h3>
-                  <p className="mt-2 text-sm leading-6 text-gray-600">
-                    {item.deskripsi}
-                  </p>
-                </div>
-              </article>
-            ))}
+{/* BERITA DAN AGENDA */}
+<section
+  id="berita"
+  className="scroll-mt-20 bg-white px-6 py-20 lg:px-16"
+>
+  <div className="mx-auto max-w-7xl">
+    <SectionHeading
+      eyebrow="INFORMASI TERBARU"
+      title="Berita & Agenda Pelatihan"
+      description="Informasi berita, kegiatan, dan agenda pelatihan guru SMKN 1 Batam."
+    />
+
+    <div className="grid gap-6 md:grid-cols-2">
+      {berita.map((item) => (
+        <article
+          key={item.judul}
+          className="flex flex-col gap-4 rounded-2xl border border-[#BFDBFE] bg-[#F3F6FC] p-6 sm:flex-row"
+        >
+          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl bg-[#DBEAFE] text-3xl">
+            {item.simbol}
           </div>
-          <p className="mt-4 text-xs text-gray-500">
-            Berita dan agenda di atas masih berupa contoh tampilan.
-          </p>
-        </div>
-      </section>
 
-      {/* GALERI KEGIATAN */}
-      <section
-        id="galeri"
-        className="scroll-mt-20 bg-[#F3F6FC] px-6 py-20 lg:px-16"
-      >
-        <div className="mx-auto max-w-7xl">
-          <SectionHeading
-            eyebrow="DOKUMENTASI KEGIATAN"
-            title="Galeri Pelatihan"
-            description="Dokumentasi kegiatan pelatihan dan aktivitas berbagi pengalaman guru."
-          />
+          <div className="flex-1">
+            <span className="rounded-full bg-[#FFF7ED] px-3 py-1 text-xs font-semibold text-[#C2410C]">
+              {item.kategori}
+            </span>
 
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {galeri.map((item, index) => (
-              <article
-                key={item.judul}
-                className="overflow-hidden rounded-2xl border border-[#BFDBFE] bg-white"
+            <h3 className="mt-3 text-lg font-bold text-[#1E293B]">
+              {item.judul}
+            </h3>
+
+            {item.tanggal && (
+              <p className="mt-2 text-xs text-gray-500">
+                {item.tanggal}
+              </p>
+            )}
+
+            <p className="mt-2 text-sm leading-6 text-gray-600">
+              {item.deskripsi}
+            </p>
+
+            {item.link && (
+              <a
+                href={item.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 inline-flex items-center gap-2 rounded-lg bg-[#1D4ED8] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#1E3A8A]"
               >
-                {index === 0 ? (
-                  <img
-                    src="/pelatihan-guru.jpg"
-                    alt={item.judul}
-                    className="h-48 w-full object-cover"
-                  />
-                ) : (
-                  <div className="flex h-48 items-center justify-center bg-gradient-to-br from-[#DBEAFE] to-[#F3F6FC] text-5xl">
-                    {item.simbol}
-                  </div>
-                )}
-                <div className="p-4">
-                  <h3 className="font-semibold">{item.judul}</h3>
-                  <p className="mt-1 text-xs text-gray-500">
-                    Dokumentasi pelatihan guru
-                  </p>
-                </div>
-              </article>
-            ))}
+                Baca Selengkapnya
+                <span>↗</span>
+              </a>
+            )}
           </div>
-          <p className="mt-4 text-xs text-gray-500">
-            Foto dan simbol merupakan contoh rancangan galeri.
-          </p>
-        </div>
-      </section>
+        </article>
+      ))}
+    </div>
+
+    <p className="mt-4 text-xs text-gray-500">
+      Berita pelatihan mengarah ke sumber asli SMKN 1 Batam.
+      Informasi agenda masih berupa contoh tampilan.
+    </p>
+  </div>
+</section>
+
+
+{/* GALERI KEGIATAN */}
+<section
+  id="galeri"
+  className="scroll-mt-20 bg-[#F3F6FC] px-6 py-20 lg:px-16"
+>
+  <div className="mx-auto max-w-7xl">
+    <SectionHeading
+      eyebrow="DOKUMENTASI KEGIATAN"
+      title="Galeri Pelatihan"
+      description="Dokumentasi kegiatan pelatihan dan aktivitas berbagi pengalaman guru."
+    />
+
+    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {galeri.map((item, index) => (
+        <article
+          key={item.judul}
+          className="overflow-hidden rounded-2xl border border-[#BFDBFE] bg-white"
+        >
+          {index === 0 ? (
+            <img
+              src="/pelatihan-guru.jpg"
+              alt={item.judul}
+              className="h-48 w-full object-cover"
+            />
+          ) : (
+            <div className="flex h-48 items-center justify-center bg-gradient-to-br from-[#DBEAFE] to-[#F3F6FC] text-5xl">
+              {item.simbol}
+            </div>
+          )}
+
+          <div className="p-4">
+            <h3 className="font-semibold text-[#1E293B]">
+              {item.judul}
+            </h3>
+            <p className="mt-1 text-xs text-gray-500">
+              Dokumentasi pelatihan guru
+            </p>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <p className="mt-4 text-xs text-gray-500">
+      Foto dan simbol merupakan contoh rancangan galeri.
+    </p>
+  </div>
+</section>
 
       {/* TESTIMONI */}
       <section
@@ -577,15 +647,36 @@ function LandingPage({ onLogin }) {
             </a>
           </div>
 
-          <div className="md:text-right">
-            <p className="text-sm text-[#DBEAFE]">Kontak Pengelola</p>
-            <p className="mt-2 text-sm">
-              Informasi kontak dapat ditambahkan di sini.
-            </p>
-            <p className="mt-6 text-xs text-[#DBEAFE]">
-              © 2026 EDUSHARE — SMKN 1 Batam
-            </p>
-          </div>
+          
+<div className="md:text-right">
+  <p className="text-sm font-semibold text-[#DBEAFE]">
+    Kontak Pengelola
+  </p>
+
+  <p className="mt-3 text-sm">
+    🏫 SMKN 1 Batam
+  </p>
+
+  <p className="mt-2 text-sm">
+    ✉️ admin@edushare.test
+  </p>
+
+  <p className="mt-2 text-sm">
+    📞 0812-3456-7890
+  </p>
+
+  <p className="mt-2 text-sm text-[#DBEAFE]">
+    Senin–Jumat, 08.00–16.00 WIB
+  </p>
+
+  <p className="mt-2 text-xs text-[#DBEAFE]">
+  </p>
+
+  <p className="mt-6 text-xs text-[#DBEAFE]">
+    © 2026 EDUSHARE — SMKN 1 Batam
+  </p>
+</div>
+
         </div>
       </footer>
     </div>
