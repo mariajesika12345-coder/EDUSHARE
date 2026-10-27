@@ -183,12 +183,8 @@ function BerandaAdmin({ guru, pelatihan, materi, karya, setView }) {
   return (
     <>
       <section className="mb-6 rounded-2xl bg-storm-500 p-6 text-white shadow-sm sm:p-7">
-        <p className="text-sm !text-white">Selamat datang,</p>
+        <p className="text-sm !text-white">Selamat datang</p>
         <h1 className="mt-1 text-3xl font-bold !text-white">Admin EDUSHARE</h1>
-        <p className="mt-2 max-w-2xl text-sm leading-6 !text-white">
-          Kelola dokumentasi, materi, pelatihan, dan publikasi hasil pelatihan
-          guru SMKN 1 Batam melalui satu platform.
-        </p>
         <button
           onClick={() => setView("materi")}
           className="mt-5 rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-storm-50"

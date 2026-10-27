@@ -180,7 +180,7 @@ function Beranda({ nama, terdaftar, setView, jumlahKarya }) {
   return (
     <>
       <section className="mb-6 rounded-2xl bg-storm-500 p-6 text-white shadow-sm sm:p-7">
-        <p className="text-sm !text-white/90">Selamat datang kembali,</p>
+        <p className="text-sm !text-white/90">Selamat datang kembali</p>
         <h1 className="mt-1 text-2xl font-bold !text-white sm:text-3xl">
           {nama}
         </h1>

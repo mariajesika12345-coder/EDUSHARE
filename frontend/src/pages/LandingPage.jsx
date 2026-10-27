@@ -87,21 +87,21 @@ const galeri = [
   return (
     <div className="min-h-screen bg-[#F3F6FC] text-[#1E293B]">
       
+      
       {/* NAVBAR */}
-      <nav className="sticky top-0 z-50 border-b border-[#BFDBFE] bg-white/95 px-6 backdrop-blur md:px-8 lg:px-10">
-        <div className="flex min-h-20 items-center justify-between gap-4">
+      <nav className="sticky top-0 z-50 border-b border-[#BFDBFE] bg-white/95 px-4 backdrop-blur md:px-8 lg:px-10">
+        <div className="relative flex min-h-20 items-center justify-between gap-3">
           <a href="#beranda" className="flex shrink-0 items-center">
             <img
               src="/logo-edushare.png"
               alt="EDUSHARE"
-              className="h-16 w-auto object-contain md:h-20"
+              className="h-14 w-auto object-contain md:h-20"
             />
           </a>
 
+          {/* MENU LAPTOP */}
           <div className="hidden items-center gap-1 text-sm lg:flex">
-            <NavLink href="#beranda">
-                    Beranda
-                  </NavLink>
+            <NavLink href="#beranda">Beranda</NavLink>
             <NavLink href="#tentang">Tentang</NavLink>
             <NavLink href="#fitur">Fitur</NavLink>
             <NavLink href="#hasil-karya">Hasil Karya</NavLink>
@@ -110,15 +110,60 @@ const galeri = [
             <NavLink href="#kontak">Kontak</NavLink>
           </div>
 
-          <button
-            type="button"
-            onClick={onLogin}
-            className="shrink-0 rounded-lg bg-[#1D4ED8] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#1E3A8A] md:px-6"
-          >
-            Login Guru
-          </button>
+          {/* TOMBOL LOGIN DAN MENU HP */}
+          <div className="flex shrink-0 items-center gap-2">
+            <button
+              type="button"
+              onClick={onLogin}
+              className="rounded-lg bg-[#1D4ED8] px-3 py-2.5 text-xs font-semibold text-white transition hover:bg-[#1E3A8A] sm:px-5 sm:text-sm"
+            >
+              Login Guru
+            </button>
+
+            <button
+              type="button"
+              onClick={() =>
+                document.getElementById("menu-hp")?.classList.toggle("hidden")
+              }
+              className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#BFDBFE] text-xl text-[#1E293B] hover:bg-[#DBEAFE] lg:hidden"
+              aria-label="Buka menu navigasi"
+              aria-controls="menu-hp"
+            >
+              ☰
+            </button>
+          </div>
+        </div>
+
+        {/* MENU HP */}
+        <div
+          id="menu-hp"
+          className="hidden border-t border-[#BFDBFE] py-3 lg:hidden"
+        >
+          <div className="grid grid-cols-2 gap-2">
+            {[
+              ["Beranda", "#beranda"],
+              ["Tentang", "#tentang"],
+              ["Fitur", "#fitur"],
+              ["Hasil Karya", "#hasil-karya"],
+              ["Berita & Agenda", "#berita"],
+              ["Galeri", "#galeri"],
+              ["Kontak", "#kontak"],
+            ].map(([label, href]) => (
+              <a
+                key={href}
+                href={href}
+                onClick={() =>
+                  document.getElementById("menu-hp")?.classList.add("hidden")
+                }
+                className="rounded-lg px-3 py-3 text-sm font-medium text-[#1E293B] transition hover:bg-[#DBEAFE] hover:text-[#2563EB]"
+              >
+                {label}
+              </a>
+            ))}
+          </div>
         </div>
       </nav>
+
 
 
       {/* HERO */}
