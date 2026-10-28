@@ -8,21 +8,24 @@ import DashboardAdmin from "./pages/DashboardAdmin";
 function App() {
   const [halaman, setHalaman] = useState("landing");
 
-  // Periksa sesi setiap kali halaman dipulihkan oleh browser.
+  // Periksa sesi ketika halaman dibuka atau dipulihkan.
   useEffect(() => {
     const periksaSesi = () => {
       const role = sessionStorage.getItem("edushare_role");
 
-      if (role !== "guru" && role !== "admin") {
-        setHalaman("landing");
+      if (role === "guru") {
+        setHalaman("dashboard-guru");
+      } else if (role === "admin") {
+        setHalaman("dashboard-admin");
       } else {
-        setHalaman(
-          role === "guru" ? "dashboard-guru" : "dashboard-admin"
-        );
+        setHalaman("landing");
       }
     };
 
     window.addEventListener("pageshow", periksaSesi);
+
+    // Periksa juga saat aplikasi pertama kali dibuka.
+    periksaSesi();
 
     return () => {
       window.removeEventListener("pageshow", periksaSesi);
@@ -46,33 +49,34 @@ function App() {
   };
 
   const handleLogout = () => {
-    // Hancurkan status sesi login di browser.
+    // Hapus semua data sesi autentikasi EDUSHARE.
     sessionStorage.removeItem("edushare_role");
-
-    // Bersihkan status autentikasi lain jika ada.
     sessionStorage.removeItem("edushare_token");
     sessionStorage.removeItem("user");
 
-    // Jangan simpan dashboard sebagai halaman aktif.
+    // Hapus juga jika status login pernah disimpan di localStorage.
+    localStorage.removeItem("edushare_role");
+    localStorage.removeItem("edushare_token");
+    localStorage.removeItem("user");
+
+    // Kembali ke landing page dan ganti entri riwayat saat ini.
     setHalaman("landing");
+    window.history.replaceState(null, "", "/");
   };
 
-  // Dashboard hanya ditampilkan jika sesi sesuai dengan perannya.
+  // Lindungi dashboard guru.
   if (halaman === "dashboard-guru") {
     if (sessionStorage.getItem("edushare_role") !== "guru") {
-      return (
-        <LandingPage onLogin={() => setHalaman("login")} />
-      );
+      return <LandingPage onLogin={() => setHalaman("login")} />;
     }
 
     return <DashboardGuru onLogout={handleLogout} />;
   }
 
+  // Lindungi dashboard admin.
   if (halaman === "dashboard-admin") {
     if (sessionStorage.getItem("edushare_role") !== "admin") {
-      return (
-        <LandingPage onLogin={() => setHalaman("login")} />
-      );
+      return <LandingPage onLogin={() => setHalaman("login")} />;
     }
 
     return <DashboardAdmin onLogout={handleLogout} />;
