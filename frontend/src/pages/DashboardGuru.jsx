@@ -308,7 +308,7 @@ function Pelatihan() {
       />
 
       <div className="grid grid-cols-1 min-[601px]:grid-cols-2 min-[1025px]:grid-cols-3 gap-4">
-  {pelatihanData.map((p) => {
+      {pelatihanData.map((p) => {
           const sudahDaftar = terdaftarLokal.includes(p.id);
           const selesai = p.status === "Selesai";
 
@@ -506,9 +506,9 @@ function Pelatihan() {
         </div>
       )}
 
-      <p className="mt-4 text-xs text-storm-500">
-        Data pendaftaran saat ini masih tersimpan sementara di dashboard.
-      </p>
+      <p className="mt-6 text-xs text-storm-500">
+  Data pendaftaran saat ini masih tersimpan sementara di dashboard.
+</p>
     </>
   );
 }
