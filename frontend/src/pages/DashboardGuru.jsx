@@ -506,9 +506,7 @@ function Pelatihan() {
         </div>
       )}
 
-      <p className="mt-6 text-xs text-storm-500">
-  Data pendaftaran saat ini masih tersimpan sementara di dashboard.
-</p>
+      
     </>
   );
 }
