@@ -307,8 +307,8 @@ function Pelatihan() {
         desc="Lihat informasi pelatihan dan daftarkan diri sebagai peserta."
       />
 
-      <div className="space-y-4">
-        {pelatihanData.map((p) => {
+      <div className="grid grid-cols-1 min-[601px]:grid-cols-2 min-[1025px]:grid-cols-3 gap-4">
+  {pelatihanData.map((p) => {
           const sudahDaftar = terdaftarLokal.includes(p.id);
           const selesai = p.status === "Selesai";
 

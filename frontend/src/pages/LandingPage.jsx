@@ -338,16 +338,11 @@ const galeri = [
     </h2>
 
     <p className="mx-auto mt-5 max-w-3xl leading-7 text-gray-600">
-      EDUSHARE merupakan website dokumentasi dan publikasi hasil
-      pelatihan guru SMKN 1 Batam. Website ini dikembangkan untuk
-      membantu menyimpan dan mengelola materi serta hasil kegiatan
-      pelatihan agar lebih teratur dan mudah diakses.
+     EDUSHARE hadir sebagai wadah digital untuk menyimpan, mengelola, dan membagikan hasil pelatihan guru SMKN 1 Batam dalam satu tempat.
     </p>
 
     <p className="mx-auto mt-4 max-w-3xl leading-7 text-gray-600">
-      Melalui EDUSHARE, guru dapat melihat materi pelatihan,
-      mengakses dokumentasi kegiatan, serta membagikan hasil karya
-      yang telah dibuat selama pelatihan.
+      Melalui EDUSHARE, guru dapat dengan mudah mengakses materi pelatihan, melihat dokumentasi kegiatan, serta menemukan berbagai hasil karya yang dikembangkan selama pelatihan. Dengan penyajian yang lebih terstruktur, setiap materi dan hasil karya dapat dimanfaatkan kembali untuk mendukung proses belajar mengajar
     </p>
 
     <div className="mt-10 grid gap-5 text-left sm:grid-cols-2">
