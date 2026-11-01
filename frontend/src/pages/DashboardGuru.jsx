@@ -1367,23 +1367,23 @@ export default function DashboardGuru({ onLogout }) {
             </p>
 
             <div className="flex gap-3">
-              <button
-                onClick={() => setShowLogout(false)}
-                className="flex-1 rounded-lg border border-storm-200 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-storm-50"
-              >
-                Batal
-              </button>
+  <button
+    onClick={() => setShowLogout(false)}
+    className="flex-1 min-h-[48px] rounded-lg border border-storm-200 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-storm-50"
+  >
+    Batal
+  </button>
 
-              <button
-                onClick={() => {
-                  setShowLogout(false);
-                  onLogout?.();
-                }}
-                className="flex-1 rounded-lg bg-storm-500 px-4 py-2.5 text-sm font-semibold text-white hover:bg-storm-600"
-              >
-                Ya, Keluar
-              </button>
-            </div>
+  <button
+    onClick={() => {
+      setShowLogout(false);
+      onLogout?.();
+    }}
+    className="flex-1 min-h-[48px] rounded-lg bg-storm-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-storm-700"
+  >
+    Ya, Keluar
+  </button>
+</div>
           </div>
         </div>
       )}
