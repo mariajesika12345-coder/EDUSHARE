@@ -271,8 +271,7 @@ function LoginGuru({ onLogin, onBack, onRegister }) {
             {/* TOMBOL LOGIN */}
             <button
               type="submit"
-              className="w-full rounded-lg bg-[#2878F8] py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#1D64DB] focus:outline-none focus:ring-2 focus:ring-[#93C5FD] focus:ring-offset-2"
-            >
+             className="w-full min-h-[48px] rounded-lg bg-[#2878F8] py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#1D64DB] focus:outline-none focus:ring-2 focus:ring-[#93C5FD] focus:ring-offset-2"            >
               Login
             </button>
           </form>

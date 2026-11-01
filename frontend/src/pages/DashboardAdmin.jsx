@@ -120,7 +120,7 @@ const inputClass =
   "w-full rounded-lg border border-storm-200 bg-white px-3 py-2.5 text-sm text-slate-800 focus:border-storm-400 focus:outline-none focus:ring-2 focus:ring-storm-100";
 
 const btnPrimary =
-  "inline-flex items-center justify-center gap-2 rounded-lg bg-storm-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-storm-600 disabled:cursor-not-allowed disabled:opacity-50";
+  "inline-flex items-center justify-center gap-2 rounded-lg bg-storm-500px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-storm-600 disabled:cursor-not-allowed disabled:opacity-50";
 
 const btnOutline =
   "inline-flex items-center justify-center gap-2 rounded-lg border border-storm-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-storm-50";
@@ -1210,7 +1210,7 @@ export default function DashboardAdmin({ onLogout }) {
                   aria-current={aktif ? "page" : undefined}
                   className={`flex min-h-11 w-full items-center gap-3 rounded-xl px-3.5 py-3 text-left text-sm font-medium transition ${
                     aktif
-                      ? "bg-storm-500 text-white shadow-sm"
+                      ? "bg-storm-600text-white shadow-sm"
                       : "text-slate-600 hover:bg-storm-50 hover:text-slate-800"
                   }`}
                 >

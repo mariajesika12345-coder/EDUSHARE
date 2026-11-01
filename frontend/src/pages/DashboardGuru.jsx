@@ -542,7 +542,7 @@ function Materi() {
               aria-pressed={tab === t}
               className={`rounded-full px-4 py-2 text-sm font-medium transition ${
                 tab === t
-                  ? "bg-storm-500 text-white"
+                  ? "bg-storm-600 text-white"
                   : "bg-storm-50 text-storm-600 hover:bg-storm-100"
               }`}
             >
@@ -1284,7 +1284,7 @@ export default function DashboardGuru({ onLogout }) {
                   aria-current={aktif ? "page" : undefined}
                   className={`flex min-h-11 w-full items-center gap-3 rounded-xl px-3.5 py-3 text-left text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-storm-300 ${
                     aktif
-                      ? "bg-storm-500 text-white shadow-sm"
+                      ? "bg-storm-600 text-white shadow-sm"
                       : "text-slate-600 hover:bg-storm-50 hover:text-slate-800"
                   }`}
                 >
