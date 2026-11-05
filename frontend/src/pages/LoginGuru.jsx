@@ -109,7 +109,7 @@ function LoginGuru({ onLogin, onBack, onRegister }) {
               onClick={onBack}
               className="mb-5 self-start text-sm font-medium text-[#2563EB] transition hover:underline"
             >
-              ← Kembali
+            
             </button>
           )}
 

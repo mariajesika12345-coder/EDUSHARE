@@ -1,5 +1,6 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
   CalendarDays,
@@ -75,7 +76,19 @@ const menu = [
   { key: "testimoni", label: "Testimoni Peserta", icon: MessageSquareQuote },
   { key: "skill", label: "Pengembangan Skill", icon: TrendingUp },
 ];
-
+// URL SETIAP HALAMAN GURU
+const routeGuru = {
+  beranda: "/guru/dashboard",
+  pelatihan: "/guru/pelatihan",
+  materi: "/guru/materi",
+  karya: "/guru/unggah-karya",
+  publikasi: "/guru/karya-peserta",
+  sertifikat: "/guru/sertifikat",
+  galeri: "/guru/galeri",
+  evaluasi: "/guru/evaluasi",
+  testimoni: "/guru/testimoni",
+  skill: "/guru/pengembangan-skill",
+};
 const tipeIcon = {
   PPT: Presentation,
   Video: PlayCircle,
@@ -1181,35 +1194,57 @@ function PengembanganSkill() {
 
  // DASHBOARD GURU
 export default function DashboardGuru({ onLogout }) {
-  const [view, setView] = useState("beranda");
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Menentukan halaman berdasarkan URL
+  const view =
+    Object.keys(routeGuru).find(
+      (key) => routeGuru[key] === location.pathname
+    ) || "beranda";
+
+  // Mengubah URL ketika menu diklik
+  const setView = (key) => {
+    navigate(routeGuru[key] || routeGuru.beranda);
+  };
+
+  // Mengarahkan URL yang tidak dikenal ke halaman beranda
+  useEffect(() => {
+    if (!Object.values(routeGuru).includes(location.pathname)) {
+      navigate(routeGuru.beranda, { replace: true });
+    }
+  }, [location.pathname, navigate]);
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [terdaftar] = useState([1, 2]);
-  const [showLogout, setShowLogout] = useState(false);
+const [terdaftar] = useState([1, 2]);
+const [showLogout, setShowLogout] = useState(false);
 
-  const [daftarKarya, setDaftarKarya] = useState([
-    {
-      id: 101,
-      judul: "Kuis Interaktif Materi Bahasa Inggris",
-      pembuat: "Siti Rahmawati",
-      deskripsi: "Kuis singkat untuk menguji pemahaman siswa tentang announcement text.",
-      tanggal: "10 September 2026",
-      status: "Dipublikasikan",
-      fileNama: "kuis-bahasa-inggris.html",
-      likes: 8,
-    },
-    {
-      id: 102,
-      judul: "Modul Pembelajaran Digital",
-      pembuat: "Andi Saputra",
-      deskripsi: "Modul digital sebagai bahan belajar mandiri bagi siswa.",
-      tanggal: "12 September 2026",
-      status: "Dipublikasikan",
-      fileNama: "modul-digital.pdf",
-      likes: 5,
-    },
-  ]);
+const [daftarKarya, setDaftarKarya] = useState([
+  {
+    id: 101,
+    judul: "Kuis Interaktif Materi Bahasa Inggris",
+    pembuat: "Siti Rahmawati",
+    deskripsi:
+      "Kuis singkat untuk menguji pemahaman siswa tentang announcement text.",
+    tanggal: "10 September 2026",
+    status: "Dipublikasikan",
+    fileNama: "kuis-bahasa-inggris.html",
+    likes: 8,
+  },
+  {
+    id: 102,
+    judul: "Modul Pembelajaran Digital",
+    pembuat: "Andi Saputra",
+    deskripsi:
+      "Modul digital sebagai bahan belajar mandiri bagi siswa.",
+    tanggal: "12 September 2026",
+    status: "Dipublikasikan",
+    fileNama: "modul-digital.pdf",
+    likes: 5,
+  },
+]);
 
-  const nama = "Guru";
+const nama = "Guru";
 
   const halaman = {
     beranda: (

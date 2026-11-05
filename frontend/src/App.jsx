@@ -1,97 +1,124 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+} from "react-router-dom";
+
 import LandingPage from "./pages/LandingPage";
 import LoginGuru from "./pages/LoginGuru";
 import DashboardGuru from "./pages/DashboardGuru";
 import DashboardAdmin from "./pages/DashboardAdmin";
 
-function App() {
-  const [halaman, setHalaman] = useState("landing");
+// Proteksi halaman berdasarkan role pengguna
+function ProtectedRoute({ allowedRole, children }) {
+  const role = sessionStorage.getItem("edushare_role");
 
-  // Periksa sesi ketika halaman dibuka atau dipulihkan.
-  useEffect(() => {
-    const periksaSesi = () => {
-      const role = sessionStorage.getItem("edushare_role");
+  if (role !== allowedRole) {
+    return <Navigate to="/" replace />;
+  }
 
-      if (role === "guru") {
-        setHalaman("dashboard-guru");
-      } else if (role === "admin") {
-        setHalaman("dashboard-admin");
-      } else {
-        setHalaman("landing");
-      }
-    };
+  return children;
+}
 
-    window.addEventListener("pageshow", periksaSesi);
-
-    // Periksa juga saat aplikasi pertama kali dibuka.
-    periksaSesi();
-
-    return () => {
-      window.removeEventListener("pageshow", periksaSesi);
-    };
-  }, []);
+function AppContent() {
+  const navigate = useNavigate();
+  const [refresh, setRefresh] = useState(0);
 
   const handleLogin = ({ email, password }) => {
     if (email === "guru@edushare.com" && password === "guru123") {
       sessionStorage.setItem("edushare_role", "guru");
-      setHalaman("dashboard-guru");
+      setRefresh((prev) => prev + 1);
+      navigate("/guru/dashboard");
       return;
     }
 
     if (email === "admin@edushare.com" && password === "admin123") {
       sessionStorage.setItem("edushare_role", "admin");
-      setHalaman("dashboard-admin");
+      setRefresh((prev) => prev + 1);
+      navigate("/admin/dashboard");
       return;
     }
 
     alert("Email atau password salah!");
   };
 
+  // Logout pengguna
   const handleLogout = () => {
-    // Hapus semua data sesi autentikasi EDUSHARE.
     sessionStorage.removeItem("edushare_role");
     sessionStorage.removeItem("edushare_token");
     sessionStorage.removeItem("user");
 
-    // Hapus juga jika status login pernah disimpan di localStorage.
     localStorage.removeItem("edushare_role");
     localStorage.removeItem("edushare_token");
     localStorage.removeItem("user");
 
-    // Kembali ke landing page dan ganti entri riwayat saat ini.
-    setHalaman("landing");
-    window.history.replaceState(null, "", "/");
+    navigate("/", { replace: true });
   };
 
-  // Lindungi dashboard guru.
-  if (halaman === "dashboard-guru") {
-    if (sessionStorage.getItem("edushare_role") !== "guru") {
-      return <LandingPage onLogin={() => setHalaman("login")} />;
-    }
-
-    return <DashboardGuru onLogout={handleLogout} />;
-  }
-
-  // Lindungi dashboard admin.
-  if (halaman === "dashboard-admin") {
-    if (sessionStorage.getItem("edushare_role") !== "admin") {
-      return <LandingPage onLogin={() => setHalaman("login")} />;
-    }
-
-    return <DashboardAdmin onLogout={handleLogout} />;
-  }
-
-  if (halaman === "login") {
-    return (
-      <LoginGuru
-        onLogin={handleLogin}
-        onBack={() => setHalaman("landing")}
+  return (
+    <Routes>
+      {/* Landing Page */}
+      <Route
+        path="/"
+        element={<LandingPage onLogin={() => navigate("/login")} />}
       />
-    );
-  }
 
-  return <LandingPage onLogin={() => setHalaman("login")} />;
+      {/* Login */}
+      <Route
+        path="/login"
+        element={
+          <LoginGuru
+            onLogin={handleLogin}
+            onBack={() => navigate("/")}
+          />
+        }
+      />
+
+      {/* Dashboard Guru */}
+      <Route
+        path="/guru/*"
+        element={
+          <ProtectedRoute allowedRole="guru">
+            <DashboardGuru
+              key={`guru-${refresh}`}
+              onLogout={handleLogout}
+            />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Dashboard Admin */}
+      <Route
+        path="/admin/*"
+        element={
+          <ProtectedRoute allowedRole="admin">
+            <DashboardAdmin
+              key={`admin-${refresh}`}
+              onLogout={handleLogout}
+            />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Halaman tidak ditemukan */}
+      <Route
+        path="*"
+        element={<Navigate to="/" replace />}
+      />
+    </Routes>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
+  );
 }
 
 export default App;

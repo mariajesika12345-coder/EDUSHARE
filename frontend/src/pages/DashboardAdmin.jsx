@@ -1,5 +1,6 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
   Users,
@@ -115,13 +116,26 @@ const menu = [
   { key: "testimoni", label: "Kelola Testimoni Peserta", icon: Heart },
   { key: "skill", label: "Pengembangan Skill", icon: BookOpen },
 ];
-
+const routeAdmin = {
+  beranda: "/admin/dashboard",
+  pengguna: "/admin/pengguna  ",
+  pelatihan: "/admin/pelatihan",
+  slide: "/admin/slide",
+  modul: "/admin/modul",
+  video: "/admin/video",
+  karya: "/admin/hasil-karya",
+  berita: "/admin/berita",
+  evaluasi: "/admin/evaluasi",
+  sertifikat: "/admin/sertifikat",
+  galeri: "/admin/galeri",
+  testimoni: "/admin/testimoni",
+  skill: "/admin/pengembangan-skill",
+};
 const inputClass =
   "w-full rounded-lg border border-storm-200 bg-white px-3 py-2.5 text-sm text-slate-800 focus:border-storm-400 focus:outline-none focus:ring-2 focus:ring-storm-100";
 
 const btnPrimary =
-  "inline-flex items-center justify-center gap-2 rounded-lg bg-storm-500px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-storm-600 disabled:cursor-not-allowed disabled:opacity-50";
-
+  "inline-flex items-center justify-center gap-2 rounded-lg bg-storm-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-storm-600 disabled:cursor-not-allowed disabled:opacity-50";
 const btnOutline =
   "inline-flex items-center justify-center gap-2 rounded-lg border border-storm-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-storm-50";
 
@@ -1121,7 +1135,24 @@ function DokumentasiAdmin() {
 }
 
 export default function DashboardAdmin({ onLogout }) {
-  const [view, setView] = useState("beranda");
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const view =
+    Object.keys(routeAdmin).find(
+      (key) => routeAdmin[key] === location.pathname
+    ) || "beranda";
+
+  const setView = (key) => {
+    navigate(routeAdmin[key] || routeAdmin.beranda);
+  };
+
+  useEffect(() => {
+    if (!Object.values(routeAdmin).includes(location.pathname)) {
+      navigate(routeAdmin.beranda, { replace: true });
+    }
+  }, [location.pathname, navigate]);
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
 
