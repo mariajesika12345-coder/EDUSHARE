@@ -115,7 +115,7 @@ function LoginGuru({ onLogin, onBack, onRegister }) {
 
           <div className="text-center">
             <h2 className="text-2xl font-bold text-[#1E293B] sm:text-3xl">
-              Login Guru
+              Login 
             </h2>
 
             <p className="mt-2 text-sm leading-6 text-[#64748B]">
