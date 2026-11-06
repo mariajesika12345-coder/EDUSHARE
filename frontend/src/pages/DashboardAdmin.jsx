@@ -118,7 +118,7 @@ const menu = [
 ];
 const routeAdmin = {
   beranda: "/admin/dashboard",
-  pengguna: "/admin/pengguna  ",
+  pengguna: "/admin/pengguna",
   pelatihan: "/admin/pelatihan",
   slide: "/admin/slide",
   modul: "/admin/modul",
@@ -1241,7 +1241,7 @@ export default function DashboardAdmin({ onLogout }) {
                   aria-current={aktif ? "page" : undefined}
                   className={`flex min-h-11 w-full items-center gap-3 rounded-xl px-3.5 py-3 text-left text-sm font-medium transition ${
                     aktif
-                      ? "bg-storm-600text-white shadow-sm"
+                     ? "bg-storm-600 text-white shadow-sm"
                       : "text-slate-600 hover:bg-storm-50 hover:text-slate-800"
                   }`}
                 >
