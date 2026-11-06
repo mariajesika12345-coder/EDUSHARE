@@ -1,25 +1,25 @@
 function LandingPage({ onLogin }) {
   
-  const karya = [
-    {
-      judul: "Media Ajar Interaktif",
-      kategori: "Media Pembelajaran",
-      simbol: "💻",
-      likes: 12,
-    },
-    {
-      judul: "Modul Pembelajaran Digital",
-      kategori: "Modul Pembelajaran",
-      simbol: "📘",
-      likes: 8,
-    },
-    {
-      judul: "Kuis Interaktif",
-      kategori: "Evaluasi Pembelajaran",
-      simbol: "💡",
-      likes: 15,
-    },
-  ];
+ const karya = [
+  {
+    kategori: "Media Pembelajaran",
+    judul: "Media Ajar Interaktif",
+    gambar: "/ajar-interaktif.jpg",
+    likes: 12,
+  },
+  {
+    kategori: "Modul Pembelajaran",
+    judul: "Modul Pembelajaran Digital",
+    gambar: "/Kuis-guru.jpg",
+    likes: 8,
+  },
+  {
+    kategori: "Evaluasi Pembelajaran",
+    judul: "Kuis Interaktif",
+    gambar: "/Kuis-siswa.jpg",
+    likes: 15,
+  },
+];
 
   const berita = [
   {
@@ -28,7 +28,6 @@ function LandingPage({ onLogin }) {
       "PKM Polibatam Latih Guru SMKN 1 Batam Manfaatkan Generative AI",
     deskripsi:
       "Berita tentang pelatihan yang dilakukan Polibatam untuk guru SMKN 1 Batam.",
-    simbol: "📰",
     tanggal: "3 September 2026",
     link: "https://smkn1batam.sch.id/pkm-polibatam-latih-guru-smkn-1-batam-manfaatkan-generative-ai-batam-pos/",
   },
@@ -37,14 +36,22 @@ function LandingPage({ onLogin }) {
     judul: "Pelatihan dan Pengembangan Kompetensi Guru",
     deskripsi:
       "Informasi agenda pelatihan untuk mendukung peningkatan kompetensi guru.",
-    simbol: "📅",
   },
 ];
   
 const galeri = [
-  { judul: "Kegiatan Pelatihan Guru", simbol: "📸" },
-  { judul: "Penyampaian Materi", simbol: "🎓" },
-  { judul: "Diskusi dan Praktik", simbol: "👥" },
+  {
+    judul: "Kegiatan Pelatihan Guru",
+    gambar: "/pelatihan-guru.jpg",
+  },
+  {
+    judul: "Penyampaian Materi",
+    gambar: "/penyampaian-materi.jpg",
+  },
+  {
+    judul: "Diskusi dan Praktik",
+    gambar: "/diskusi-praktik.jpg",
+  },
 ];
 
 
@@ -65,19 +72,16 @@ const galeri = [
 
   const skill = [
     {
-      simbol: "🖥️",
       judul: "Media Ajar Digital",
       deskripsi:
         "Mengenal pembuatan media ajar yang menarik dan interaktif.",
     },
     {
-      simbol: "📚",
       judul: "Modul Pembelajaran",
       deskripsi:
         "Mengembangkan dan mendokumentasikan modul pembelajaran.",
     },
     {
-      simbol: "✨",
       judul: "Pemanfaatan Teknologi",
       deskripsi:
         "Mengeksplorasi teknologi untuk mendukung proses belajar mengajar.",
@@ -175,7 +179,7 @@ const galeri = [
           <div>
             <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-[#DBEAFE] px-4 py-2 text-xs font-semibold text-[#1D4ED8]">
               <span className="h-2 w-2 rounded-full bg-[#FF8A24]" />
-              SMKN 1 BATAM • PUSAT DOKUMENTASI PELATIHAN
+              SMKN 1 BATAM •PUSAT DOKUMENTASI PELATIHAN
             </div>
 
             <h1 className="text-4xl font-bold leading-tight text-[#1E293B] lg:text-5xl">
@@ -233,9 +237,7 @@ const galeri = [
             <div className="mx-auto max-w-lg rounded-2xl border border-[#BFDBFE] bg-white p-5 shadow-xl">
               <div className="mb-4 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#DBEAFE] text-xl">
-                    📚
-                  </div>
+                  
                   <div>
                     <p className="font-bold">Pelatihan Guru</p>
                     <p className="text-xs text-gray-500">
@@ -296,32 +298,6 @@ const galeri = [
         </div>
       </section>
 
-      {/* RINGKASAN */}
-      <section className="bg-white px-6 py-10 lg:px-16">
-        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard
-            icon="👥"
-            title="Guru dan Peserta"
-            description="Komunitas pelatihan"
-          />
-          <StatCard
-            icon="📁"
-            title="Materi Pelatihan"
-            description="Slide, modul, dan video"
-          />
-          <StatCard
-            icon="💡"
-            title="Hasil Karya"
-            description="Karya peserta pelatihan"
-          />
-          <StatCard
-            icon="📷"
-            title="Dokumentasi"
-            description="Galeri kegiatan"
-          />
-        </div>
-      </section>
-
       
 {/* TENTANG */}
 <section
@@ -347,7 +323,7 @@ const galeri = [
 
     <div className="mt-10 grid gap-5 text-left sm:grid-cols-2">
       <div className="rounded-2xl border border-[#BFDBFE] bg-white p-6">
-        <div className="mb-3 text-3xl">📁</div>
+        <div className="mb-3 text-3xl"></div>
         <h3 className="text-lg font-bold text-[#1E293B]">
           Dokumentasi Terpusat
         </h3>
@@ -358,7 +334,7 @@ const galeri = [
       </div>
 
       <div className="rounded-2xl border border-[#BFDBFE] bg-white p-6">
-        <div className="mb-3 text-3xl">📚</div>
+        <div className="mb-3 text-3xl"></div>
         <h3 className="text-lg font-bold text-[#1E293B]">
           Mudah Diakses
         </h3>
@@ -386,47 +362,39 @@ const galeri = [
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             <FeatureCard
-              icon="📚"
+          
               title="Materi Pelatihan"
               description="Mengakses slide, presentasi, modul, dan video pelatihan."
             />
             <FeatureCard
-              icon="💡"
               title="Hasil Karya dan Like"
               description="Melihat hasil karya peserta dan memberikan apresiasi melalui fitur suka."
             />
             <FeatureCard
-              icon="📝"
               title="Pendaftaran Pelatihan"
               description="Melihat informasi pelatihan dan mendaftar sebagai peserta melalui portal guru."
             />
             <FeatureCard
-              icon="🏅"
               title="Sertifikat Pelatihan"
               description="Mengakses dan mengunduh sertifikat pelatihan yang telah diperoleh."
             />
             <FeatureCard
-              icon="⭐"
               title="Evaluasi Kegiatan"
               description="Memberikan penilaian dan saran untuk peningkatan kualitas pelatihan."
             />
             <FeatureCard
-              icon="📰"
               title="Berita dan Agenda"
               description="Mendapatkan informasi berita, kegiatan, dan agenda pelatihan."
             />
             <FeatureCard
-              icon="📷"
               title="Galeri Kegiatan"
               description="Melihat dokumentasi foto kegiatan pelatihan guru."
             />
             <FeatureCard
-              icon="💬"
               title="Testimoni Peserta"
               description="Membaca pengalaman dan tanggapan peserta mengenai pelatihan."
             />
             <FeatureCard
-              icon="📈"
               title="Pengembangan Skill"
               description="Menjelajahi topik pembelajaran untuk mendukung peningkatan keterampilan guru."
             />
@@ -452,9 +420,13 @@ const galeri = [
                 key={item.judul}
                 className="overflow-hidden rounded-2xl border border-[#BFDBFE] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
               >
-                <div className="flex h-40 items-center justify-center bg-gradient-to-br from-[#DBEAFE] to-[#F3F6FC] text-5xl">
-                  {item.simbol}
-                </div>
+                <div className="h-40 overflow-hidden bg-[#F3F6FC]">
+  <img
+    src={item.gambar}
+    alt={item.judul}
+    className="h-full w-full object-cover"
+  />
+</div>
                 <div className="p-5">
                   <p className="text-xs font-semibold uppercase tracking-wide text-[#2563EB]">
                     {item.kategori}
@@ -501,10 +473,7 @@ const galeri = [
           key={item.judul}
           className="flex flex-col gap-4 rounded-2xl border border-[#BFDBFE] bg-[#F3F6FC] p-6 sm:flex-row"
         >
-          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl bg-[#DBEAFE] text-3xl">
-            {item.simbol}
-          </div>
-
+          
           <div className="flex-1">
             <span className="rounded-full bg-[#FFF7ED] px-3 py-1 text-xs font-semibold text-[#C2410C]">
               {item.kategori}
@@ -574,8 +543,11 @@ const galeri = [
             />
           ) : (
             <div className="flex h-48 items-center justify-center bg-gradient-to-br from-[#DBEAFE] to-[#F3F6FC] text-5xl">
-              {item.simbol}
-            </div>
+<img
+  src={item.gambar}
+  alt={item.judul}
+  className="w-full h-full object-cover"
+/>            </div>
           )}
 
           <div className="p-4">
@@ -654,9 +626,7 @@ const galeri = [
                 key={item.judul}
                 className="rounded-2xl border border-[#BFDBFE] bg-white p-6 transition hover:-translate-y-1 hover:shadow-md"
               >
-                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-[#DBEAFE] text-2xl">
-                  {item.simbol}
-                </div>
+                
                 <h3 className="text-lg font-bold">{item.judul}</h3>
                 <p className="mt-3 text-sm leading-6 text-gray-600">
                   {item.deskripsi}
@@ -752,30 +722,19 @@ function SectionHeading({ eyebrow, title, description }) {
   );
 }
 
-function StatCard({ icon, title, description }) {
-  return (
-    <div className="flex items-center gap-4 rounded-xl border border-[#BFDBFE] bg-[#F3F6FC] p-5">
-      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#DBEAFE] text-xl">
-        {icon}
-      </div>
-      <div>
-        <p className="font-bold text-[#1E293B]">{title}</p>
-        <p className="mt-1 text-xs text-gray-500">{description}</p>
-      </div>
-    </div>
-  );
-}
 
-function FeatureCard({ icon, title, description }) {
+
+function FeatureCard({ title, description }) {
   return (
     <article className="rounded-2xl border border-[#BFDBFE] bg-[#F3F6FC] p-6 transition hover:-translate-y-1 hover:border-[#93C5FD] hover:shadow-md">
-      <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-[#DBEAFE] text-xl">
-        {icon}
-      </div>
-      <h3 className="text-lg font-bold text-[#1E293B]">{title}</h3>
-      <p className="mt-3 text-sm leading-6 text-gray-600">{description}</p>
+      <h3 className="text-lg font-bold text-[#1E293B]">
+        {title}
+      </h3>
+
+      <p className="mt-3 text-sm leading-6 text-gray-600">
+        {description}
+      </p>
     </article>
   );
 }
-
 export default LandingPage;
