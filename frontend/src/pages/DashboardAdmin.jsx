@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
@@ -27,24 +26,90 @@ import {
 } from "lucide-react";
 
 const initialGuru = [
-  { id: 1, nama: "Siti Rahmawati", email: "siti.rahmawati@smkn1batam.sch.id", peran: "Guru" },
-  { id: 2, nama: "Andi Saputra", email: "andi.saputra@smkn1batam.sch.id", peran: "Guru" },
-  { id: 3, nama: "Dewi Lestari", email: "dewi.lestari@smkn1batam.sch.id", peran: "Peserta" },
-  { id: 4, nama: "Budi Santoso", email: "budi.santoso@smkn1batam.sch.id", peran: "Peserta" },
+  {
+    id: 1,
+    nama: "Siti Rahmawati",
+    email: "siti.rahmawati@smkn1batam.sch.id",
+    peran: "Guru",
+  },
+  {
+    id: 2,
+    nama: "Andi Saputra",
+    email: "andi.saputra@smkn1batam.sch.id",
+    peran: "Guru",
+  },
+  {
+    id: 3,
+    nama: "Dewi Lestari",
+    email: "dewi.lestari@smkn1batam.sch.id",
+    peran: "Peserta",
+  },
+  {
+    id: 4,
+    nama: "Budi Santoso",
+    email: "budi.santoso@smkn1batam.sch.id",
+    peran: "Peserta",
+  },
 ];
 const initialPelatihan = [
-  { id: 1, judul: "Pemanfaatan Generative AI untuk Pembelajaran", tanggal: "3 September 2026", lokasi: "SMKN 1 Batam", peserta: 32, kuota: 40 },
-  { id: 2, judul: "Pembuatan Media Ajar Digital", tanggal: "27 Oktober 2026", lokasi: "Lab Komputer 2, SMKN 1 Batam", peserta: 18, kuota: 30 },
-  { id: 3, judul: "Pengembangan Modul Pembelajaran Interaktif", tanggal: "3 November 2026", lokasi: "Ruang Rapat Utama, SMKN 1 Batam", peserta: 18, kuota: 50 },
+  {
+    id: 1,
+    judul: "Pemanfaatan Generative AI untuk Pembelajaran",
+    tanggal: "3 September 2026",
+    lokasi: "SMKN 1 Batam",
+    peserta: 32,
+    kuota: 40,
+  },
+  {
+    id: 2,
+    judul: "Pembuatan Media Ajar Digital",
+    tanggal: "27 Oktober 2026",
+    lokasi: "Lab Komputer 2, SMKN 1 Batam",
+    peserta: 18,
+    kuota: 30,
+  },
+  {
+    id: 3,
+    judul: "Pengembangan Modul Pembelajaran Interaktif",
+    tanggal: "3 November 2026",
+    lokasi: "Ruang Rapat Utama, SMKN 1 Batam",
+    peserta: 18,
+    kuota: 50,
+  },
 ];
 const initialKarya = [
-  { id: 1, judul: "Kuis Interaktif Materi Bahasa Inggris", pembuat: "Siti Rahmawati", status: "Menunggu verifikasi" },
-  { id: 2, judul: "Modul Pembelajaran Digital", pembuat: "Andi Saputra", status: "Dipublikasikan" },
-  { id: 3, judul: "Video Penjelasan Materi", pembuat: "Dewi Lestari", status: "Perlu revisi" },
+  {
+    id: 1,
+    judul: "Kuis Interaktif Materi Bahasa Inggris",
+    pembuat: "Siti Rahmawati",
+    status: "Menunggu verifikasi",
+  },
+  {
+    id: 2,
+    judul: "Modul Pembelajaran Digital",
+    pembuat: "Andi Saputra",
+    status: "Dipublikasikan",
+  },
+  {
+    id: 3,
+    judul: "Video Penjelasan Materi",
+    pembuat: "Dewi Lestari",
+    status: "Perlu revisi",
+  },
 ];
 const initialBerita = [
-  { id: 1, judul: "Pelatihan Guru SMKN 1 Batam", isi: "Guru mengikuti kegiatan pelatihan untuk mengenal pemanfaatan teknologi digital dan Generative AI dalam menyiapkan media pembelajaran.", tanggal: "3 September 2026" },
-  { id: 2, judul: "Kumpulan Karya Pembelajaran Digital", isi: "Hasil karya peserta pelatihan mulai dikumpulkan sebagai dokumentasi dan bahan berbagi antarguru.", tanggal: "10 September 2026" },
+  {
+    id: 1,
+    judul: "Pelatihan Guru SMKN 1 Batam",
+    isi: "Guru mengikuti kegiatan pelatihan untuk mengenal pemanfaatan teknologi digital dan Generative AI dalam menyiapkan media pembelajaran.",
+    tanggal: "3 September 2026",
+  },
+  {
+    id: 2,
+    judul: "Kumpulan Karya Pembelajaran Digital",
+    isi: "Hasil karya peserta pelatihan mulai dikumpulkan sebagai dokumentasi dan bahan berbagi antarguru.",
+    tanggal: "10 September 2026",
+  },
 ];
 
 const initialMateri = [
@@ -79,12 +144,7 @@ const initialSertifikat = [
     judul: "Pemanfaatan Generative AI untuk Pembelajaran",
     tanggal: "3 September 2026",
     status: "Sertifikat tersedia",
-    peserta: [
-      "Siti Rahmawati",
-      "Andi Saputra",
-      "Dewi Lestari",
-      "Budi Santoso",
-    ],
+    peserta: ["Siti Rahmawati", "Andi Saputra", "Dewi Lestari", "Budi Santoso"],
   },
   {
     id: 2,
@@ -191,7 +251,7 @@ function BerandaAdmin({ guru, pelatihan, materi, karya, setView }) {
   ];
 
   const karyaMenunggu = karya.filter(
-    (item) => item.status === "Menunggu verifikasi"
+    (item) => item.status === "Menunggu verifikasi",
   ).length;
 
   return (
@@ -292,7 +352,7 @@ function KelolaPengguna({ data, setData }) {
   const hasil = data.filter((item) =>
     `${item.nama} ${item.email} ${item.peran}`
       .toLowerCase()
-      .includes(q.toLowerCase())
+      .includes(q.toLowerCase()),
   );
 
   return (
@@ -352,9 +412,7 @@ function KelolaPengguna({ data, setData }) {
                       title="Hapus pengguna"
                       aria-label={`Hapus ${item.nama}`}
                       onClick={() =>
-                        setData((prev) =>
-                          prev.filter((u) => u.id !== item.id)
-                        )
+                        setData((prev) => prev.filter((u) => u.id !== item.id))
                       }
                     >
                       <Trash2 size={17} />
@@ -386,7 +444,7 @@ function KelolaPelatihan({ data, setData }) {
 
     const tanggalFormat = new Date(`${tanggal}T00:00:00`).toLocaleDateString(
       "id-ID",
-      { day: "numeric", month: "long", year: "numeric" }
+      { day: "numeric", month: "long", year: "numeric" },
     );
 
     setData((prev) => [
@@ -534,7 +592,12 @@ function KelolaMateri({ data, setData }) {
   const tambah = (e) => {
     e.preventDefault();
 
-    if (!judul.trim() || !namaFile.trim() || !pelatihan.trim() || !file.trim()) {
+    if (
+      !judul.trim() ||
+      !namaFile.trim() ||
+      !pelatihan.trim() ||
+      !file.trim()
+    ) {
       return;
     }
 
@@ -566,13 +629,18 @@ function KelolaMateri({ data, setData }) {
 
   return (
     <>
-            <SectionTitle title="Kelola Materi" />
+      <SectionTitle title="Kelola Materi" />
 
       <Card className="mb-5">
         <h3 className="mb-4 font-semibold text-slate-800">Tambah materi</h3>
-        <form onSubmit={tambah} className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <form
+          onSubmit={tambah}
+          className="grid grid-cols-1 gap-4 md:grid-cols-2"
+        >
           <div>
-            <label className="mb-1 block text-sm font-medium">Judul materi</label>
+            <label className="mb-1 block text-sm font-medium">
+              Judul materi
+            </label>
             <input
               required
               value={judul}
@@ -594,7 +662,9 @@ function KelolaMateri({ data, setData }) {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium">Jenis materi</label>
+            <label className="mb-1 block text-sm font-medium">
+              Jenis materi
+            </label>
             <select
               value={tipe}
               onChange={(e) => setTipe(e.target.value)}
@@ -609,7 +679,9 @@ function KelolaMateri({ data, setData }) {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium">Kategori materi</label>
+            <label className="mb-1 block text-sm font-medium">
+              Kategori materi
+            </label>
             <input
               required
               value={pelatihan}
@@ -736,8 +808,8 @@ function KelolaMateri({ data, setData }) {
 
       <p className="mt-4 text-xs leading-5 text-slate-500">
         File harus tersedia di folder public/materi agar tautan dapat dibuka.
-        Penambahan melalui formulir hanya mencatat lokasi file, bukan
-        mengunggah file ke server.
+        Penambahan melalui formulir hanya mencatat lokasi file, bukan mengunggah
+        file ke server.
       </p>
     </>
   );
@@ -746,7 +818,7 @@ function KelolaMateri({ data, setData }) {
 function KelolaKarya({ data, setData }) {
   const ubahStatus = (id, status) => {
     setData((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, status } : item))
+      prev.map((item) => (item.id === id ? { ...item, status } : item)),
     );
   };
 
@@ -852,7 +924,9 @@ function KelolaBerita({ data, setData }) {
       <Card className="mb-5 max-w-2xl">
         <form onSubmit={tambah} className="space-y-4">
           <div>
-            <label className="mb-1 block text-sm font-medium">Judul berita</label>
+            <label className="mb-1 block text-sm font-medium">
+              Judul berita
+            </label>
             <input
               required
               value={judul}
@@ -927,9 +1001,24 @@ function EvaluasiAdmin() {
       />
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {[
-          { judul: "Pemanfaatan Generative AI untuk Pembelajaran", peserta: 32, rating: "4,8/5", ringkasan: "Peserta merasa materi bermanfaat dan mudah diterapkan." },
-          { judul: "Pembuatan Media Ajar Digital", peserta: 18, rating: "4,6/5", ringkasan: "Peserta menyukai praktik langsung membuat media ajar." },
-          { judul: "Pengembangan Modul Interaktif", peserta: 18, rating: "4,7/5", ringkasan: "Peserta menyarankan tambahan waktu untuk praktik." },
+          {
+            judul: "Pemanfaatan Generative AI untuk Pembelajaran",
+            peserta: 32,
+            rating: "4,8/5",
+            ringkasan: "Peserta merasa materi bermanfaat dan mudah diterapkan.",
+          },
+          {
+            judul: "Pembuatan Media Ajar Digital",
+            peserta: 18,
+            rating: "4,6/5",
+            ringkasan: "Peserta menyukai praktik langsung membuat media ajar.",
+          },
+          {
+            judul: "Pengembangan Modul Interaktif",
+            peserta: 18,
+            rating: "4,7/5",
+            ringkasan: "Peserta menyarankan tambahan waktu untuk praktik.",
+          },
         ].map((item) => (
           <Card key={item.judul}>
             <div className="flex items-center gap-2 text-amber-500">
@@ -937,16 +1026,21 @@ function EvaluasiAdmin() {
               <span className="font-semibold">{item.rating}</span>
             </div>
             <h3 className="mt-3 font-semibold text-slate-800">{item.judul}</h3>
-            <p className="mt-2 text-sm text-slate-500">{item.peserta} tanggapan peserta</p>
-            <p className="mt-3 text-sm leading-6 text-slate-600">{item.ringkasan}</p>
+            <p className="mt-2 text-sm text-slate-500">
+              {item.peserta} tanggapan peserta
+            </p>
+            <p className="mt-3 text-sm leading-6 text-slate-600">
+              {item.ringkasan}
+            </p>
           </Card>
         ))}
       </div>
-      <p className="mt-4 text-xs text-slate-500">Contoh data sementara untuk tampilan, bukan hasil evaluasi asli.</p>
+      <p className="mt-4 text-xs text-slate-500">
+        Contoh data sementara untuk tampilan, bukan hasil evaluasi asli.
+      </p>
     </>
   );
 }
-
 
 function DataSederhanaAdmin({ title, desc, items }) {
   return (
@@ -956,8 +1050,12 @@ function DataSederhanaAdmin({ title, desc, items }) {
         {items.map((item) => (
           <Card key={item.judul}>
             <h3 className="font-semibold text-slate-800">{item.judul}</h3>
-            <p className="mt-2 text-sm leading-6 text-slate-600">{item.keterangan}</p>
-            <span className="mt-3 inline-flex rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">Data contoh</span>
+            <p className="mt-2 text-sm leading-6 text-slate-600">
+              {item.keterangan}
+            </p>
+            <span className="mt-3 inline-flex rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
+              Data contoh
+            </span>
           </Card>
         ))}
       </div>
@@ -984,9 +1082,7 @@ function KelolaSertifikat({ data }) {
             <Card key={item.id}>
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <h3 className="font-semibold text-slate-800">
-                    {item.judul}
-                  </h3>
+                  <h3 className="font-semibold text-slate-800">{item.judul}</h3>
                   <p className="mt-2 text-sm text-slate-500">
                     <CalendarDays size={15} className="mr-1 inline" />
                     {item.tanggal}
@@ -1001,9 +1097,7 @@ function KelolaSertifikat({ data }) {
 
                 <button
                   className={btnOutline}
-                  onClick={() =>
-                    setPelatihanTerpilih(terbuka ? null : item.id)
-                  }
+                  onClick={() => setPelatihanTerpilih(terbuka ? null : item.id)}
                 >
                   <Users size={16} />
                   {terbuka ? "Tutup Daftar" : "Lihat Peserta"}
@@ -1052,7 +1146,11 @@ function KelolaSertifikat({ data }) {
 
 function DokumentasiAdmin() {
   const [foto, setFoto] = useState([
-    { id: "dummy-1", nama: "Dokumentasi Pelatihan Guru", url: "/pelatihan-guru.jpg" },
+    {
+      id: "dummy-1",
+      nama: "Dokumentasi Pelatihan Guru",
+      url: "/pelatihan-guru.jpg",
+    },
   ]);
 
   const pilihFoto = (e) => {
@@ -1140,7 +1238,7 @@ export default function DashboardAdmin({ onLogout }) {
 
   const view =
     Object.keys(routeAdmin).find(
-      (key) => routeAdmin[key] === location.pathname
+      (key) => routeAdmin[key] === location.pathname,
     ) || "beranda";
 
   const setView = (key) => {
@@ -1181,9 +1279,44 @@ export default function DashboardAdmin({ onLogout }) {
     karya: <KelolaKarya data={karya} setData={setKarya} />,
     berita: <KelolaBerita data={berita} setData={setBerita} />,
     evaluasi: <EvaluasiAdmin />,
-    sertifikat: <KelolaSertifikat data={sertifikat} />,    galeri: <DokumentasiAdmin />,
-    testimoni: <DataSederhanaAdmin title="Kelola Testimoni Peserta" desc="Lihat testimoni yang dibagikan guru setelah mengikuti pelatihan." items={[{ judul: "Siti Rahmawati", keterangan: "Materi pelatihan mudah dipahami dan bisa diterapkan saat membuat media pembelajaran." }, { judul: "Andi Saputra", keterangan: "Kegiatan membantu saya mendapatkan ide baru untuk membuat media ajar digital." }]} />,
-    skill: <DataSederhanaAdmin title="Pengembangan Skill" desc="Kelola informasi pengembangan keterampilan guru." items={[{ judul: "Membuat Media Ajar Digital", keterangan: "Latihan membuat kuis, modul, dan presentasi untuk pembelajaran." }, { judul: "Pemanfaatan Teknologi Pembelajaran", keterangan: "Informasi pengembangan keterampilan menggunakan teknologi untuk kegiatan belajar mengajar." }]} />,
+    sertifikat: <KelolaSertifikat data={sertifikat} />,
+    galeri: <DokumentasiAdmin />,
+    testimoni: (
+      <DataSederhanaAdmin
+        title="Kelola Testimoni Peserta"
+        desc="Lihat testimoni yang dibagikan guru setelah mengikuti pelatihan."
+        items={[
+          {
+            judul: "Siti Rahmawati",
+            keterangan:
+              "Materi pelatihan mudah dipahami dan bisa diterapkan saat membuat media pembelajaran.",
+          },
+          {
+            judul: "Andi Saputra",
+            keterangan:
+              "Kegiatan membantu saya mendapatkan ide baru untuk membuat media ajar digital.",
+          },
+        ]}
+      />
+    ),
+    skill: (
+      <DataSederhanaAdmin
+        title="Pengembangan Skill"
+        desc="Kelola informasi pengembangan keterampilan guru."
+        items={[
+          {
+            judul: "Membuat Media Ajar Digital",
+            keterangan:
+              "Latihan membuat kuis, modul, dan presentasi untuk pembelajaran.",
+          },
+          {
+            judul: "Pemanfaatan Teknologi Pembelajaran",
+            keterangan:
+              "Informasi pengembangan keterampilan menggunakan teknologi untuk kegiatan belajar mengajar.",
+          },
+        ]}
+      />
+    ),
   };
 
   const judulHalaman =
@@ -1241,7 +1374,7 @@ export default function DashboardAdmin({ onLogout }) {
                   aria-current={aktif ? "page" : undefined}
                   className={`flex min-h-11 w-full items-center gap-3 rounded-xl px-3.5 py-3 text-left text-sm font-medium transition ${
                     aktif
-                     ? "bg-storm-600 text-white shadow-sm"
+                      ? "bg-storm-600 text-white shadow-sm"
                       : "text-slate-600 hover:bg-storm-50 hover:text-slate-800"
                   }`}
                 >
@@ -1304,7 +1437,6 @@ export default function DashboardAdmin({ onLogout }) {
         </main>
       </div>
 
-     
       {showLogout && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 p-4">
           <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
@@ -1337,6 +1469,6 @@ export default function DashboardAdmin({ onLogout }) {
           </div>
         </div>
       )}
-      </div>
+    </div>
   );
 }

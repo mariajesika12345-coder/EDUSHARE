@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 
 function RegisterGuru({ onRegister, onBack }) {
@@ -11,26 +10,26 @@ function RegisterGuru({ onRegister, onBack }) {
   const [showSuccess, setShowSuccess] = useState(false);
 
   async function handleSubmit(e) {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (password !== passwordConfirmation) {
-    setError("Konfirmasi password tidak sama.");
-    return;
+    if (password !== passwordConfirmation) {
+      setError("Konfirmasi password tidak sama.");
+      return;
+    }
+
+    setError("");
+
+    const result = await onRegister({
+      name: name.trim(),
+      email: email.trim(),
+      password,
+      password_confirmation: passwordConfirmation,
+    });
+
+    if (result) {
+      setShowSuccess(true);
+    }
   }
-
-  setError("");
-
-  const result = await onRegister({
-    name: name.trim(),
-    email: email.trim(),
-    password,
-    password_confirmation: passwordConfirmation,
-  });
-
-  if (result) {
-    setShowSuccess(true);
-  }
-}
 
   const inputClass =
     "w-full rounded-lg border border-[#E2E8F0] bg-white px-4 py-3 text-sm text-[#1E293B] outline-none focus:border-[#94A3B8] focus:ring-1 focus:ring-[#CBD5E1]";
@@ -52,24 +51,26 @@ function RegisterGuru({ onRegister, onBack }) {
           }}
         >
           <div className="relative z-10">
-  <span className="mb-4 inline-block rounded-full border border-white/40 bg-white/15 px-4 py-2 text-xs font-semibold tracking-wider text-white">
-    PLATFORM DIGITAL GURU
-  </span>
+            <span className="mb-4 inline-block rounded-full border border-white/40 bg-white/15 px-4 py-2 text-xs font-semibold tracking-wider text-white">
+              PLATFORM DIGITAL GURU
+            </span>
 
-  <h1 className="!text-white text-4xl font-extrabold tracking-wide">
-    EDUSHARE
-  </h1>
+            <h1 className="!text-white text-4xl font-extrabold tracking-wide">
+              EDUSHARE
+            </h1>
 
-  <div className="mt-3 h-1 w-16 rounded-full bg-orange-400" />
+            <div className="mt-3 h-1 w-16 rounded-full bg-orange-400" />
 
-  <h2 className="!text-white mt-5 text-2xl font-bold leading-snug">
-    Bergabung Bersama EDUSHARE
-  </h2>
+            <h2 className="!text-white mt-5 text-2xl font-bold leading-snug">
+              Bergabung Bersama EDUSHARE
+            </h2>
 
-  <p className="!text-white mt-4 max-w-sm text-sm leading-7">
-    Daftarkan akun Anda untuk mengakses materi pelatihan, dokumentasi kegiatan, dan hasil karya guru SMKN 1 Batam dalam satu platform digital.
-  </p>
-</div>
+            <p className="!text-white mt-4 max-w-sm text-sm leading-7">
+              Daftarkan akun Anda untuk mengakses materi pelatihan, dokumentasi
+              kegiatan, dan hasil karya guru SMKN 1 Batam dalam satu platform
+              digital.
+            </p>
+          </div>
         </div>
 
         <div className="flex flex-col justify-center bg-white p-6 sm:p-8 md:p-9">
@@ -184,7 +185,7 @@ function RegisterGuru({ onRegister, onBack }) {
           </p>
         </div>
       </div>
-            {showSuccess && (
+      {showSuccess && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
           <div className="w-full max-w-sm rounded-2xl bg-white p-8 text-center shadow-2xl">
             <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-green-100">

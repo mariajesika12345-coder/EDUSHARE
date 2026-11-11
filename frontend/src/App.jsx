@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import {
   BrowserRouter,
@@ -49,7 +48,7 @@ function AppContent() {
         throw new Error(
           data.errors?.email?.[0] ||
             data.message ||
-            "Email atau password salah!"
+            "Email atau password salah!",
         );
       }
 
@@ -88,47 +87,44 @@ function AppContent() {
 
       const data = await response.json();
       if (!response.ok) {
-  const firstError = Object.values(data.errors || {})[0]?.[0];
+        const firstError = Object.values(data.errors || {})[0]?.[0];
 
-  throw new Error(
-    firstError || data.message || "Pendaftaran gagal."
-  );
-}
+        throw new Error(firstError || data.message || "Pendaftaran gagal.");
+      }
 
-return true;
-
-} catch (error) {
-  alert(error.message || "Tidak dapat terhubung ke server Laravel.");
-}
+      return true;
+    } catch (error) {
+      alert(error.message || "Tidak dapat terhubung ke server Laravel.");
+    }
   };
   // Logout pengguna
   const handleLogout = async () => {
-  const token = sessionStorage.getItem("edushare_token");
+    const token = sessionStorage.getItem("edushare_token");
 
-  try {
-    if (token) {
-      await fetch("http://127.0.0.1:8000/api/logout", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    try {
+      if (token) {
+        await fetch("http://127.0.0.1:8000/api/logout", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Logout API gagal:", error);
+    } finally {
+      sessionStorage.removeItem("edushare_role");
+      sessionStorage.removeItem("edushare_token");
+      sessionStorage.removeItem("user");
+
+      localStorage.removeItem("edushare_role");
+      localStorage.removeItem("edushare_token");
+      localStorage.removeItem("user");
+
+      navigate("/", { replace: true });
     }
-  } catch (error) {
-    console.error("Logout API gagal:", error);
-  } finally {
-    sessionStorage.removeItem("edushare_role");
-    sessionStorage.removeItem("edushare_token");
-    sessionStorage.removeItem("user");
-
-    localStorage.removeItem("edushare_role");
-    localStorage.removeItem("edushare_token");
-    localStorage.removeItem("user");
-
-    navigate("/", { replace: true });
-  }
-};
+  };
 
   return (
     <Routes>
@@ -138,8 +134,8 @@ return true;
         element={<LandingPage onLogin={() => navigate("/login")} />}
       />
 
-            {/* Login */}
-            <Route
+      {/* Login */}
+      <Route
         path="/login"
         element={
           <LoginGuru
@@ -164,10 +160,7 @@ return true;
         path="/guru/*"
         element={
           <ProtectedRoute allowedRole="guru">
-            <DashboardGuru
-              key={`guru-${refresh}`}
-              onLogout={handleLogout}
-            />
+            <DashboardGuru key={`guru-${refresh}`} onLogout={handleLogout} />
           </ProtectedRoute>
         }
       />
@@ -177,19 +170,13 @@ return true;
         path="/admin/*"
         element={
           <ProtectedRoute allowedRole="admin">
-            <DashboardAdmin
-              key={`admin-${refresh}`}
-              onLogout={handleLogout}
-            />
+            <DashboardAdmin key={`admin-${refresh}`} onLogout={handleLogout} />
           </ProtectedRoute>
         }
       />
 
       {/* Halaman tidak ditemukan */}
-      <Route
-        path="*"
-        element={<Navigate to="/" replace />}
-      />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }
