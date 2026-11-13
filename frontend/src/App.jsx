@@ -109,7 +109,7 @@ function AppContent() {
             Accept: "application/json",
             Authorization: `Bearer ${token}`,
           },
-        });
+        });  
       }
     } catch (error) {
       console.error("Logout API gagal:", error);

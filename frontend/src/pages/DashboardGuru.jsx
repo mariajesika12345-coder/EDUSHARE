@@ -1,6 +1,8 @@
 
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+
+const API_URL = "http://127.0.0.1:8000/api";
 import {
   LayoutDashboard,
   CalendarDays,
@@ -27,7 +29,7 @@ import {
 } from "lucide-react";
 
 const pelatihanData = [
-  { id: 1, judul: "Pemanfaatan Generative AI untuk Pembelajaran", tanggal: "3 September 2026", waktu: "09.00–12.00 WIB", lokasi: "SMKN 1 Batam", kuota: 40, terisi: 32, status: "Selesai" },
+  { id: 1, judul: "Pemanfaatan Generative AI untuk Pembelajaran", tanggal: "3 September 2026", waktu: "09.00–12.00 WIB", lokasi: "SMKN 1 Batam", kuota: 40, terisi: 32, status: "Pendaftaran dibuka" },
   { id: 2, judul: "Pembuatan Media Ajar Digital", tanggal: "27 Oktober 2026", waktu: "09.00–12.00 WIB", lokasi: "Lab Komputer 2, SMKN 1 Batam", kuota: 30, terisi: 18, status: "Pendaftaran dibuka" },
   { id: 3, judul: "Pengembangan Modul Pembelajaran Interaktif", tanggal: "3 November 2026", waktu: "10.00–13.00 WIB", lokasi: "Ruang Rapat Utama, SMKN 1 Batam", kuota: 50, terisi: 18, status: "Pendaftaran dibuka" },
 ];
@@ -299,19 +301,64 @@ function Pelatihan() {
     setPesan("");
   };
 
-  const kirimPendaftaran = (e) => {
-    e.preventDefault();
+ 
+const kirimPendaftaran = async (e) => {
+  e.preventDefault();
 
-    if (!pelatihanDipilih) return;
+  if (!pelatihanDipilih) return;
 
-    if (terdaftarLokal.includes(pelatihanDipilih.id)) {
-      setPesan("Kamu sudah terdaftar pada pelatihan ini.");
-      return;
+  if (terdaftarLokal.includes(pelatihanDipilih.id)) {
+    setPesan("Kamu sudah terdaftar pada pelatihan ini.");
+    return;
+  }
+
+  const token = sessionStorage.getItem("edushare_token");
+
+  if (!token) {
+    setPesan("Sesi login tidak ditemukan. Silakan login kembali.");
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      `${API_URL}/pendaftaran-pelatihan`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          pelatihan_id: pelatihanDipilih.id,
+          mata_pelajaran: instansi,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.errors?.pelatihan_id?.[0] ||
+        data.errors?.mata_pelajaran?.[0] ||
+        data.message ||
+        "Pendaftaran gagal."
+      );
     }
 
-    setTerdaftarLokal((prev) => [...prev, pelatihanDipilih.id]);
+    setTerdaftarLokal((prev) => [
+      ...prev,
+      pelatihanDipilih.id,
+    ]);
+
     setPesan("Pendaftaran berhasil!");
-  };
+
+  } catch (error) {
+    setPesan(error.message || "Tidak dapat terhubung ke server.");
+  }
+};
+
 
   return (
     <>
@@ -461,22 +508,19 @@ function Pelatihan() {
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="instansi-peserta"
-                    className="mb-1 block text-sm font-medium text-storm-800"
-                  >
-                    Asal Instansi / Sekolah
-                  </label>
+                  <label htmlFor="instansi-peserta" className="...">
+  Mata Pelajaran yang Diampu
+</label>
 
-                  <input
-                    id="instansi-peserta"
-                    type="text"
-                    required
-                    value={instansi}
-                    onChange={(e) => setInstansi(e.target.value)}
-                    placeholder="Contoh: SMKN 1 Batam"
-                    className={inputClass}
-                  />
+<input
+  id="instansi-peserta"
+  type="text"
+  required
+  value={instansi}
+  onChange={(e) => setInstansi(e.target.value)}
+  placeholder="Contoh: Matematika"
+  className={inputClass}
+/>
                 </div>
 
                 <div>

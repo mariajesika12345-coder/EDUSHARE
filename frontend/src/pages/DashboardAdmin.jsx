@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+const API_URL = "http://127.0.0.1:8000/api";
 import {
   LayoutDashboard,
   Users,
@@ -25,32 +26,7 @@ import {
   Gamepad2,
 } from "lucide-react";
 
-const initialGuru = [
-  {
-    id: 1,
-    nama: "Siti Rahmawati",
-    email: "siti.rahmawati@smkn1batam.sch.id",
-    peran: "Guru",
-  },
-  {
-    id: 2,
-    nama: "Andi Saputra",
-    email: "andi.saputra@smkn1batam.sch.id",
-    peran: "Guru",
-  },
-  {
-    id: 3,
-    nama: "Dewi Lestari",
-    email: "dewi.lestari@smkn1batam.sch.id",
-    peran: "Peserta",
-  },
-  {
-    id: 4,
-    nama: "Budi Santoso",
-    email: "budi.santoso@smkn1batam.sch.id",
-    peran: "Peserta",
-  },
-];
+
 const initialPelatihan = [
   {
     id: 1,
@@ -1254,13 +1230,52 @@ export default function DashboardAdmin({ onLogout }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
 
-  const [guru, setGuru] = useState(initialGuru);
-  const [pelatihan, setPelatihan] = useState(initialPelatihan);
+  const [guru, setGuru] = useState([]);  const [pelatihan, setPelatihan] = useState(initialPelatihan);
   const [materi, setMateri] = useState(initialMateri);
   const [karya, setKarya] = useState(initialKarya);
   const [berita, setBerita] = useState(initialBerita);
   const [sertifikat] = useState(initialSertifikat);
+useEffect(() => {
+  const ambilDataPendaftaran = async () => {
+    const token = sessionStorage.getItem("edushare_token");
 
+    if (!token) {
+      console.error("Token Admin tidak ditemukan.");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${API_URL}/pendaftaran-pelatihan`,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      const hasil = await response.json();
+
+      if (!response.ok) {
+        throw new Error(hasil.message || "Gagal mengambil data peserta.");
+      }
+
+      const daftarGuru = (hasil.data || []).map((item) => ({
+        id: item.id,
+        nama: item.nama_lengkap,
+        email: item.email,
+        peran: "Peserta",
+      }));
+
+      setGuru(daftarGuru);
+    } catch (error) {
+      console.error("Gagal mengambil data pendaftaran:", error);
+    }
+  };
+
+  ambilDataPendaftaran();
+}, []);
   const halaman = {
     beranda: (
       <BerandaAdmin
