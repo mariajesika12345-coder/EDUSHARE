@@ -569,18 +569,58 @@ const kirimPendaftaran = async (e) => {
 }
 
 // MATERI PELATIHAN — DATA ASLI TETAP DIPERTAHANKAN
+
 function Materi() {
   const [tab, setTab] = useState("Semua");
   const [q, setQ] = useState("");
+  const [materi, setMateri] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
   const tabs = ["Semua", "Slide", "Modul", "Video"];
 
-  const hasil = materiData.filter(
+  useEffect(() => {
+    const ambilMateri = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const response = await fetch(`${API_URL}/materi`);
+        const hasil = await response.json();
+
+        if (!response.ok) {
+          throw new Error(hasil.message || "Gagal mengambil materi.");
+        }
+
+        const dataMateri = (hasil.data || []).map((item) => ({
+          id: item.id,
+          judul: item.judul,
+          namaFile: item.nama_file,
+          tipe: item.tipe,
+          pelatihan: item.kategori || "Materi pembelajaran",
+          file: item.file_path,
+        }));
+
+        setMateri(dataMateri);
+      } catch (err) {
+        setError(err.message || "Tidak dapat terhubung ke server.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    ambilMateri();
+  }, []);
+
+  const hasil = materi.filter(
     (m) =>
       (tab === "Semua" ||
         (tab === "Slide" && m.tipe === "PPT") ||
         (tab === "Modul" && m.tipe === "Modul") ||
         m.tipe === tab) &&
-      `${m.judul} ${m.pelatihan}`.toLowerCase().includes(q.toLowerCase())
+      `${m.judul} ${m.pelatihan}`
+        .toLowerCase()
+        .includes(q.toLowerCase())
   );
 
   return (
@@ -623,8 +663,12 @@ function Materi() {
         </div>
       </div>
 
-      {hasil.length === 0 ? (
-        <EmptyState pesan="Tidak ada materi yang cocok dengan pencarian." />
+      {loading ? (
+        <EmptyState pesan="Sedang mengambil data materi..." />
+      ) : error ? (
+        <EmptyState pesan={error} />
+      ) : hasil.length === 0 ? (
+        <EmptyState pesan="Belum ada materi yang tersedia." />
       ) : (
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
           {hasil.map((m) => {
@@ -635,6 +679,7 @@ function Materi() {
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-storm-100 text-storm-600">
                   <Icon size={22} />
                 </div>
+
                 <div className="min-w-0 flex-1">
                   <h3 className="truncate font-semibold text-storm-800">
                     {m.judul}

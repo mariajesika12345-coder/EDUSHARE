@@ -4,6 +4,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PendaftaranPelatihanController;
+use App\Http\Controllers\Api\MateriController;
 
 // API REGISTER
 Route::post('/register', [AuthController::class, 'register']);
@@ -35,3 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/pendaftaran-pelatihan/{id}/status', [PendaftaranPelatihanController::class, 'updateStatus']);
 
 });
+// API MATERI
+Route::get('/materi', [MateriController::class, 'index']);
+Route::post('/materi', [MateriController::class, 'store']);
+Route::delete('/materi/{id}', [MateriController::class, 'destroy']);
