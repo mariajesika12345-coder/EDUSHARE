@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -20,7 +19,6 @@ import {
   Star,
   CheckCircle2,
   MapPin,
-  Images,
   MessageSquareQuote,
   TrendingUp,
   Heart,
@@ -29,14 +27,51 @@ import {
 } from "lucide-react";
 
 const pelatihanData = [
-  { id: 1, judul: "Pemanfaatan Generative AI untuk Pembelajaran", tanggal: "3 September 2026", waktu: "09.00–12.00 WIB", lokasi: "SMKN 1 Batam", kuota: 40, terisi: 32, status: "Pendaftaran dibuka" },
-  { id: 2, judul: "Pembuatan Media Ajar Digital", tanggal: "27 Oktober 2026", waktu: "09.00–12.00 WIB", lokasi: "Lab Komputer 2, SMKN 1 Batam", kuota: 30, terisi: 18, status: "Pendaftaran dibuka" },
-  { id: 3, judul: "Pengembangan Modul Pembelajaran Interaktif", tanggal: "3 November 2026", waktu: "10.00–13.00 WIB", lokasi: "Ruang Rapat Utama, SMKN 1 Batam", kuota: 50, terisi: 18, status: "Pendaftaran dibuka" },
+  {
+    id: 1,
+    judul: "Pemanfaatan Generative AI untuk Pembelajaran",
+    tanggal: "3 September 2026",
+    waktu: "09.00–12.00 WIB",
+    lokasi: "SMKN 1 Batam",
+    kuota: 40,
+    terisi: 32,
+    status: "Pendaftaran dibuka",
+  },
+  {
+    id: 2,
+    judul: "Pembuatan Media Ajar Digital",
+    tanggal: "27 Oktober 2026",
+    waktu: "09.00–12.00 WIB",
+    lokasi: "Lab Komputer 2, SMKN 1 Batam",
+    kuota: 30,
+    terisi: 18,
+    status: "Pendaftaran dibuka",
+  },
+  {
+    id: 3,
+    judul: "Pengembangan Modul Pembelajaran Interaktif",
+    tanggal: "3 November 2026",
+    waktu: "10.00–13.00 WIB",
+    lokasi: "Ruang Rapat Utama, SMKN 1 Batam",
+    kuota: 50,
+    terisi: 18,
+    status: "Pendaftaran dibuka",
+  },
 ];
 
 const sertifikatData = [
-  { id: 1, judul: "Sertifikat Pelatihan Pemanfaatan Generative AI", tanggal: "3 September 2026", tersedia: true },
-  { id: 2, judul: "Sertifikat Pembuatan Media Ajar Digital", tanggal: "27 Oktober 2026", tersedia: false },
+  {
+    id: 1,
+    judul: "Sertifikat Pelatihan Pemanfaatan Generative AI",
+    tanggal: "3 September 2026",
+    tersedia: true,
+  },
+  {
+    id: 2,
+    judul: "Sertifikat Pembuatan Media Ajar Digital",
+    tanggal: "27 Oktober 2026",
+    tersedia: false,
+  },
 ];
 
 const materiData = [
@@ -73,7 +108,6 @@ const menu = [
   { key: "karya", label: "Unggah Hasil Karya", icon: Upload },
   { key: "publikasi", label: "Karya Peserta", icon: Heart },
   { key: "sertifikat", label: "Sertifikat", icon: Award },
-  { key: "galeri", label: "Galeri Kegiatan", icon: Images },
   { key: "evaluasi", label: "Evaluasi Kegiatan", icon: ClipboardCheck },
   { key: "testimoni", label: "Testimoni Peserta", icon: MessageSquareQuote },
   { key: "skill", label: "Pengembangan Skill", icon: TrendingUp },
@@ -86,7 +120,6 @@ const routeGuru = {
   karya: "/guru/unggah-karya",
   publikasi: "/guru/karya-peserta",
   sertifikat: "/guru/sertifikat",
-  galeri: "/guru/galeri",
   evaluasi: "/guru/evaluasi",
   testimoni: "/guru/testimoni",
   skill: "/guru/pengembangan-skill",
@@ -122,9 +155,7 @@ function SectionTitle({ title, desc }) {
       <h2 className="text-xl font-bold tracking-tight text-storm-800">
         {title}
       </h2>
-      {desc && (
-        <p className="mt-1 text-sm leading-6 text-storm-500">{desc}</p>
-      )}
+      {desc && <p className="mt-1 text-sm leading-6 text-storm-500">{desc}</p>}
     </div>
   );
 }
@@ -242,7 +273,9 @@ function Beranda({ nama, terdaftar, setView, jumlahKarya }) {
                   </h3>
                   <p className="flex items-start gap-2 text-sm text-storm-500">
                     <CalendarDays size={15} className="mt-0.5 shrink-0" />
-                    <span>{p.tanggal} · {p.waktu}</span>
+                    <span>
+                      {p.tanggal} · {p.waktu}
+                    </span>
                   </p>
                   <p className="flex items-start gap-2 text-sm text-storm-500">
                     <MapPin size={15} className="mt-0.5 shrink-0" />
@@ -301,28 +334,25 @@ function Pelatihan() {
     setPesan("");
   };
 
- 
-const kirimPendaftaran = async (e) => {
-  e.preventDefault();
+  const kirimPendaftaran = async (e) => {
+    e.preventDefault();
 
-  if (!pelatihanDipilih) return;
+    if (!pelatihanDipilih) return;
 
-  if (terdaftarLokal.includes(pelatihanDipilih.id)) {
-    setPesan("Kamu sudah terdaftar pada pelatihan ini.");
-    return;
-  }
+    if (terdaftarLokal.includes(pelatihanDipilih.id)) {
+      setPesan("Kamu sudah terdaftar pada pelatihan ini.");
+      return;
+    }
 
-  const token = sessionStorage.getItem("edushare_token");
+    const token = sessionStorage.getItem("edushare_token");
 
-  if (!token) {
-    setPesan("Sesi login tidak ditemukan. Silakan login kembali.");
-    return;
-  }
+    if (!token) {
+      setPesan("Sesi login tidak ditemukan. Silakan login kembali.");
+      return;
+    }
 
-  try {
-    const response = await fetch(
-      `${API_URL}/pendaftaran-pelatihan`,
-      {
+    try {
+      const response = await fetch(`${API_URL}/pendaftaran-pelatihan`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -333,32 +363,26 @@ const kirimPendaftaran = async (e) => {
           pelatihan_id: pelatihanDipilih.id,
           mata_pelajaran: instansi,
         }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.errors?.pelatihan_id?.[0] ||
+            data.errors?.mata_pelajaran?.[0] ||
+            data.message ||
+            "Pendaftaran gagal.",
+        );
       }
-    );
 
-    const data = await response.json();
+      setTerdaftarLokal((prev) => [...prev, pelatihanDipilih.id]);
 
-    if (!response.ok) {
-      throw new Error(
-        data.errors?.pelatihan_id?.[0] ||
-        data.errors?.mata_pelajaran?.[0] ||
-        data.message ||
-        "Pendaftaran gagal."
-      );
+      setPesan("Pendaftaran berhasil!");
+    } catch (error) {
+      setPesan(error.message || "Tidak dapat terhubung ke server.");
     }
-
-    setTerdaftarLokal((prev) => [
-      ...prev,
-      pelatihanDipilih.id,
-    ]);
-
-    setPesan("Pendaftaran berhasil!");
-
-  } catch (error) {
-    setPesan(error.message || "Tidak dapat terhubung ke server.");
-  }
-};
-
+  };
 
   return (
     <>
@@ -368,7 +392,7 @@ const kirimPendaftaran = async (e) => {
       />
 
       <div className="grid grid-cols-1 min-[601px]:grid-cols-2 min-[1025px]:grid-cols-3 gap-4">
-      {pelatihanData.map((p) => {
+        {pelatihanData.map((p) => {
           const sudahDaftar = terdaftarLokal.includes(p.id);
           const selesai = p.status === "Selesai";
 
@@ -411,10 +435,10 @@ const kirimPendaftaran = async (e) => {
                   {selesai
                     ? "Pelatihan selesai"
                     : sudahDaftar
-                    ? "Sudah terdaftar"
-                    : p.terisi >= p.kuota
-                    ? "Kuota penuh"
-                    : "Daftar Pelatihan"}
+                      ? "Sudah terdaftar"
+                      : p.terisi >= p.kuota
+                        ? "Kuota penuh"
+                        : "Daftar Pelatihan"}
                 </button>
               </div>
             </Card>
@@ -465,10 +489,7 @@ const kirimPendaftaran = async (e) => {
 
             {pesan === "Pendaftaran berhasil!" ? (
               <div className="rounded-xl bg-emerald-50 p-5 text-center">
-                <CheckCircle2
-                  size={42}
-                  className="mx-auto text-emerald-600"
-                />
+                <CheckCircle2 size={42} className="mx-auto text-emerald-600" />
 
                 <h4 className="mt-3 font-semibold text-emerald-800">
                   Pendaftaran berhasil!
@@ -509,34 +530,34 @@ const kirimPendaftaran = async (e) => {
 
                 <div>
                   <label htmlFor="instansi-peserta" className="...">
-  Mata Pelajaran yang Diampu
-</label>
+                    Mata Pelajaran yang Diampu
+                  </label>
 
-<input
-  id="instansi-peserta"
-  type="text"
-  required
-  value={instansi}
-  onChange={(e) => setInstansi(e.target.value)}
-  placeholder="Contoh: Matematika"
-  className={inputClass}
-/>
+                  <input
+                    id="instansi-peserta"
+                    type="text"
+                    required
+                    value={instansi}
+                    onChange={(e) => setInstansi(e.target.value)}
+                    placeholder="Contoh: Matematika"
+                    className={inputClass}
+                  />
                 </div>
 
                 <div>
-  <label className="mb-1 block text-sm font-medium text-storm-700">
-    Email
-  </label>
-  <input
-    type="email"
-    name="email"
-    value={email}
-    onChange={(e) => setEmail(e.target.value)}
-    required
-    placeholder="Contoh: nama@email.com"
-    className={inputClass}
-  />
-</div>
+                  <label className="mb-1 block text-sm font-medium text-storm-700">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    placeholder="Contoh: nama@email.com"
+                    className={inputClass}
+                  />
+                </div>
                 {pesan && (
                   <p role="alert" className="text-sm text-red-600">
                     {pesan}
@@ -562,8 +583,6 @@ const kirimPendaftaran = async (e) => {
           </div>
         </div>
       )}
-
-      
     </>
   );
 }
@@ -618,9 +637,7 @@ function Materi() {
         (tab === "Slide" && m.tipe === "PPT") ||
         (tab === "Modul" && m.tipe === "Modul") ||
         m.tipe === tab) &&
-      `${m.judul} ${m.pelatihan}`
-        .toLowerCase()
-        .includes(q.toLowerCase())
+      `${m.judul} ${m.pelatihan}`.toLowerCase().includes(q.toLowerCase()),
   );
 
   return (
@@ -710,7 +727,9 @@ function Materi() {
                     target={m.tipe === "Kuis" ? "_blank" : undefined}
                     rel={m.tipe === "Kuis" ? "noopener noreferrer" : undefined}
                     className={btnOutline}
-                    aria-label={m.tipe === "Kuis" ? "Buka kuis" : "Unduh materi"}
+                    aria-label={
+                      m.tipe === "Kuis" ? "Buka kuis" : "Unduh materi"
+                    }
                     title={m.tipe === "Kuis" ? "Buka kuis" : "Unduh materi"}
                   >
                     {m.tipe === "Kuis" ? (
@@ -769,7 +788,10 @@ function HasilKarya({ setDaftar }) {
       <Card className="max-w-3xl">
         <form onSubmit={kirim} className="space-y-5">
           <div>
-            <label htmlFor="judul-karya" className="mb-1.5 block text-sm font-medium text-storm-800">
+            <label
+              htmlFor="judul-karya"
+              className="mb-1.5 block text-sm font-medium text-storm-800"
+            >
               Judul karya
             </label>
             <input
@@ -783,7 +805,10 @@ function HasilKarya({ setDaftar }) {
           </div>
 
           <div>
-            <label htmlFor="deskripsi-karya" className="mb-1.5 block text-sm font-medium text-storm-800">
+            <label
+              htmlFor="deskripsi-karya"
+              className="mb-1.5 block text-sm font-medium text-storm-800"
+            >
               Deskripsi
             </label>
             <textarea
@@ -857,33 +882,37 @@ function PublikasiKarya({ daftar }) {
             return (
               <Card key={item.id}>
                 <div className="mb-4 h-48 overflow-hidden rounded-xl bg-storm-50">
-  {item.fileNama === "kuis-bahasa-inggris.html" ? (
-    <img
-      src="/Kuis-guru.jpg"
-      alt={item.judul}
-      className="h-full w-full object-cover"
-    />
-  ) : item.judul === "Modul Pembelajaran Digital" ? (
-    <img
-      src="/Kuis-siswa.jpg"
-      alt={item.judul}
-      className="h-full w-full object-cover"
-    />
-  ) : (
-    <div className="flex h-full items-center justify-center">
-      <BookOpen size={42} className="text-storm-400" />
-    </div>
-  )}
-</div>
+                  {item.fileNama === "kuis-bahasa-inggris.html" ? (
+                    <img
+                      src="/Kuis-guru.jpg"
+                      alt={item.judul}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : item.judul === "Modul Pembelajaran Digital" ? (
+                    <img
+                      src="/Kuis-siswa.jpg"
+                      alt={item.judul}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center">
+                      <BookOpen size={42} className="text-storm-400" />
+                    </div>
+                  )}
+                </div>
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <p className="text-xs text-storm-500">
                     {item.pembuat || "Peserta Pelatihan"}
                   </p>
-                  <Badge tone={item.status === "Dipublikasikan" ? "success" : "warn"}>
+                  <Badge
+                    tone={item.status === "Dipublikasikan" ? "success" : "warn"}
+                  >
                     {item.status || "Dipublikasikan"}
                   </Badge>
                 </div>
-                <h3 className="mt-2 font-semibold text-storm-800">{item.judul}</h3>
+                <h3 className="mt-2 font-semibold text-storm-800">
+                  {item.judul}
+                </h3>
                 {item.deskripsi && (
                   <p className="mt-2 text-sm leading-6 text-storm-500">
                     {item.deskripsi}
@@ -904,7 +933,7 @@ function PublikasiKarya({ daftar }) {
                       setDisukai((prev) =>
                         sudahLike
                           ? prev.filter((id) => id !== item.id)
-                          : [...prev, item.id]
+                          : [...prev, item.id],
                       )
                     }
                     className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition ${
@@ -913,7 +942,10 @@ function PublikasiKarya({ daftar }) {
                         : "bg-storm-50 text-storm-600 hover:bg-storm-100"
                     }`}
                   >
-                    <Heart size={17} className={sudahLike ? "fill-current" : ""} />
+                    <Heart
+                      size={17}
+                      className={sudahLike ? "fill-current" : ""}
+                    />
                     {sudahLike ? "Disukai" : "Like"}
                   </button>
                 </div>
@@ -944,7 +976,9 @@ function Sertifikat() {
               className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
             >
               <div>
-                <h3 className="font-semibold leading-6 text-storm-800">{s.judul}</h3>
+                <h3 className="font-semibold leading-6 text-storm-800">
+                  {s.judul}
+                </h3>
                 <p className="mt-1 text-sm text-storm-500">{s.tanggal}</p>
                 <div className="mt-3">
                   <Badge tone={s.tersedia ? "success" : "warn"}>
@@ -960,71 +994,6 @@ function Sertifikat() {
                 <Download size={16} />
                 Unduh sertifikat
               </button>
-            </Card>
-          ))}
-        </div>
-      )}
-    </>
-  );
-}
-
-// GALERI KEGIATAN
-const galeriData = [
-  {
-    id: 1,
-    judul: "Pelatihan Guru SMKN 1 Batam",
-    keterangan: "Kegiatan pelatihan pemanfaatan teknologi digital.",
-    gambar: "/pelatihan-guru.jpg",
-  },
-  {
-    id: 2,
-    judul: "Praktik Pembuatan Media Ajar",
-    keterangan: "Peserta mencoba membuat media pembelajaran.",
-    gambar: "/praktik-guru.jpg",
-  },
-  {
-    id: 3,
-    judul: "Presentasi Hasil Karya",
-    keterangan: "Guru membagikan hasil karya dari kegiatan pelatihan.",
-    gambar: "/presentasi-karya.jpg",
-  },
-];
-
-function Galeri() {
-  return (
-    <>
-      <SectionTitle
-        title="Galeri Kegiatan"
-        desc="Dokumentasi kegiatan pelatihan guru SMKN 1 Batam."
-      />
-
-      {galeriData.length === 0 ? (
-        <EmptyState pesan="Dokumentasi kegiatan akan ditampilkan setelah tersedia." />
-      ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {galeriData.map((item) => (
-            <Card key={item.id}>
-              <div className="h-40 overflow-hidden rounded-xl bg-storm-50">
-                {item.gambar ? (
-                  <img
-                    src={item.gambar}
-                    alt={item.judul}
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center">
-                    <Images size={42} className="text-storm-300" />
-                  </div>
-                )}
-              </div>
-
-              <h3 className="mt-4 font-semibold text-storm-800">
-                {item.judul}
-              </h3>
-
-              <p className="mt-1 text-sm text-storm-500">
-                {item.keterangan}
-              </p>
             </Card>
           ))}
         </div>
@@ -1055,7 +1024,9 @@ function Evaluasi() {
     return (
       <Card className="mx-auto w-full max-w-xl py-10 text-center">
         <CheckCircle2 size={44} className="mx-auto text-emerald-500" />
-        <h3 className="mt-3 text-lg font-bold text-storm-800">Evaluasi terkirim</h3>
+        <h3 className="mt-3 text-lg font-bold text-storm-800">
+          Evaluasi terkirim
+        </h3>
         <p className="mx-auto mt-1 max-w-sm text-sm leading-6 text-storm-500">
           Terima kasih. Masukan Anda membantu meningkatkan kualitas pelatihan.
         </p>
@@ -1149,15 +1120,21 @@ function Evaluasi() {
   );
 }
 
-
-
 // TESTIMONI PESERTA
 function Testimoni() {
   const [nama, setNama] = useState("");
   const [isi, setIsi] = useState("");
   const [daftar, setDaftar] = useState([
-    { id: 201, nama: "Siti Rahmawati", isi: "Materi pelatihan mudah dipahami dan bisa diterapkan saat membuat media pembelajaran." },
-    { id: 202, nama: "Andi Saputra", isi: "Kegiatan ini menambah ide baru untuk membuat pembelajaran lebih menarik." },
+    {
+      id: 201,
+      nama: "Siti Rahmawati",
+      isi: "Materi pelatihan mudah dipahami dan bisa diterapkan saat membuat media pembelajaran.",
+    },
+    {
+      id: 202,
+      nama: "Andi Saputra",
+      isi: "Kegiatan ini menambah ide baru untuk membuat pembelajaran lebih menarik.",
+    },
   ]);
 
   const kirim = (e) => {
@@ -1244,9 +1221,27 @@ function Testimoni() {
 
 // PENGEMBANGAN SKILL
 const skillData = [
-  { id: 1, kategori: "Media Pembelajaran", judul: "Membuat Kuis Interaktif", deskripsi: "Mempelajari cara menyusun kuis sederhana untuk membantu siswa memahami materi." },
-  { id: 2, kategori: "Teknologi Digital", judul: "Menyusun Modul Digital", deskripsi: "Mengembangkan modul pembelajaran yang rapi, mudah dibaca, dan dapat dibagikan." },
-  { id: 3, kategori: "Generative AI", judul: "Membuat Konten Pembelajaran", deskripsi: "Mengenal pemanfaatan alat digital untuk membantu menyiapkan ide dan konten pembelajaran." },
+  {
+    id: 1,
+    kategori: "Media Pembelajaran",
+    judul: "Membuat Kuis Interaktif",
+    deskripsi:
+      "Mempelajari cara menyusun kuis sederhana untuk membantu siswa memahami materi.",
+  },
+  {
+    id: 2,
+    kategori: "Teknologi Digital",
+    judul: "Menyusun Modul Digital",
+    deskripsi:
+      "Mengembangkan modul pembelajaran yang rapi, mudah dibaca, dan dapat dibagikan.",
+  },
+  {
+    id: 3,
+    kategori: "Generative AI",
+    judul: "Membuat Konten Pembelajaran",
+    deskripsi:
+      "Mengenal pemanfaatan alat digital untuk membantu menyiapkan ide dan konten pembelajaran.",
+  },
 ];
 
 function PengembanganSkill() {
@@ -1268,7 +1263,9 @@ function PengembanganSkill() {
               <p className="mt-4 text-xs font-medium text-storm-500">
                 {item.kategori}
               </p>
-              <h3 className="mt-1 font-semibold text-storm-800">{item.judul}</h3>
+              <h3 className="mt-1 font-semibold text-storm-800">
+                {item.judul}
+              </h3>
               <p className="mt-2 text-sm leading-6 text-storm-500">
                 {item.deskripsi}
               </p>
@@ -1280,8 +1277,7 @@ function PengembanganSkill() {
   );
 }
 
-
- // DASHBOARD GURU
+// DASHBOARD GURU
 export default function DashboardGuru({ onLogout }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -1289,7 +1285,7 @@ export default function DashboardGuru({ onLogout }) {
   // Menentukan halaman berdasarkan URL
   const view =
     Object.keys(routeGuru).find(
-      (key) => routeGuru[key] === location.pathname
+      (key) => routeGuru[key] === location.pathname,
     ) || "beranda";
 
   // Mengubah URL ketika menu diklik
@@ -1305,35 +1301,35 @@ export default function DashboardGuru({ onLogout }) {
   }, [location.pathname, navigate]);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
-const [terdaftar] = useState([1, 2]);
-const [showLogout, setShowLogout] = useState(false);
+  const [terdaftar] = useState([1, 2]);
+  const [showLogout, setShowLogout] = useState(false);
 
-const [daftarKarya, setDaftarKarya] = useState([
-  {
-    id: 101,
-    judul: "Kuis Interaktif Materi Bahasa Inggris",
-    pembuat: "Siti Rahmawati",
-    deskripsi:
-      "Kuis singkat untuk menguji pemahaman siswa tentang announcement text.",
-    tanggal: "10 September 2026",
-    status: "Dipublikasikan",
-    fileNama: "kuis-bahasa-inggris.html",
-    likes: 8,
-  },
-  {
-    id: 102,
-    judul: "Modul Pembelajaran Digital",
-    pembuat: "Andi Saputra",
-    deskripsi:
-      "Modul digital sebagai bahan belajar mandiri bagi siswa.",
-    tanggal: "12 September 2026",
-    status: "Dipublikasikan",
-    fileNama: "modul-digital.pdf",
-    likes: 5,
-  },
-]);
+  const [daftarKarya, setDaftarKarya] = useState([
+    {
+      id: 101,
+      judul: "Kuis Interaktif Materi Bahasa Inggris",
+      pembuat: "Siti Rahmawati",
+      deskripsi:
+        "Kuis singkat untuk menguji pemahaman siswa tentang announcement text.",
+      tanggal: "10 September 2026",
+      status: "Dipublikasikan",
+      fileNama: "kuis-bahasa-inggris.html",
+      likes: 8,
+    },
+    {
+      id: 102,
+      judul: "Modul Pembelajaran Digital",
+      pembuat: "Andi Saputra",
+      deskripsi: "Modul digital sebagai bahan belajar mandiri bagi siswa.",
+      tanggal: "12 September 2026",
+      status: "Dipublikasikan",
+      fileNama: "modul-digital.pdf",
+      likes: 5,
+    },
+  ]);
 
-const nama = "Guru";
+  const user = JSON.parse(sessionStorage.getItem("user") || "{}");
+  const nama = user.name || "Guru";
 
   const halaman = {
     beranda: (
@@ -1349,7 +1345,6 @@ const nama = "Guru";
     karya: <HasilKarya setDaftar={setDaftarKarya} />,
     publikasi: <PublikasiKarya daftar={daftarKarya} />,
     sertifikat: <Sertifikat />,
-    galeri: <Galeri />,
     evaluasi: <Evaluasi />,
     testimoni: <Testimoni />,
     skill: <PengembanganSkill />,
@@ -1451,7 +1446,7 @@ const nama = "Guru";
 
           <div className="ml-3 flex shrink-0 items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-storm-100 font-bold text-storm-700">
-              G
+              {nama.charAt(0).toUpperCase()}
             </div>
             <div className="hidden sm:block">
               <p className="text-sm font-semibold text-storm-800">{nama}</p>
@@ -1491,23 +1486,23 @@ const nama = "Guru";
             </p>
 
             <div className="flex gap-3">
-  <button
-    onClick={() => setShowLogout(false)}
-    className="flex-1 min-h-[48px] rounded-lg border border-storm-200 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-storm-50"
-  >
-    Batal
-  </button>
+              <button
+                onClick={() => setShowLogout(false)}
+                className="flex-1 min-h-[48px] rounded-lg border border-storm-200 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-storm-50"
+              >
+                Batal
+              </button>
 
-  <button
-    onClick={() => {
-      setShowLogout(false);
-      onLogout?.();
-    }}
-    className="flex-1 min-h-[48px] rounded-lg bg-storm-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-storm-700"
-  >
-    Ya, Keluar
-  </button>
-</div>
+              <button
+                onClick={() => {
+                  setShowLogout(false);
+                  onLogout?.();
+                }}
+                className="flex-1 min-h-[48px] rounded-lg bg-storm-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-storm-700"
+              >
+                Ya, Keluar
+              </button>
+            </div>
           </div>
         </div>
       )}
