@@ -26,32 +26,6 @@ import {
   Gamepad2,
 } from "lucide-react";
 
-const initialPelatihan = [
-  {
-    id: 1,
-    judul: "Pemanfaatan Generative AI untuk Pembelajaran",
-    tanggal: "3 September 2026",
-    lokasi: "SMKN 1 Batam",
-    peserta: 32,
-    kuota: 40,
-  },
-  {
-    id: 2,
-    judul: "Pembuatan Media Ajar Digital",
-    tanggal: "27 Oktober 2026",
-    lokasi: "Lab Komputer 2, SMKN 1 Batam",
-    peserta: 18,
-    kuota: 30,
-  },
-  {
-    id: 3,
-    judul: "Pengembangan Modul Pembelajaran Interaktif",
-    tanggal: "3 November 2026",
-    lokasi: "Ruang Rapat Utama, SMKN 1 Batam",
-    peserta: 18,
-    kuota: 50,
-  },
-];
 const initialKarya = [
   {
     id: 1,
@@ -114,6 +88,7 @@ const initialSertifikat = [
 const menu = [
   { key: "beranda", label: "Beranda", icon: LayoutDashboard },
   { key: "pengguna", label: "Data Guru", icon: Users },
+  { key: "pendaftaran", label: "Pendaftaran Pelatihan", icon: ClipboardCheck },
   { key: "pelatihan", label: "Kelola Pelatihan", icon: CalendarDays },
   { key: "materi", label: "Kelola Materi Pelatihan", icon: BookOpen },
   { key: "karya", label: "Kelola Hasil Karya", icon: Heart },
@@ -128,6 +103,7 @@ const menu = [
 const routeAdmin = {
   beranda: "/admin/dashboard",
   pengguna: "/admin/pengguna",
+  pendaftaran: "/admin/pendaftaran",
   pelatihan: "/admin/pelatihan",
   materi: "/admin/slide",
   karya: "/admin/hasil-karya",
@@ -458,7 +434,9 @@ function KelolaPengguna({ data, setData }) {
 
               <p className="mt-2 text-sm leading-relaxed text-slate-500">
                 Apakah Anda yakin ingin menghapus data guru{" "}
-                <span className="font-semibold text-slate-800"></span>
+                <span className="font-semibold text-slate-800">
+                  {guruAkanDihapus.nama}
+                </span>{" "}
               </p>
             </div>
 
@@ -487,46 +465,532 @@ function KelolaPengguna({ data, setData }) {
   );
 }
 
+function KelolaPendaftaran({ data, setData }) {
+  const [pencarian, setPencarian] = useState("");
+  const [pendaftaranAkanDihapus, setPendaftaranAkanDihapus] = useState(null);
+  const [sedangMemproses, setSedangMemproses] = useState(null);
+  const [notifikasi, setNotifikasi] = useState({
+    tampil: false,
+    tipe: "",
+    pesan: "",
+  });
+  const token = sessionStorage.getItem("edushare_token");
+
+  const hasil = data.filter((item) =>
+    `${item.nama_lengkap} ${item.email} ${item.mata_pelajaran} ${
+      item.pelatihan?.nama_pelatihan || ""
+    }`
+      .toLowerCase()
+      .includes(pencarian.toLowerCase()),
+  );
+
+  const ubahStatus = async (id, status) => {
+    setSedangMemproses(id);
+
+    try {
+      const response = await fetch(
+        `${API_URL}/pendaftaran-pelatihan/${id}/status`,
+        {
+          method: "PUT",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ status }),
+        },
+      );
+
+      const hasil = await response.json();
+
+      if (!response.ok) {
+        throw new Error(hasil.message || "Gagal mengubah status.");
+      }
+
+      setData((prev) =>
+        prev.map((item) => (item.id === id ? { ...item, status } : item)),
+      );
+
+      setNotifikasi({
+        tampil: true,
+        tipe: "success",
+        pesan: `Status pendaftaran berhasil diubah menjadi ${status}.`,
+      });
+    } catch (error) {
+      setNotifikasi({
+        tampil: true,
+        tipe: "error",
+        pesan: error.message || "Tidak dapat terhubung ke server.",
+      });
+    } finally {
+      setSedangMemproses(null);
+    }
+  };
+
+  const hapusPendaftaran = async () => {
+    if (!pendaftaranAkanDihapus) return;
+
+    const item = pendaftaranAkanDihapus;
+    setSedangMemproses(item.id);
+
+    try {
+      const response = await fetch(
+        `${API_URL}/pendaftaran-pelatihan/${item.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      const hasil = await response.json();
+
+      if (!response.ok) {
+        throw new Error(hasil.message || "Gagal menghapus pendaftaran.");
+      }
+
+      setData((prev) => prev.filter((p) => p.id !== item.id));
+      setPendaftaranAkanDihapus(null);
+
+      setNotifikasi({
+        tampil: true,
+        tipe: "success",
+        pesan: "Pendaftaran berhasil dihapus.",
+      });
+    } catch (error) {
+      setPendaftaranAkanDihapus(null);
+
+      setNotifikasi({
+        tampil: true,
+        tipe: "error",
+        pesan: error.message || "Tidak dapat terhubung ke server.",
+      });
+    } finally {
+      setSedangMemproses(null);
+    }
+  };
+  return (
+    <div className="space-y-6">
+      <SectionTitle
+        title="Pendaftaran Pelatihan"
+        desc="Lihat dan kelola data guru yang mendaftar pelatihan."
+      />
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <Card>
+          <p className="text-2xl font-bold text-slate-800">{data.length}</p>
+          <p className="text-sm text-slate-500">Total Pendaftar</p>
+        </Card>
+
+        <Card>
+          <p className="text-2xl font-bold text-slate-800">
+            {data.filter((item) => item.status === "Selesai").length}
+          </p>
+          <p className="text-sm text-slate-500">Pelatihan Selesai</p>
+        </Card>
+      </div>
+
+      <Card>
+        <div className="relative">
+          <Search
+            size={18}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+          />
+          <input
+            value={pencarian}
+            onChange={(e) => setPencarian(e.target.value)}
+            placeholder="Cari nama, email, mata pelajaran, atau pelatihan..."
+            className={`${inputClass} pl-10`}
+          />
+        </div>
+      </Card>
+
+      <Card className="overflow-hidden p-0">
+        {hasil.length === 0 ? (
+          <div className="p-10 text-center">
+            <Users size={40} className="mx-auto text-slate-300" />
+            <h3 className="mt-3 font-semibold text-slate-700">
+              {pencarian
+                ? "Pendaftaran tidak ditemukan"
+                : "Belum ada pendaftaran"}
+            </h3>
+            <p className="mt-1 text-sm text-slate-500">
+              Data pendaftaran guru akan ditampilkan di sini.
+            </p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[900px] text-left text-sm">
+              <thead className="bg-slate-50 text-slate-500">
+                <tr>
+                  <th className="px-5 py-4">Nama Guru</th>
+                  <th className="px-5 py-4">Email</th>
+                  <th className="px-5 py-4">Mata Pelajaran</th>
+                  <th className="px-5 py-4">Pelatihan</th>
+                  <th className="px-5 py-4">Status</th>
+                  <th className="px-5 py-4 text-center">Aksi</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {hasil.map((item) => (
+                  <tr key={item.id} className="border-t border-slate-100">
+                    <td className="px-5 py-4 font-semibold text-slate-800">
+                      {item.nama_lengkap}
+                    </td>
+                    <td className="px-5 py-4 text-slate-500">{item.email}</td>
+                    <td className="px-5 py-4 text-slate-600">
+                      {item.mata_pelajaran}
+                    </td>
+                    <td className="px-5 py-4 text-slate-600">
+                      {item.pelatihan?.nama_pelatihan || "-"}
+                    </td>
+                    <td className="px-5 py-4">
+                      <select
+                        value={item.status}
+                        disabled={sedangMemproses === item.id}
+                        onChange={(e) => ubahStatus(item.id, e.target.value)}
+                        className="rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                      >
+                        <option value="Terdaftar">Terdaftar</option>
+                        <option value="Selesai">Selesai</option>
+                        <option value="Dibatalkan">Dibatalkan</option>
+                        <option value="Menunggu">Menunggu</option>
+                      </select>
+                    </td>
+                    <td className="px-5 py-4 text-center">
+                      <button
+                        type="button"
+                        disabled={sedangMemproses === item.id}
+                        onClick={() => setPendaftaranAkanDihapus(item)}
+                        className="rounded-lg p-2 text-rose-600 hover:bg-rose-50 disabled:opacity-50"
+                        title="Hapus pendaftaran"
+                      >
+                        <Trash2 size={17} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Card>
+      {/* MODAL KONFIRMASI HAPUS PENDAFTARAN */}
+      {pendaftaranAkanDihapus && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-rose-50">
+              <Trash2 size={30} className="text-rose-600" />
+            </div>
+
+            <div className="mt-4 text-center">
+              <h3 className="text-xl font-bold text-slate-800">
+                Hapus Pendaftaran?
+              </h3>
+
+              <p className="mt-2 text-sm leading-relaxed text-slate-500">
+                Apakah anda ingin menghapus pendaftaran dari{" "}
+                <span className="font-semibold text-slate-800">
+                  {pendaftaranAkanDihapus.nama_lengkap}
+                </span>
+                ?
+              </p>
+            </div>
+
+            <div className="mt-6 flex gap-3">
+              <button
+                type="button"
+                disabled={sedangMemproses === pendaftaranAkanDihapus.id}
+                onClick={() => setPendaftaranAkanDihapus(null)}
+                className="flex-1 rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
+              >
+                Batal
+              </button>
+
+              <button
+                type="button"
+                disabled={sedangMemproses === pendaftaranAkanDihapus.id}
+                onClick={hapusPendaftaran}
+                className="flex-1 rounded-xl bg-rose-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-rose-700 disabled:opacity-50"
+              >
+                {sedangMemproses === pendaftaranAkanDihapus.id
+                  ? "Menghapus..."
+                  : "Ya, Hapus"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* POP UP NOTIFIKASI STATUS */}
+      {notifikasi.tampil && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-sm rounded-2xl bg-white p-6 text-center shadow-2xl">
+            <div
+              className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full ${
+                notifikasi.tipe === "success"
+                  ? "bg-emerald-50 text-emerald-600"
+                  : "bg-rose-50 text-rose-600"
+              }`}
+            >
+              {notifikasi.tipe === "success" ? (
+                <CheckCircle2 size={36} />
+              ) : (
+                <X size={36} />
+              )}
+            </div>
+
+            <h3 className="mt-4 text-xl font-bold text-slate-800">
+              {notifikasi.tipe === "success"
+                ? "Berhasil!"
+                : "Terjadi Kesalahan"}
+            </h3>
+
+            <p className="mt-2 text-sm leading-6 text-slate-500">
+              {notifikasi.pesan}
+            </p>
+
+            <button
+              type="button"
+              onClick={() =>
+                setNotifikasi({ tampil: false, tipe: "", pesan: "" })
+              }
+              className="mt-6 w-full rounded-xl bg-storm-500 px-4 py-3 text-sm font-semibold text-white transition hover:bg-storm-600"
+            >
+              Mengerti
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function KelolaPelatihan({ data, setData }) {
   const [judul, setJudul] = useState("");
+  const [deskripsi, setDeskripsi] = useState("");
   const [tanggal, setTanggal] = useState("");
+  const [tanggalTutupPendaftaran, setTanggalTutupPendaftaran] = useState("");
+  const [tanggalSelesai, setTanggalSelesai] = useState("");
   const [lokasi, setLokasi] = useState("");
   const [kuota, setKuota] = useState("30");
   const [formBuka, setFormBuka] = useState(false);
+  const [pelatihanDipilih, setPelatihanDipilih] = useState(null);
+  const [pesanHapus, setPesanHapus] = useState("");
 
-  const tambah = (e) => {
+  const [editId, setEditId] = useState(null);
+  const [editJudul, setEditJudul] = useState("");
+  const [editDeskripsi, setEditDeskripsi] = useState("");
+  const [editMulai, setEditMulai] = useState("");
+  const [editTutupPendaftaran, setEditTutupPendaftaran] = useState("");
+  const [editSelesai, setEditSelesai] = useState("");
+  const [editLokasi, setEditLokasi] = useState("");
+  const [editStatus, setEditStatus] = useState("Dibuka");
+
+  // POST - MENAMBAHKAN DATA PELATIHAN KE DATABASE
+  const tambah = async (e) => {
     e.preventDefault();
 
-    if (!judul.trim() || !tanggal || !lokasi.trim() || Number(kuota) < 1) {
+    if (!judul.trim()) {
+      setPesanHapus("Nama pelatihan wajib diisi.");
       return;
     }
 
-    const tanggalFormat = new Date(`${tanggal}T00:00:00`).toLocaleDateString(
-      "id-ID",
-      { day: "numeric", month: "long", year: "numeric" },
-    );
+    try {
+      const token = sessionStorage.getItem("edushare_token");
 
-    setData((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        judul: judul.trim(),
-        tanggal: tanggalFormat,
-        lokasi: lokasi.trim(),
-        peserta: 0,
-        kuota: Number(kuota),
-      },
-    ]);
+      const response = await fetch(`${API_URL}/pelatihan`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          nama_pelatihan: judul.trim(),
+          deskripsi: deskripsi.trim() || null,
+          tanggal_mulai: tanggal || null,
+          tanggal_tutup_pendaftaran: tanggalTutupPendaftaran || null,
+          tanggal_selesai: tanggalSelesai || null,
+          lokasi: lokasi.trim() || null,
+          status: "Dibuka",
+        }),
+      });
 
-    setJudul("");
-    setTanggal("");
-    setLokasi("");
-    setKuota("30");
-    setFormBuka(false);
+      const hasil = await response.json();
+
+      if (!response.ok) {
+        throw new Error(hasil.message || "Gagal menambahkan pelatihan.");
+      }
+
+      setData((prev) => [...prev, hasil.data]);
+
+      setJudul("");
+      setDeskripsi("");
+      setTanggal("");
+      setTanggalTutupPendaftaran("");
+      setTanggalSelesai("");
+      setLokasi("");
+      setKuota("30");
+      setFormBuka(false);
+
+      setPesanHapus("Pelatihan berhasil ditambahkan!");
+    } catch (error) {
+      setPesanHapus(error.message || "Tidak dapat terhubung ke server.");
+    }
+  };
+
+  // MENYIAPKAN DATA UNTUK DIEDIT
+  const mulaiEdit = (item) => {
+    setEditId(item.id);
+    setEditJudul(item.nama_pelatihan || "");
+    setEditDeskripsi(item.deskripsi || "");
+    setEditMulai(item.tanggal_mulai || "");
+    setEditTutupPendaftaran(item.tanggal_tutup_pendaftaran || "");
+    setEditSelesai(item.tanggal_selesai || "");
+    setEditLokasi(item.lokasi || "");
+    setEditStatus(item.status || "Dibuka");
+  };
+
+  // PUT - MEMPERBARUI DATA DATABASE
+  const simpanEdit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const token = sessionStorage.getItem("edushare_token");
+
+      const response = await fetch(`${API_URL}/pelatihan/${editId}`, {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          nama_pelatihan: editJudul,
+          deskripsi: editDeskripsi,
+          tanggal_mulai: editMulai || null,
+          tanggal_tutup_pendaftaran: editTutupPendaftaran || null,
+          tanggal_selesai: editSelesai || null,
+          lokasi: editLokasi,
+          status: editStatus,
+        }),
+      });
+
+      const hasil = await response.json();
+
+      if (!response.ok) {
+        throw new Error(hasil.message || "Gagal memperbarui pelatihan.");
+      }
+
+      setData((prev) =>
+        prev.map((item) => (item.id === editId ? hasil.data : item)),
+      );
+
+      setEditId(null);
+      setPesanHapus("Data pelatihan berhasil diperbarui.");
+    } catch (error) {
+      setPesanHapus(error.message || "Tidak dapat terhubung ke server.");
+    }
+  };
+
+  // Membuka modal konfirmasi hapus
+  const hapus = (item) => {
+    setPelatihanDipilih(item);
+  };
+
+  // Proses DELETE setelah dikonfirmasi
+  const konfirmasiHapus = async () => {
+    const item = pelatihanDipilih;
+
+    if (!item) return;
+
+    if (!item.nama_pelatihan) {
+      setData((prev) => prev.filter((p) => p.id !== item.id));
+      setPelatihanDipilih(null);
+      setPesanHapus("Pelatihan berhasil dihapus.");
+      return;
+    }
+
+    try {
+      const token = sessionStorage.getItem("edushare_token");
+
+      const response = await fetch(`${API_URL}/pelatihan/${item.id}`, {
+        method: "DELETE",
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const hasil = await response.json();
+
+      if (!response.ok) {
+        throw new Error(hasil.message || "Gagal menghapus pelatihan.");
+      }
+
+      setData((prev) => prev.filter((p) => p.id !== item.id));
+      setPelatihanDipilih(null);
+      setPesanHapus("Pelatihan berhasil dihapus.");
+    } catch (error) {
+      setPelatihanDipilih(null);
+      setPesanHapus(error.message);
+    }
   };
 
   return (
     <>
+      {/* MODAL KONFIRMASI HAPUS */}
+      {pelatihanDipilih && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+            <h3 className="mb-2 text-lg font-bold text-gray-800">
+              Hapus Pelatihan?
+            </h3>
+
+            <p className="mb-6 text-sm text-gray-600">
+              Apakah Anda yakin ingin menghapus pelatihan ini?
+            </p>
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setPelatihanDipilih(null)}
+                className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100"
+              >
+                Batal
+              </button>
+
+              <button
+                onClick={konfirmasiHapus}
+                className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+              >
+                Ya, Hapus
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL NOTIFIKASI */}
+      {pesanHapus && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 p-4">
+          <div className="w-full max-w-sm rounded-2xl bg-white p-6 text-center shadow-xl">
+            <h3 className="mb-2 text-lg font-bold text-gray-800">Informasi</h3>
+
+            <p className="mb-5 text-sm text-gray-600">{pesanHapus}</p>
+
+            <button
+              onClick={() => setPesanHapus("")}
+              className="rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white hover:bg-blue-700"
+            >
+              Oke
+            </button>
+          </div>
+        </div>
+      )}
+
       <SectionTitle
         title="Kelola Pelatihan"
         desc="Tambah dan perbarui informasi kegiatan pelatihan."
@@ -557,7 +1021,9 @@ function KelolaPelatihan({ data, setData }) {
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium">Tanggal</label>
+              <label className="mb-1 block text-sm font-medium">
+                Tanggal Mulai Pelatihan
+              </label>
               <input
                 required
                 type="date"
@@ -567,6 +1033,19 @@ function KelolaPelatihan({ data, setData }) {
               />
             </div>
 
+            <div>
+              <label className="mb-1 block text-sm font-medium">
+                Batas Akhir Pendaftaran
+              </label>
+              <input
+                required
+                type="date"
+                min={new Date().toISOString().split("T")[0]}
+                value={tanggalTutupPendaftaran}
+                onChange={(e) => setTanggalTutupPendaftaran(e.target.value)}
+                className={inputClass}
+              />
+            </div>
             <div>
               <label className="mb-1 block text-sm font-medium">Lokasi</label>
               <input
@@ -599,6 +1078,88 @@ function KelolaPelatihan({ data, setData }) {
         </Card>
       )}
 
+      {/* FORM EDIT DATA DATABASE */}
+      {editId !== null && (
+        <Card className="mb-5 max-w-2xl">
+          <h3 className="mb-4 font-semibold">Edit Pelatihan</h3>
+
+          <form onSubmit={simpanEdit} className="space-y-4">
+            <div>
+              <label className="mb-1 block text-sm font-medium">
+                Nama pelatihan
+              </label>
+              <input
+                required
+                value={editJudul}
+                onChange={(e) => setEditJudul(e.target.value)}
+                className={inputClass}
+              />
+            </div>
+
+            <div></div>
+
+            <div>
+              <label className="mb-1 block text-sm font-medium">
+                Tanggal mulai
+              </label>
+              <input
+                type="date"
+                value={editMulai}
+                onChange={(e) => setEditMulai(e.target.value)}
+                className={inputClass}
+              />
+            </div>
+
+            <div>
+              <label className="mb-1 block text-sm font-medium">
+                Tanggal selesai
+              </label>
+              <input
+                type="date"
+                value={editSelesai}
+                onChange={(e) => setEditSelesai(e.target.value)}
+                className={inputClass}
+              />
+            </div>
+
+            <div>
+              <label className="mb-1 block text-sm font-medium">Lokasi</label>
+              <input
+                value={editLokasi}
+                onChange={(e) => setEditLokasi(e.target.value)}
+                className={inputClass}
+              />
+            </div>
+
+            <div>
+              <label className="mb-1 block text-sm font-medium">Status</label>
+              <select
+                value={editStatus}
+                onChange={(e) => setEditStatus(e.target.value)}
+                className={inputClass}
+              >
+                <option value="Dibuka">Dibuka</option>
+                <option value="Selesai">Selesai</option>
+              </select>
+            </div>
+
+            <div className="flex gap-2">
+              <button type="submit" className={btnPrimary}>
+                Simpan Perubahan
+              </button>
+
+              <button
+                type="button"
+                className={btnOutline}
+                onClick={() => setEditId(null)}
+              >
+                Batal
+              </button>
+            </div>
+          </form>
+        </Card>
+      )}
+
       {data.length === 0 ? (
         <EmptyState
           icon={CalendarDays}
@@ -613,26 +1174,47 @@ function KelolaPelatihan({ data, setData }) {
               className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
             >
               <div className="min-w-0">
-                <h3 className="font-semibold text-slate-800">{item.judul}</h3>
+                <h3 className="font-semibold text-slate-800">
+                  {item.nama_pelatihan || item.judul}
+                </h3>
+
                 <p className="mt-2 text-sm text-slate-500">
                   <CalendarDays size={15} className="mr-1 inline" />
-                  {item.tanggal}
+                  {item.tanggal_mulai || item.tanggal}
+                  {item.tanggal_selesai ? ` - ${item.tanggal_selesai}` : ""}
                 </p>
+
                 <p className="mt-1 text-sm text-slate-500">{item.lokasi}</p>
-                <p className="mt-1 text-sm text-slate-500">
-                  Peserta: {item.peserta}/{item.kuota}
-                </p>
+
+                {item.nama_pelatihan ? (
+                  <p className="mt-1 text-sm text-slate-500">
+                    Status: {item.status}
+                  </p>
+                ) : (
+                  <p className="mt-1 text-sm text-slate-500">
+                    Peserta: {item.peserta}/{item.kuota}
+                  </p>
+                )}
               </div>
 
-              <button
-                className={`${btnOutline} text-rose-600`}
-                onClick={() =>
-                  setData((prev) => prev.filter((p) => p.id !== item.id))
-                }
-              >
-                <Trash2 size={16} />
-                Hapus
-              </button>
+              <div className="flex gap-2">
+                {item.nama_pelatihan && (
+                  <button
+                    className={btnOutline}
+                    onClick={() => mulaiEdit(item)}
+                  >
+                    Edit
+                  </button>
+                )}
+
+                <button
+                  className={`${btnOutline} text-rose-600`}
+                  onClick={() => hapus(item)}
+                >
+                  <Trash2 size={16} />
+                  Hapus
+                </button>
+              </div>
             </Card>
           ))}
         </div>
@@ -1626,39 +2208,98 @@ export default function DashboardAdmin({ onLogout }) {
   const [showLogout, setShowLogout] = useState(false);
 
   const [guru, setGuru] = useState([]);
-  const [pelatihan, setPelatihan] = useState(initialPelatihan);
+  const [pendaftaran, setPendaftaran] = useState([]);
+  const [pelatihan, setPelatihan] = useState([]);
+  useEffect(() => {
+    const ambilPelatihan = async () => {
+      try {
+        const token = sessionStorage.getItem("edushare_token");
+
+        const response = await fetch(`${API_URL}/pelatihan`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Gagal mengambil data pelatihan");
+        }
+
+        const hasil = await response.json();
+
+        console.log("Respons API Kelola Pelatihan:", hasil);
+
+        const daftarPelatihan = Array.isArray(hasil) ? hasil : hasil.data || [];
+
+        setPelatihan(daftarPelatihan);
+      } catch (error) {
+        console.error("Gagal mengambil pelatihan:", error);
+      }
+    };
+
+    ambilPelatihan();
+  }, []);
   const [materi, setMateri] = useState([]);
   const [karya, setKarya] = useState(initialKarya);
   const [berita, setBerita] = useState(initialBerita);
   const [sertifikat] = useState(initialSertifikat);
   useEffect(() => {
-    const ambilMateri = async () => {
+    const fetchGuru = async () => {
       try {
-        const response = await fetch(`${API_URL}/materi`);
-        const hasil = await response.json();
+        const token = sessionStorage.getItem("edushare_token");
+
+        const response = await fetch(`${API_URL}/guru`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        });
 
         if (!response.ok) {
-          throw new Error(hasil.message || "Gagal mengambil materi.");
+          throw new Error("Gagal mengambil data guru");
         }
 
-        const daftarMateri = (hasil.data || []).map((item) => ({
-          id: item.id,
-          judul: item.judul,
-          namaFile: item.nama_file,
-          tipe: item.tipe,
-          pelatihan: item.kategori || "",
-          file: item.file_path,
-        }));
+        const data = await response.json();
 
-        setMateri(daftarMateri);
+        setGuru(
+          data.map((item) => ({
+            id: item.id,
+            nama: item.name,
+            email: item.email,
+          })),
+        );
       } catch (error) {
-        console.error("Gagal mengambil materi:", error);
+        console.error("Error mengambil data guru:", error);
       }
     };
 
-    ambilMateri();
+    fetchGuru();
   }, []);
 
+  // Mengambil data pendaftaran dari database
+  useEffect(() => {
+    const ambilPendaftaran = async () => {
+      try {
+        const token = sessionStorage.getItem("edushare_token");
+
+        const response = await fetch(`${API_URL}/pendaftaran-pelatihan`, {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const hasil = await response.json();
+
+        setPendaftaran(hasil.data || []);
+      } catch (error) {
+        console.error("Gagal mengambil pendaftaran:", error);
+      }
+    };
+
+    ambilPendaftaran();
+  }, []);
   const halaman = {
     beranda: (
       <BerandaAdmin
@@ -1670,6 +2311,9 @@ export default function DashboardAdmin({ onLogout }) {
       />
     ),
     pengguna: <KelolaPengguna data={guru} setData={setGuru} />,
+    pendaftaran: (
+      <KelolaPendaftaran data={pendaftaran} setData={setPendaftaran} />
+    ),
     pelatihan: <KelolaPelatihan data={pelatihan} setData={setPelatihan} />,
     materi: <KelolaMateri data={materi} setData={setMateri} />,
     karya: <KelolaKarya data={karya} setData={setKarya} />,

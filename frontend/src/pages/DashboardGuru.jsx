@@ -316,15 +316,80 @@ function Beranda({ nama, terdaftar, setView, jumlahKarya }) {
   );
 }
 
-// PENDAFTARAN PELATIHAN
 
+// PENDAFTARAN PELATIHAN
 function Pelatihan() {
+  const [daftarPelatihan, setDaftarPelatihan] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
   const [terdaftarLokal, setTerdaftarLokal] = useState([]);
   const [pelatihanDipilih, setPelatihanDipilih] = useState(null);
   const [namaLengkap, setNamaLengkap] = useState("");
   const [instansi, setInstansi] = useState("");
   const [email, setEmail] = useState("");
   const [pesan, setPesan] = useState("");
+
+  useEffect(() => {
+    const ambilPelatihan = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const token = sessionStorage.getItem("edushare_token");
+
+        const response = await fetch(`${API_URL}/pelatihan`, {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const hasil = await response.json();
+
+        if (!response.ok) {
+          throw new Error(hasil.message || "Gagal mengambil data pelatihan.");
+        }
+
+    const data = (hasil.data || []).map((item) => ({
+      id: item.id,
+      judul: item.nama_pelatihan,
+      tanggal: item.tanggal_mulai
+        ? new Date(
+            `${item.tanggal_mulai}T00:00:00`,
+          ).toLocaleDateString("id-ID", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          })
+        : "Belum ditentukan",
+      batasPendaftaran: item.tanggal_tutup_pendaftaran
+        ? new Date(
+            `${item.tanggal_tutup_pendaftaran}T00:00:00`,
+          ).toLocaleDateString("id-ID", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          })
+        : "Belum ditentukan",
+      waktu: "",
+      lokasi: item.lokasi || "Lokasi belum ditentukan",
+      status:
+        item.status === "Dibuka"
+          ? "Pendaftaran dibuka"
+          : item.status || "Belum tersedia",
+    }));
+
+        setDaftarPelatihan(data);
+      } catch (err) {
+        setError(err.message || "Tidak dapat terhubung ke server.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    ambilPelatihan();
+  }, []);
 
   const tutupForm = () => {
     setPelatihanDipilih(null);
@@ -340,14 +405,14 @@ function Pelatihan() {
     if (!pelatihanDipilih) return;
 
     if (terdaftarLokal.includes(pelatihanDipilih.id)) {
-      setPesan("Kamu sudah terdaftar pada pelatihan ini.");
+      setPesan("Anda sudah terdaftar pada pelatihan ini.");
       return;
     }
 
     const token = sessionStorage.getItem("edushare_token");
 
     if (!token) {
-      setPesan("Sesi login tidak ditemukan. Silakan login kembali.");
+      setPesan("Silakan login kembali.");
       return;
     }
 
@@ -377,209 +442,163 @@ function Pelatihan() {
       }
 
       setTerdaftarLokal((prev) => [...prev, pelatihanDipilih.id]);
-
       setPesan("Pendaftaran berhasil!");
-    } catch (error) {
-      setPesan(error.message || "Tidak dapat terhubung ke server.");
+    } catch (err) {
+      setPesan(err.message || "Tidak dapat terhubung ke server.");
     }
   };
 
   return (
     <>
       <SectionTitle
-        title="Pelatihan dan Pendaftaran"
-        desc="Lihat informasi pelatihan dan daftarkan diri sebagai peserta."
+        title="Pelatihan & Pendaftaran"
+        desc="Lihat informasi pelatihan dan daftarkan diri Anda."
       />
 
-      <div className="grid grid-cols-1 min-[601px]:grid-cols-2 min-[1025px]:grid-cols-3 gap-4">
-        {pelatihanData.map((p) => {
-          const sudahDaftar = terdaftarLokal.includes(p.id);
-          const selesai = p.status === "Selesai";
+      {loading ? (
+        <EmptyState pesan="Sedang mengambil data pelatihan..." />
+      ) : error ? (
+        <EmptyState pesan={error} />
+      ) : daftarPelatihan.length === 0 ? (
+        <EmptyState pesan="Belum ada pelatihan yang tersedia." />
+      ) : (
+        <div className="grid grid-cols-1 gap-4 min-[601px]:grid-cols-2 min-[1025px]:grid-cols-3">
+          {daftarPelatihan.map((p) => {
+            const selesai = p.status === "Selesai";
+            const sudahDaftar = terdaftarLokal.includes(p.id);
 
-          return (
-            <Card key={p.id}>
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                <div className="min-w-0">
-                  <Badge tone={selesai ? "default" : "success"}>
+            return (
+              <Card key={p.id} className="flex flex-col">
+                <div className="mb-3 flex items-start justify-between gap-2">
+                  <Badge tone={selesai ? "warn" : "success"}>
                     {p.status}
                   </Badge>
-
-                  <h3 className="mt-3 font-semibold text-storm-800">
-                    {p.judul}
-                  </h3>
-
-                  <p className="mt-2 text-sm text-storm-500">
-                    <CalendarDays size={15} className="mr-1 inline" />
-                    {p.tanggal} · {p.waktu}
-                  </p>
-
-                  <p className="mt-1 text-sm text-storm-500">
-                    <MapPin size={15} className="mr-1 inline" />
-                    {p.lokasi}
-                  </p>
-
-                  <p className="mt-2 text-sm text-storm-500">
-                    Peserta: {p.terisi}/{p.kuota}
-                  </p>
+                  <CalendarDays size={20} className="text-storm-500" />
                 </div>
+
+                <h3 className="font-semibold leading-6 text-storm-800">
+                  {p.judul}
+                </h3>
+
+                <p className="mt-3 flex items-start gap-2 text-sm text-storm-500">
+                  <CalendarDays size={16} className="mt-0.5 shrink-0" />
+                  {p.tanggal}
+                </p>
+<p className="mt-2 flex items-start gap-2 text-sm text-amber-600">
+  <CalendarDays size={16} className="mt-0.5 shrink-0" />
+  <span>
+    Batas pendaftaran: {p.batasPendaftaran}
+  </span>
+</p>
+                <p className="mt-2 flex items-start gap-2 text-sm text-storm-500">
+                  <MapPin size={16} className="mt-0.5 shrink-0" />
+                  {p.lokasi}
+                </p>
 
                 <button
                   type="button"
-                  disabled={selesai || sudahDaftar || p.terisi >= p.kuota}
+                  disabled={selesai || sudahDaftar}
                   onClick={() => {
-                    setPesan("");
                     setPelatihanDipilih(p);
+                    setPesan("");
                   }}
-                  className={btnPrimary}
+                  className={`${btnPrimary} mt-5 w-full`}
                 >
                   {selesai
                     ? "Pelatihan selesai"
                     : sudahDaftar
                       ? "Sudah terdaftar"
-                      : p.terisi >= p.kuota
-                        ? "Kuota penuh"
-                        : "Daftar Pelatihan"}
+                      : "Daftar Pelatihan"}
                 </button>
-              </div>
-            </Card>
-          );
-        })}
-      </div>
+              </Card>
+            );
+          })}
+        </div>
+      )}
 
       {pelatihanDipilih && (
-        <div
-          className="fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto bg-black/50 p-4"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) tutupForm();
-          }}
-        >
-          <div
-            className="my-auto w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="judul-form-pendaftaran"
-          >
+        <div className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-black/40 p-4">
+          <div className="my-auto w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl">
             <div className="mb-5 flex items-start justify-between gap-3">
               <div>
-                <h3
-                  id="judul-form-pendaftaran"
-                  className="text-lg font-bold text-storm-800"
-                >
-                  Form Pendaftaran Pelatihan
+                <h3 className="text-lg font-bold text-storm-800">
+                  Form Pendaftaran
                 </h3>
-
-                <p className="mt-2 text-sm font-medium text-storm-700">
+                <p className="mt-1 text-sm text-storm-500">
                   {pelatihanDipilih.judul}
                 </p>
-
-                <p className="mt-1 text-xs text-storm-500">
-                  {pelatihanDipilih.tanggal} · {pelatihanDipilih.waktu}
-                </p>
               </div>
-
               <button
                 type="button"
                 onClick={tutupForm}
                 className="rounded-lg p-2 text-storm-500 hover:bg-storm-100"
-                aria-label="Tutup formulir"
+                aria-label="Tutup form"
               >
                 <X size={20} />
               </button>
             </div>
 
-            {pesan === "Pendaftaran berhasil!" ? (
-              <div className="rounded-xl bg-emerald-50 p-5 text-center">
-                <CheckCircle2 size={42} className="mx-auto text-emerald-600" />
+            <form onSubmit={kirimPendaftaran} className="space-y-4">
+              <div>
+                <label className="mb-1 block text-sm font-medium text-storm-700">
+                  Nama lengkap
+                </label>
+                <input
+                  required
+                  value={namaLengkap}
+                  onChange={(e) => setNamaLengkap(e.target.value)}
+                  className={inputClass}
+                  placeholder="Masukkan nama lengkap"
+                />
+              </div>
 
-                <h4 className="mt-3 font-semibold text-emerald-800">
-                  Pendaftaran berhasil!
-                </h4>
+              <div>
+                <label className="mb-1 block text-sm font-medium text-storm-700">
+                  Mata pelajaran yang diampu
+                </label>
+                <input
+                  required
+                  value={instansi}
+                  onChange={(e) => setInstansi(e.target.value)}
+                  className={inputClass}
+                  placeholder="Contoh: Informatika"
+                />
+              </div>
 
-                <p className="mt-2 text-sm text-emerald-700">
-                  Kamu berhasil mendaftar pada pelatihan ini.
+              <div>
+                <label className="mb-1 block text-sm font-medium text-storm-700">
+                  Email
+                </label>
+                <input
+                  required
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className={inputClass}
+                  placeholder="Masukkan email"
+                />
+              </div>
+
+              {pesan && (
+                <p className="rounded-lg bg-storm-50 p-3 text-sm text-storm-700">
+                  {pesan}
                 </p>
+              )}
 
+              <div className="flex flex-col-reverse gap-3 sm:flex-row">
                 <button
                   type="button"
                   onClick={tutupForm}
-                  className={`${btnPrimary} mt-4`}
+                  className={`${btnOutline} flex-1`}
                 >
-                  Selesai
+                  Batal
+                </button>
+                <button type="submit" className={`${btnPrimary} flex-1`}>
+                  <Send size={16} />
+                  Kirim Pendaftaran
                 </button>
               </div>
-            ) : (
-              <form onSubmit={kirimPendaftaran} className="space-y-4">
-                <div>
-                  <label
-                    htmlFor="nama-peserta"
-                    className="mb-1 block text-sm font-medium text-storm-800"
-                  >
-                    Nama Lengkap dan Gelar
-                  </label>
-
-                  <input
-                    id="nama-peserta"
-                    type="text"
-                    required
-                    value={namaLengkap}
-                    onChange={(e) => setNamaLengkap(e.target.value)}
-                    placeholder="Masukkan nama lengkap"
-                    className={inputClass}
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="instansi-peserta" className="...">
-                    Mata Pelajaran yang Diampu
-                  </label>
-
-                  <input
-                    id="instansi-peserta"
-                    type="text"
-                    required
-                    value={instansi}
-                    onChange={(e) => setInstansi(e.target.value)}
-                    placeholder="Contoh: Matematika"
-                    className={inputClass}
-                  />
-                </div>
-
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-storm-700">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    placeholder="Contoh: nama@email.com"
-                    className={inputClass}
-                  />
-                </div>
-                {pesan && (
-                  <p role="alert" className="text-sm text-red-600">
-                    {pesan}
-                  </p>
-                )}
-
-                <div className="flex flex-col-reverse gap-2 pt-2 sm:flex-row sm:justify-end">
-                  <button
-                    type="button"
-                    onClick={tutupForm}
-                    className={btnOutline}
-                  >
-                    Batal
-                  </button>
-
-                  <button type="submit" className={btnPrimary}>
-                    <CheckCircle2 size={16} />
-                    Kirim &amp; Daftar
-                  </button>
-                </div>
-              </form>
-            )}
+            </form>
           </div>
         </div>
       )}

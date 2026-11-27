@@ -35,7 +35,25 @@ class MateriController extends Controller
             'data' => $materi,
         ], 201);
     }
+    public function update(Request $request, $id)
+    {
+        $materi = Materi::findOrFail($id);
 
+        $validated = $request->validate([
+            'judul' => 'required|string|max:255',
+            'nama_file' => 'required|string|max:255',
+            'tipe' => 'required|string|max:100',
+            'kategori' => 'nullable|string|max:255',
+            'file_path' => 'required|string|max:255',
+        ]);
+
+        $materi->update($validated);
+
+        return response()->json([
+            'message' => 'Materi berhasil diperbarui.',
+            'data' => $materi,
+        ], 200);
+    }
     public function destroy($id)
     {
         $materi = Materi::findOrFail($id);

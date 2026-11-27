@@ -9,9 +9,10 @@ class Pelatihan extends Model
     protected $table = 'pelatihan';
 
     protected $fillable = [
-        'nama_pelatihan',
+       'nama_pelatihan',
         'deskripsi',
         'tanggal_mulai',
+        'tanggal_tutup_pendaftaran',
         'tanggal_selesai',
         'lokasi',
         'status',

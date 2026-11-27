@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PendaftaranPelatihanController;
 use App\Http\Controllers\Api\MateriController;
+use App\Http\Controllers\Api\PelatihanController;
 
 // API REGISTER
 Route::post('/register', [AuthController::class, 'register']);
@@ -25,6 +26,9 @@ Route::get('/test', function () {
     // API PENDAFTARAN PELATIHAN
 
 Route::middleware('auth:sanctum')->group(function () {
+    
+// Admin melihat data semua guru
+Route::get('/guru', [AuthController::class, 'indexGuru']);
 
     // Guru mendaftar pelatihan
     Route::post('/pendaftaran-pelatihan', [PendaftaranPelatihanController::class, 'store']);
@@ -35,8 +39,20 @@ Route::middleware('auth:sanctum')->group(function () {
     // Admin mengubah status pendaftaran
     Route::put('/pendaftaran-pelatihan/{id}/status', [PendaftaranPelatihanController::class, 'updateStatus']);
 
+   
+// Admin menghapus pendaftaran
+Route::delete('/pendaftaran-pelatihan/{id}', [PendaftaranPelatihanController::class, 'destroy']);
+
+// ADMIN KELOLA DATA PELATIHAN
+Route::get('/pelatihan', [PelatihanController::class, 'index']);
+Route::post('/pelatihan', [PelatihanController::class, 'store']);
+Route::put('/pelatihan/{id}', [PelatihanController::class, 'update']);
+Route::delete('/pelatihan/{id}', [PelatihanController::class, 'destroy']);
+
 });
+
 // API MATERI
 Route::get('/materi', [MateriController::class, 'index']);
 Route::post('/materi', [MateriController::class, 'store']);
+Route::put('/materi/{id}', [MateriController::class, 'update']);
 Route::delete('/materi/{id}', [MateriController::class, 'destroy']);

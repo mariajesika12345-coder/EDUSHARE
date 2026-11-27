@@ -66,7 +66,8 @@ class PendaftaranPelatihanController extends Controller
         abort_unless($request->user()->role === 'admin', 403, 'Akses hanya untuk admin.');
 
         $validated = $request->validate([
-          'status' => 'required|in:Terdaftar',        ]);
+    'status' => 'required|in:Terdaftar,Selesai,Dibatalkan',
+]);
 
         $pendaftaran = PendaftaranPelatihan::findOrFail($id);
 
@@ -74,9 +75,22 @@ class PendaftaranPelatihanController extends Controller
             'status' => $validated['status'],
         ]);
 
-        return response()->json([
+                return response()->json([
             'message' => 'Status pendaftaran berhasil diperbarui.',
             'data' => $pendaftaran,
         ]);
+    }
+
+    // ADMIN MENGHAPUS PENDAFTARAN
+    public function destroy(Request $request, $id)
+    {
+        abort_unless($request->user()->role === 'admin', 403, 'Akses hanya untuk admin.');
+
+        $pendaftaran = PendaftaranPelatihan::findOrFail($id);
+        $pendaftaran->delete();
+
+        return response()->json([
+            'message' => 'Pendaftaran pelatihan berhasil dihapus.',
+        ], 200);
     }
 }
