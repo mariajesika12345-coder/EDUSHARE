@@ -1,4 +1,3 @@
-
 <?php
 
 use Illuminate\Support\Facades\Route;
@@ -6,6 +5,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PendaftaranPelatihanController;
 use App\Http\Controllers\Api\MateriController;
 use App\Http\Controllers\Api\PelatihanController;
+use App\Http\Controllers\Api\EvaluasiPelatihanController;
 
 // API REGISTER
 Route::post('/register', [AuthController::class, 'register']);
@@ -21,14 +21,19 @@ Route::get('/test', function () {
     return response()->json([
         'message' => 'Backend Laravel berhasil terhubung!'
     ]);
-    });
+});
 
-    // API PENDAFTARAN PELATIHAN
+// API PENDAFTARAN PELATIHAN
 
 Route::middleware('auth:sanctum')->group(function () {
-    
-// Admin melihat data semua guru
-Route::get('/guru', [AuthController::class, 'indexGuru']);
+
+    // EVALUASI PELATIHAN
+    Route::post('/evaluasi-pelatihan', [EvaluasiPelatihanController::class, 'store']);
+    Route::get('/evaluasi-pelatihan', [EvaluasiPelatihanController::class, 'index']);
+    Route::get('/evaluasi-pelatihan/{id}', [EvaluasiPelatihanController::class, 'show']);
+
+    // Admin melihat data semua guru
+    Route::get('/guru', [AuthController::class, 'indexGuru']);
 
     // Guru mendaftar pelatihan
     Route::post('/pendaftaran-pelatihan', [PendaftaranPelatihanController::class, 'store']);
@@ -39,15 +44,15 @@ Route::get('/guru', [AuthController::class, 'indexGuru']);
     // Admin mengubah status pendaftaran
     Route::put('/pendaftaran-pelatihan/{id}/status', [PendaftaranPelatihanController::class, 'updateStatus']);
 
-   
-// Admin menghapus pendaftaran
-Route::delete('/pendaftaran-pelatihan/{id}', [PendaftaranPelatihanController::class, 'destroy']);
 
-// ADMIN KELOLA DATA PELATIHAN
-Route::get('/pelatihan', [PelatihanController::class, 'index']);
-Route::post('/pelatihan', [PelatihanController::class, 'store']);
-Route::put('/pelatihan/{id}', [PelatihanController::class, 'update']);
-Route::delete('/pelatihan/{id}', [PelatihanController::class, 'destroy']);
+    // Admin menghapus pendaftaran
+    Route::delete('/pendaftaran-pelatihan/{id}', [PendaftaranPelatihanController::class, 'destroy']);
+
+    // ADMIN KELOLA DATA PELATIHAN
+    Route::get('/pelatihan', [PelatihanController::class, 'index']);
+    Route::post('/pelatihan', [PelatihanController::class, 'store']);
+    Route::put('/pelatihan/{id}', [PelatihanController::class, 'update']);
+    Route::delete('/pelatihan/{id}', [PelatihanController::class, 'destroy']);
 
 });
 

@@ -11,11 +11,16 @@ class PendaftaranPelatihanController extends Controller
     // GURU MENDAFTAR PELATIHAN
     public function store(Request $request)
     {
-        abort_unless($request->user()->role === 'guru', 403, 'Hanya guru yang dapat mendaftar.');
+        abort_unless(
+            $request->user()->role === 'guru',
+            403,
+            'Hanya guru yang dapat mendaftar.'
+        );
 
         $validated = $request->validate([
             'pelatihan_id' => 'required|exists:pelatihan,id',
-            'mata_pelajaran' => 'required|string|max:255',
+            'nama_lengkap' => 'required|string|max:255',
+            'nomor_whatsapp' => 'required|string|max:20',
         ]);
 
         $user = $request->user();
@@ -33,8 +38,8 @@ class PendaftaranPelatihanController extends Controller
         $pendaftaran = PendaftaranPelatihan::create([
             'user_id' => $user->id,
             'pelatihan_id' => $validated['pelatihan_id'],
-            'nama_lengkap' => $user->name,
-            'mata_pelajaran' => $validated['mata_pelajaran'],
+            'nama_lengkap' => $validated['nama_lengkap'],
+            'nomor_whatsapp' => $validated['nomor_whatsapp'],
             'email' => $user->email,
             'status' => 'Terdaftar',
         ]);
@@ -48,7 +53,11 @@ class PendaftaranPelatihanController extends Controller
     // ADMIN MELIHAT DAFTAR PESERTA
     public function index(Request $request)
     {
-        abort_unless($request->user()->role === 'admin', 403, 'Akses hanya untuk admin.');
+        abort_unless(
+            $request->user()->role === 'admin',
+            403,
+            'Akses hanya untuk admin.'
+        );
 
         $pendaftaran = PendaftaranPelatihan::with(['user', 'pelatihan'])
             ->latest()
@@ -63,11 +72,15 @@ class PendaftaranPelatihanController extends Controller
     // ADMIN MENGUBAH STATUS PENDAFTARAN
     public function updateStatus(Request $request, $id)
     {
-        abort_unless($request->user()->role === 'admin', 403, 'Akses hanya untuk admin.');
+        abort_unless(
+            $request->user()->role === 'admin',
+            403,
+            'Akses hanya untuk admin.'
+        );
 
         $validated = $request->validate([
-    'status' => 'required|in:Terdaftar,Selesai,Dibatalkan',
-]);
+            'status' => 'required|in:Terdaftar,Selesai,Dibatalkan',
+        ]);
 
         $pendaftaran = PendaftaranPelatihan::findOrFail($id);
 
@@ -75,7 +88,7 @@ class PendaftaranPelatihanController extends Controller
             'status' => $validated['status'],
         ]);
 
-                return response()->json([
+        return response()->json([
             'message' => 'Status pendaftaran berhasil diperbarui.',
             'data' => $pendaftaran,
         ]);
@@ -84,7 +97,11 @@ class PendaftaranPelatihanController extends Controller
     // ADMIN MENGHAPUS PENDAFTARAN
     public function destroy(Request $request, $id)
     {
-        abort_unless($request->user()->role === 'admin', 403, 'Akses hanya untuk admin.');
+        abort_unless(
+            $request->user()->role === 'admin',
+            403,
+            'Akses hanya untuk admin.'
+        );
 
         $pendaftaran = PendaftaranPelatihan::findOrFail($id);
         $pendaftaran->delete();

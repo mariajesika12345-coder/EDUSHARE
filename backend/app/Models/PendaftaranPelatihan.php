@@ -12,7 +12,7 @@ class PendaftaranPelatihan extends Model
         'user_id',
         'pelatihan_id',
         'nama_lengkap',
-        'mata_pelajaran',
+        'nomor_whatsapp',
         'email',
         'status',
     ];

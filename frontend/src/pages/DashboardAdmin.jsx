@@ -366,7 +366,7 @@ function KelolaPengguna({ data, setData }) {
             <table className="w-full min-w-[600px] text-left text-sm">
               <thead className="bg-slate-50 text-slate-500">
                 <tr>
-                  <th className="px-5 py-4">Nama Guru</th>
+                  <th className="px-5 py-4">Responden</th>{" "}
                   <th className="px-5 py-4">Email</th>
                   <th className="px-5 py-4">Peran</th>
                   <th className="px-5 py-4 text-center">Aksi</th>
@@ -627,7 +627,6 @@ function KelolaPendaftaran({ data, setData }) {
                 <tr>
                   <th className="px-5 py-4">Nama Guru</th>
                   <th className="px-5 py-4">Email</th>
-                  <th className="px-5 py-4">Mata Pelajaran</th>
                   <th className="px-5 py-4">Pelatihan</th>
                   <th className="px-5 py-4">Status</th>
                   <th className="px-5 py-4 text-center">Aksi</th>
@@ -640,13 +639,13 @@ function KelolaPendaftaran({ data, setData }) {
                     <td className="px-5 py-4 font-semibold text-slate-800">
                       {item.nama_lengkap}
                     </td>
+
                     <td className="px-5 py-4 text-slate-500">{item.email}</td>
-                    <td className="px-5 py-4 text-slate-600">
-                      {item.mata_pelajaran}
-                    </td>
+
                     <td className="px-5 py-4 text-slate-600">
                       {item.pelatihan?.nama_pelatihan || "-"}
                     </td>
+
                     <td className="px-5 py-4">
                       <select
                         value={item.status}
@@ -660,6 +659,7 @@ function KelolaPendaftaran({ data, setData }) {
                         <option value="Menunggu">Menunggu</option>
                       </select>
                     </td>
+
                     <td className="px-5 py-4 text-center">
                       <button
                         type="button"
@@ -946,7 +946,7 @@ function KelolaPelatihan({ data, setData }) {
       {pelatihanDipilih && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
           <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
-            <h3 className="mb-2 text-lg font-bold text-gray-800">
+            <h3 className="mb-4 text-lg font-bold text-gray-800">
               Hapus Pelatihan?
             </h3>
 
@@ -1757,7 +1757,7 @@ function KelolaMateri({ data, setData }) {
               onClick={() =>
                 setNotifikasi({ tampil: false, tipe: "", pesan: "" })
               }
-              className="rounded-lg bg-blue-600 px-6 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+              className="rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white hover:bg-blue-700"
             >
               OK
             </button>
@@ -1945,74 +1945,331 @@ function KelolaBerita({ data, setData }) {
   );
 }
 
-function EvaluasiAdmin() {
+function DataSederhanaAdmin({ title, desc, items = [] }) {
   return (
     <>
-      <SectionTitle
-        title="Evaluasi Kegiatan"
-        desc="Lihat hasil evaluasi kegiatan pelatihan."
-      />
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        {[
-          {
-            judul: "Pemanfaatan Generative AI untuk Pembelajaran",
-            peserta: 32,
-            rating: "4,8/5",
-            ringkasan: "Peserta merasa materi bermanfaat dan mudah diterapkan.",
-          },
-          {
-            judul: "Pembuatan Media Ajar Digital",
-            peserta: 18,
-            rating: "4,6/5",
-            ringkasan: "Peserta menyukai praktik langsung membuat media ajar.",
-          },
-          {
-            judul: "Pengembangan Modul Interaktif",
-            peserta: 18,
-            rating: "4,7/5",
-            ringkasan: "Peserta menyarankan tambahan waktu untuk praktik.",
-          },
-        ].map((item) => (
-          <Card key={item.judul}>
-            <div className="flex items-center gap-2 text-amber-500">
-              <ClipboardCheck size={20} />
-              <span className="font-semibold">{item.rating}</span>
-            </div>
-            <h3 className="mt-3 font-semibold text-slate-800">{item.judul}</h3>
-            <p className="mt-2 text-sm text-slate-500">
-              {item.peserta} tanggapan peserta
-            </p>
-            <p className="mt-3 text-sm leading-6 text-slate-600">
-              {item.ringkasan}
-            </p>
-          </Card>
-        ))}
-      </div>
-      <p className="mt-4 text-xs text-slate-500">
-        Contoh data sementara untuk tampilan, bukan hasil evaluasi asli.
-      </p>
+      <SectionTitle title={title} desc={desc} />
+
+      {items.length === 0 ? (
+        <EmptyState
+          icon={BookOpen}
+          title="Belum ada data"
+          desc="Data akan ditampilkan setelah tersedia."
+        />
+      ) : (
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          {items.map((item, index) => (
+            <Card key={`${item.judul}-${index}`}>
+              <h3 className="font-semibold text-slate-800">{item.judul}</h3>
+              {item.keterangan && (
+                <p className="mt-2 text-sm leading-6 text-slate-500">
+                  {item.keterangan}
+                </p>
+              )}
+            </Card>
+          ))}
+        </div>
+      )}
     </>
   );
 }
 
-function DataSederhanaAdmin({ title, desc, items }) {
+function EvaluasiAdmin({ data, pendaftaran = [], pelatihan = [] }) {
+  const [evaluasiDipilih, setEvaluasiDipilih] = useState(null);
+
+  const pertanyaan = [
+    "Saya belajar hal baru setelah mengikuti pelatihan ini.",
+    "Pengetahuan dan keterampilan saya bertambah setelah mengikuti pelatihan ini.",
+    "Pengalaman yang diperoleh dari pelatihan dapat diimplementasikan dalam pengembangan bahan ajar di mata pelajaran yang saya ampu.",
+    "Materi pelatihan relevan dan mendukung pekerjaan saya sebagai guru di SMK.",
+    "Secara umum pelatihan dilaksanakan dengan baik.",
+    "Secara umum, pemateri menggunakan waktu dengan baik selama pelatihan berlangsung.",
+    "Pemateri memiliki pengetahuan yang baik terkait subjek pelatihan.",
+    "Pemateri mengorganisasi sesi pelatihan dengan baik.",
+    "Pemateri mempersiapkan materi dengan baik.",
+    "Pemateri menyampaikan materi dengan baik dan mudah dipahami.",
+    "Pemateri dan tim responsif terhadap pertanyaan peserta.",
+    "Pemateri mampu menghadirkan lingkungan pembelajaran/pelatihan dengan baik.",
+    "Fasilitas pelatihan dipersiapkan dengan baik.",
+  ];
+
+  const aspek = [
+    { nama: "Kesesuaian materi", indeks: [2, 3] },
+    { nama: "Penyampaian narasumber", indeks: [6, 7, 8, 9, 10, 11] },
+    { nama: "Fasilitas pelatihan", indeks: [12] },
+    { nama: "Manfaat pelatihan", indeks: [0, 1] },
+    { nama: "Pengelolaan kegiatan", indeks: [4, 5] },
+  ];
+
+  const hitungRataRata = (indeks, respons = data) => {
+    const nilai = respons.flatMap((item) =>
+      indeks
+        .map((i) => Number(item[`penilaian_${i + 1}`] || 0))
+        .filter((n) => n > 0 && n <= 5),
+    );
+
+    return nilai.length ? nilai.reduce((a, b) => a + b, 0) / nilai.length : 0;
+  };
+
+  const semuaNilai = data.flatMap((item) =>
+    pertanyaan
+      .map((_, i) => Number(item[`penilaian_${i + 1}`] || 0))
+      .filter((n) => n > 0 && n <= 5),
+  );
+
+  const rataRata = semuaNilai.length
+    ? (semuaNilai.reduce((a, b) => a + b, 0) / semuaNilai.length).toFixed(2)
+    : "0.00";
+
+  const daftarPelatihan = pelatihan.filter((item) =>
+    data.some(
+      (evaluasi) =>
+        String(evaluasi.pelatihan_id ?? evaluasi.pelatihan?.id) ===
+        String(item.id),
+    ),
+  );
+
+  const nilaiAspek = aspek.map((item) => ({
+    ...item,
+    nilai: hitungRataRata(item.indeks),
+  }));
+
+  const nilaiGrafik = nilaiAspek.map((item) => ({
+    ...item,
+    tinggi: (item.nilai / 5) * 100,
+  }));
+
   return (
-    <>
-      <SectionTitle title={title} desc={desc} />
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        {items.map((item) => (
-          <Card key={item.judul}>
-            <h3 className="font-semibold text-slate-800">{item.judul}</h3>
-            <p className="mt-2 text-sm leading-6 text-slate-600">
-              {item.keterangan}
-            </p>
-            <span className="mt-3 inline-flex rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
-              Data contoh
-            </span>
-          </Card>
-        ))}
+    <div className="space-y-5">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <SectionTitle
+          title="Evaluasi Kegiatan"
+          desc="Pantau hasil penilaian dan masukan guru terhadap kegiatan pelatihan."
+        />
+        <Badge success>Dashboard Admin</Badge>
       </div>
-    </>
+
+      {/* RINGKASAN */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <Card>
+          <p className="text-sm text-slate-500">Total Respons</p>
+          <h3 className="mt-1 text-3xl font-bold text-slate-800">
+            {data.length}
+          </h3>
+          <p className="mt-1 text-xs text-slate-500">Guru mengisi evaluasi</p>
+        </Card>
+
+        <Card>
+          <p className="text-sm text-slate-500">Rata-rata Penilaian</p>
+          <h3 className="mt-1 text-3xl font-bold text-slate-800">
+            {rataRata}/5
+          </h3>
+          <p className="mt-1 text-xs text-slate-500">Dari seluruh respons</p>
+        </Card>
+      </div>
+
+      {/* INFORMASI PELATIHAN */}
+      {daftarPelatihan.length > 0 ? (
+        daftarPelatihan.map((item) => {
+          const idPelatihan = String(item.id);
+
+          const jumlahRespons = data.filter(
+            (e) => String(e.pelatihan_id ?? e.pelatihan?.id) === idPelatihan,
+          ).length;
+
+          const jumlahPeserta = pendaftaran.filter(
+            (p) =>
+              String(p.pelatihan_id ?? p.pelatihan?.id) === idPelatihan &&
+              p.status !== "Dibatalkan",
+          ).length;
+
+          const persentase = jumlahPeserta
+            ? Math.min(100, Math.round((jumlahRespons / jumlahPeserta) * 100))
+            : 0;
+
+          return (
+            <Card key={item.id}>
+              <h3 className="font-semibold text-slate-800">
+                {item.nama_pelatihan}
+              </h3>
+
+              <div className="mt-3 flex justify-between gap-3 text-xs text-slate-500">
+                <span>
+                  {jumlahPeserta > 0
+                    ? `${jumlahRespons} dari ${jumlahPeserta} peserta`
+                    : `${jumlahRespons} respons`}
+                </span>
+                <span className="font-semibold text-slate-800">
+                  {jumlahPeserta > 0 ? `${persentase}%` : "-"}
+                </span>
+              </div>
+
+              <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-100">
+                <div
+                  className="h-full rounded-full bg-green-600 transition-all"
+                  style={{ width: `${persentase}%` }}
+                />
+              </div>
+
+              <p className="mt-2 text-xs text-slate-500">
+                Tingkat pengisian evaluasi
+              </p>
+            </Card>
+          );
+        })
+      ) : (
+        <Card>
+          <p className="text-sm font-medium text-slate-700">
+            Belum ada data pelatihan yang memiliki evaluasi.
+          </p>
+        </Card>
+      )}
+
+      {/* REKAPITULASI */}
+      <section>
+        <h3 className="font-semibold text-slate-800">Rekapitulasi Penilaian</h3>
+        <p className="mt-1 text-xs text-slate-500">
+          Rata-rata berdasarkan aspek evaluasi
+        </p>
+
+        <div className="mt-4 space-y-4">
+          {nilaiAspek.map((item) => (
+            <div key={item.nama}>
+              <div className="mb-2 flex justify-between gap-3 text-sm">
+                <span className="font-medium text-slate-700">{item.nama}</span>
+                <span className="font-semibold text-slate-800">
+                  {item.nilai.toFixed(1)}/5
+                </span>
+              </div>
+
+              <div className="h-2 overflow-hidden rounded-full bg-slate-100">
+                <div
+                  className="h-full rounded-full bg-green-600"
+                  style={{ width: `${(item.nilai / 5) * 100}%` }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* GRAFIK */}
+      <Card>
+        <h3 className="font-semibold text-slate-800">Grafik Hasil Penilaian</h3>
+        <p className="mt-1 text-xs text-slate-500">
+          Visualisasi rata-rata penilaian per aspek.
+        </p>
+
+        <div className="mt-7 flex h-64 gap-2">
+          <div className="flex flex-col justify-between pb-7 text-right text-xs text-slate-500">
+            <span>5/5</span>
+            <span>3.75/5</span>
+            <span>2.5/5</span>
+            <span>1.25/5</span>
+            <span>0/5</span>
+          </div>
+
+          <div className="relative flex flex-1 items-end justify-around border-b border-slate-200">
+            <div className="absolute inset-0 flex flex-col justify-between pb-7">
+              {[0, 1, 2, 3, 4].map((n) => (
+                <div
+                  key={n}
+                  className="border-t border-dashed border-slate-100"
+                />
+              ))}
+            </div>
+
+            {nilaiGrafik.map((item) => (
+              <div
+                key={item.nama}
+                className="relative z-10 flex h-full min-w-0 flex-1 flex-col items-center justify-end px-1"
+              >
+                <div
+                  className="w-full max-w-20 rounded-t-lg bg-blue-500 transition-all"
+                  style={{
+                    height: `${item.tinggi}%`,
+                    minHeight: item.nilai > 0 ? "4px" : "0px",
+                  }}
+                  title={`${item.nama}: ${item.nilai.toFixed(2)}/5`}
+                />
+
+                <span className="mt-2 min-h-7 text-center text-[10px] leading-3 text-slate-600 sm:text-xs">
+                  {item.nama
+                    .replace("Kesesuaian materi", "Materi")
+                    .replace("Penyampaian narasumber", "Narasumber")
+                    .replace("Fasilitas pelatihan", "Fasilitas")
+                    .replace("Manfaat pelatihan", "Manfaat")
+                    .replace("Pengelolaan kegiatan", "Pengelolaan")}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Card>
+
+      <p className="text-xs text-slate-500">
+        *Nilai rekapitulasi dan grafik dihitung berdasarkan jawaban evaluasi
+        yang tersimpan di database.
+      </p>
+
+      {/* MODAL DETAIL */}
+      {evaluasiDipilih && (
+        <div className="fixed inset-0 z-[80] flex items-center justify-center bg-slate-900/50 p-4">
+          <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl">
+            <div className="flex justify-between border-b pb-4">
+              <div>
+                <h3 className="font-bold text-slate-800">
+                  Detail Evaluasi Guru
+                </h3>
+              </div>
+              <button
+                onClick={() => setEvaluasiDipilih(null)}
+                className="rounded-lg p-2 hover:bg-slate-100"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <h4 className="mb-3 mt-5 font-semibold">Hasil Penilaian</h4>
+
+            <div className="space-y-3">
+              {pertanyaan.map((soal, index) => (
+                <div key={index} className="rounded-xl border p-4">
+                  <p className="text-sm text-slate-700">
+                    {index + 1}. {soal}
+                  </p>
+                  <p className="mt-2 font-semibold text-blue-700">
+                    Nilai: {evaluasiDipilih[`penilaian_${index + 1}`] || "-"}/5
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <h4 className="mb-3 mt-6 font-semibold">Masukan Peserta</h4>
+
+            {[
+              ["Materi yang paling menarik", evaluasiDipilih.materi_menarik],
+              ["Komentar dan saran", evaluasiDipilih.komentar],
+              ["Pelatihan selanjutnya", evaluasiDipilih.pelatihan_selanjutnya],
+            ].map(([judul, isi]) => (
+              <div key={judul} className="mb-3 rounded-xl border p-4">
+                <p className="text-sm font-semibold">{judul}</p>
+                <p className="mt-2 whitespace-pre-wrap text-sm text-slate-600">
+                  {isi || "-"}
+                </p>
+              </div>
+            ))}
+
+            <button
+              onClick={() => setEvaluasiDipilih(null)}
+              className={`${btnPrimary} mt-4 w-full`}
+            >
+              Tutup Detail
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -2210,6 +2467,41 @@ export default function DashboardAdmin({ onLogout }) {
   const [guru, setGuru] = useState([]);
   const [pendaftaran, setPendaftaran] = useState([]);
   const [pelatihan, setPelatihan] = useState([]);
+  const [evaluasi, setEvaluasi] = useState([]);
+  const [evaluasiLoading, setEvaluasiLoading] = useState(true);
+  const [evaluasiError, setEvaluasiError] = useState("");
+  // MENGAMBIL DATA EVALUASI DARI DATABASE
+  useEffect(() => {
+    const ambilEvaluasi = async () => {
+      try {
+        const token = sessionStorage.getItem("edushare_token");
+
+        const response = await fetch(`${API_URL}/evaluasi-pelatihan`, {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const hasil = await response.json();
+
+        if (!response.ok) {
+          throw new Error(hasil.message || "Gagal mengambil data evaluasi.");
+        }
+
+        const daftarEvaluasi = Array.isArray(hasil) ? hasil : hasil.data || [];
+
+        setEvaluasi(daftarEvaluasi);
+      } catch (error) {
+        console.error("Gagal mengambil evaluasi:", error);
+        setEvaluasiError(error.message || "Tidak dapat terhubung ke server.");
+      } finally {
+        setEvaluasiLoading(false);
+      }
+    };
+
+    ambilEvaluasi();
+  }, []);
   useEffect(() => {
     const ambilPelatihan = async () => {
       try {
@@ -2318,7 +2610,17 @@ export default function DashboardAdmin({ onLogout }) {
     materi: <KelolaMateri data={materi} setData={setMateri} />,
     karya: <KelolaKarya data={karya} setData={setKarya} />,
     berita: <KelolaBerita data={berita} setData={setBerita} />,
-    evaluasi: <EvaluasiAdmin />,
+
+    evaluasi: (
+      <EvaluasiAdmin
+        data={evaluasi}
+        loading={evaluasiLoading}
+        error={evaluasiError}
+        pendaftaran={pendaftaran}
+        pelatihan={pelatihan}
+      />
+    ),
+
     sertifikat: <KelolaSertifikat data={sertifikat} />,
     galeri: <DokumentasiAdmin />,
     testimoni: (

@@ -59,18 +59,18 @@ class AuthController extends Controller
             'token' => $token,
         ]);
     }
-// ADMIN MELIHAT DATA SEMUA GURU
-public function indexGuru(Request $request)
-{
-    abort_unless($request->user()->role === 'admin', 403, 'Akses hanya untuk admin.');
+    // ADMIN MELIHAT DATA SEMUA GURU
+    public function indexGuru(Request $request)
+    {
+        abort_unless($request->user()->role === 'admin', 403, 'Akses hanya untuk admin.');
 
-    $guru = User::where('role', 'guru')
-        ->select('id', 'name', 'email', 'created_at')
-        ->latest()
-        ->get();
+        $guru = User::where('role', 'guru')
+            ->select('id', 'name', 'email', 'created_at')
+            ->latest()
+            ->get();
 
-    return response()->json($guru);
-}
+        return response()->json($guru);
+    }
     // LOGOUT
     public function logout(Request $request)
     {

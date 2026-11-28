@@ -16,7 +16,6 @@ import {
   PlayCircle,
   Presentation,
   Download,
-  Star,
   CheckCircle2,
   MapPin,
   MessageSquareQuote,
@@ -316,7 +315,6 @@ function Beranda({ nama, terdaftar, setView, jumlahKarya }) {
   );
 }
 
-
 // PENDAFTARAN PELATIHAN
 function Pelatihan() {
   const [daftarPelatihan, setDaftarPelatihan] = useState([]);
@@ -326,8 +324,7 @@ function Pelatihan() {
   const [terdaftarLokal, setTerdaftarLokal] = useState([]);
   const [pelatihanDipilih, setPelatihanDipilih] = useState(null);
   const [namaLengkap, setNamaLengkap] = useState("");
-  const [instansi, setInstansi] = useState("");
-  const [email, setEmail] = useState("");
+  const [nomorWhatsapp, setNomorWhatsapp] = useState("");
   const [pesan, setPesan] = useState("");
 
   useEffect(() => {
@@ -351,34 +348,35 @@ function Pelatihan() {
           throw new Error(hasil.message || "Gagal mengambil data pelatihan.");
         }
 
-    const data = (hasil.data || []).map((item) => ({
-      id: item.id,
-      judul: item.nama_pelatihan,
-      tanggal: item.tanggal_mulai
-        ? new Date(
-            `${item.tanggal_mulai}T00:00:00`,
-          ).toLocaleDateString("id-ID", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          })
-        : "Belum ditentukan",
-      batasPendaftaran: item.tanggal_tutup_pendaftaran
-        ? new Date(
-            `${item.tanggal_tutup_pendaftaran}T00:00:00`,
-          ).toLocaleDateString("id-ID", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          })
-        : "Belum ditentukan",
-      waktu: "",
-      lokasi: item.lokasi || "Lokasi belum ditentukan",
-      status:
-        item.status === "Dibuka"
-          ? "Pendaftaran dibuka"
-          : item.status || "Belum tersedia",
-    }));
+        const data = (hasil.data || []).map((item) => ({
+          id: item.id,
+          judul: item.nama_pelatihan,
+          tanggal: item.tanggal_mulai
+            ? new Date(`${item.tanggal_mulai}T00:00:00`).toLocaleDateString(
+                "id-ID",
+                {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                },
+              )
+            : "Belum ditentukan",
+          batasPendaftaran: item.tanggal_tutup_pendaftaran
+            ? new Date(
+                `${item.tanggal_tutup_pendaftaran}T00:00:00`,
+              ).toLocaleDateString("id-ID", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })
+            : "Belum ditentukan",
+          waktu: "",
+          lokasi: item.lokasi || "Lokasi belum ditentukan",
+          status:
+            item.status === "Dibuka"
+              ? "Pendaftaran dibuka"
+              : item.status || "Belum tersedia",
+        }));
 
         setDaftarPelatihan(data);
       } catch (err) {
@@ -394,8 +392,7 @@ function Pelatihan() {
   const tutupForm = () => {
     setPelatihanDipilih(null);
     setNamaLengkap("");
-    setInstansi("");
-    setEmail("");
+    setNomorWhatsapp("");
     setPesan("");
   };
 
@@ -426,7 +423,8 @@ function Pelatihan() {
         },
         body: JSON.stringify({
           pelatihan_id: pelatihanDipilih.id,
-          mata_pelajaran: instansi,
+          nama_lengkap: namaLengkap,
+          nomor_whatsapp: nomorWhatsapp,
         }),
       });
 
@@ -434,8 +432,9 @@ function Pelatihan() {
 
       if (!response.ok) {
         throw new Error(
-          data.errors?.pelatihan_id?.[0] ||
-            data.errors?.mata_pelajaran?.[0] ||
+          data.errors?.nama_lengkap?.[0] ||
+            data.errors?.nomor_whatsapp?.[0] ||
+            data.errors?.pelatihan_id?.[0] ||
             data.message ||
             "Pendaftaran gagal.",
         );
@@ -470,9 +469,7 @@ function Pelatihan() {
             return (
               <Card key={p.id} className="flex flex-col">
                 <div className="mb-3 flex items-start justify-between gap-2">
-                  <Badge tone={selesai ? "warn" : "success"}>
-                    {p.status}
-                  </Badge>
+                  <Badge tone={selesai ? "warn" : "success"}>{p.status}</Badge>
                   <CalendarDays size={20} className="text-storm-500" />
                 </div>
 
@@ -484,12 +481,10 @@ function Pelatihan() {
                   <CalendarDays size={16} className="mt-0.5 shrink-0" />
                   {p.tanggal}
                 </p>
-<p className="mt-2 flex items-start gap-2 text-sm text-amber-600">
-  <CalendarDays size={16} className="mt-0.5 shrink-0" />
-  <span>
-    Batas pendaftaran: {p.batasPendaftaran}
-  </span>
-</p>
+                <p className="mt-2 flex items-start gap-2 text-sm text-amber-600">
+                  <CalendarDays size={16} className="mt-0.5 shrink-0" />
+                  <span>Batas pendaftaran: {p.batasPendaftaran}</span>
+                </p>
                 <p className="mt-2 flex items-start gap-2 text-sm text-storm-500">
                   <MapPin size={16} className="mt-0.5 shrink-0" />
                   {p.lokasi}
@@ -539,43 +534,32 @@ function Pelatihan() {
             </div>
 
             <form onSubmit={kirimPendaftaran} className="space-y-4">
+              {/* Nama Lengkap Beserta Gelar Akademik */}
               <div>
                 <label className="mb-1 block text-sm font-medium text-storm-700">
-                  Nama lengkap
+                  Nama Lengkap Beserta Gelar Akademik
                 </label>
                 <input
                   required
                   value={namaLengkap}
                   onChange={(e) => setNamaLengkap(e.target.value)}
                   className={inputClass}
-                  placeholder="Masukkan nama lengkap"
+                  placeholder="Contoh: Maria Jessica Gu Bhadi, S.Kom."
                 />
               </div>
 
+              {/* Nomor WhatsApp */}
               <div>
                 <label className="mb-1 block text-sm font-medium text-storm-700">
-                  Mata pelajaran yang diampu
+                  Nomor WhatsApp
                 </label>
                 <input
                   required
-                  value={instansi}
-                  onChange={(e) => setInstansi(e.target.value)}
+                  type="tel"
+                  value={nomorWhatsapp}
+                  onChange={(e) => setNomorWhatsapp(e.target.value)}
                   className={inputClass}
-                  placeholder="Contoh: Informatika"
-                />
-              </div>
-
-              <div>
-                <label className="mb-1 block text-sm font-medium text-storm-700">
-                  Email
-                </label>
-                <input
-                  required
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className={inputClass}
-                  placeholder="Masukkan email"
+                  placeholder="Contoh: 081234567890"
                 />
               </div>
 
@@ -593,6 +577,7 @@ function Pelatihan() {
                 >
                   Batal
                 </button>
+
                 <button type="submit" className={`${btnPrimary} flex-1`}>
                   <Send size={16} />
                   Kirim Pendaftaran
@@ -1021,44 +1006,153 @@ function Sertifikat() {
   );
 }
 
-// EVALUASI KEGIATAN
+
 function Evaluasi() {
-  const [rating, setRating] = useState(0);
+  const [nama, setNama] = useState("");
+  const [usia, setUsia] = useState("");
+  const [penilaian, setPenilaian] = useState({});
+  const [materiMenarik, setMateriMenarik] = useState("");
   const [komentar, setKomentar] = useState("");
+  const [pelatihanSelanjutnya, setPelatihanSelanjutnya] = useState("");
+
+  const [daftarPelatihan, setDaftarPelatihan] = useState([]);
+  const [pelatihanId, setPelatihanId] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [mengirim, setMengirim] = useState(false);
+  const [pesan, setPesan] = useState("");
   const [terkirim, setTerkirim] = useState(false);
 
-  if (pelatihanData.length === 0) {
-    return (
-      <>
-        <SectionTitle
-          title="Evaluasi Kegiatan"
-          desc="Berikan penilaian dan saran untuk pelatihan yang sudah diikuti."
-        />
-        <EmptyState pesan="Evaluasi dapat diisi setelah informasi pelatihan tersedia." />
-      </>
-    );
-  }
+  const pertanyaan = [
+    "Saya belajar hal baru setelah mengikuti pelatihan ini.",
+    "Pengetahuan dan keterampilan saya bertambah setelah mengikuti pelatihan ini.",
+    "Pengalaman yang diperoleh dari pelatihan dapat diimplementasikan dalam pengembangan bahan ajar di mata pelajaran yang saya ampu.",
+    "Materi pelatihan relevan dan mendukung pekerjaan saya sebagai guru di SMK.",
+    "Secara umum pelatihan dilaksanakan dengan baik.",
+    "Secara umum, pemateri menggunakan waktu dengan baik selama pelatihan berlangsung.",
+    "Pemateri memiliki pengetahuan yang baik terkait subjek pelatihan.",
+    "Pemateri mengorganisasi sesi pelatihan dengan baik.",
+    "Pemateri mempersiapkan materi dengan baik.",
+    "Pemateri menyampaikan materi dengan baik dan mudah dipahami.",
+    "Pemateri dan tim responsif terhadap pertanyaan peserta.",
+    "Pemateri mampu menghadirkan lingkungan pembelajaran/pelatihan dengan baik.",
+    "Fasilitas pelatihan dipersiapkan dengan baik.",
+  ];
 
+  // AMBIL DATA PELATIHAN DARI DATABASE
+  useEffect(() => {
+    const ambilData = async () => {
+      try {
+        const token = sessionStorage.getItem("edushare_token");
+
+        const response = await fetch(`${API_URL}/pelatihan`, {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const hasil = await response.json();
+
+        if (!response.ok) {
+          throw new Error(hasil.message || "Gagal mengambil data pelatihan.");
+        }
+
+        setDaftarPelatihan(hasil.data || []);
+
+        const user = JSON.parse(sessionStorage.getItem("user") || "{}");
+        setNama(user.name || "");
+      } catch (err) {
+        setPesan(err.message || "Gagal mengambil data pelatihan.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    ambilData();
+  }, []);
+
+  // KIRIM EVALUASI KE DATABASE
+  const kirimEvaluasi = async (e) => {
+    e.preventDefault();
+    setPesan("");
+
+    const token = sessionStorage.getItem("edushare_token");
+
+    if (!token) {
+      setPesan("Sesi login berakhir. Silakan login kembali.");
+      return;
+    }
+
+    if (!pelatihanId) {
+      setPesan("Silakan pilih pelatihan terlebih dahulu.");
+      return;
+    }
+
+    if (Object.keys(penilaian).length !== 13) {
+      setPesan("Mohon isi seluruh 13 pertanyaan penilaian.");
+      return;
+    }
+
+    try {
+      setMengirim(true);
+
+      const jawabanPenilaian = Object.fromEntries(
+        pertanyaan.map((_, index) => [
+          `penilaian_${index + 1}`,
+          Number(penilaian[index + 1]),
+        ]),
+      );
+
+      const response = await fetch(`${API_URL}/evaluasi-pelatihan`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          pelatihan_id: Number(pelatihanId),
+          nama_lengkap: nama,
+          usia: Number(usia),
+          ...jawabanPenilaian,
+          materi_menarik: materiMenarik,
+          komentar: komentar,
+          pelatihan_selanjutnya: pelatihanSelanjutnya,
+        }),
+      });
+
+      const hasil = await response.json();
+
+      if (!response.ok) {
+        const errorValidasi = hasil.errors
+          ? Object.values(hasil.errors).flat()[0]
+          : null;
+
+        throw new Error(
+          errorValidasi || hasil.message || "Evaluasi gagal dikirim.",
+        );
+      }
+
+      setTerkirim(true);
+    } catch (err) {
+      setPesan(err.message || "Tidak dapat terhubung ke server.");
+    } finally {
+      setMengirim(false);
+    }
+  };
+
+  // PESAN BERHASIL
   if (terkirim) {
     return (
       <Card className="mx-auto w-full max-w-xl py-10 text-center">
         <CheckCircle2 size={44} className="mx-auto text-emerald-500" />
         <h3 className="mt-3 text-lg font-bold text-storm-800">
-          Evaluasi terkirim
+          Evaluasi berhasil dikirim!
         </h3>
-        <p className="mx-auto mt-1 max-w-sm text-sm leading-6 text-storm-500">
-          Terima kasih. Masukan Anda membantu meningkatkan kualitas pelatihan.
+        <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-storm-500">
+          Terima kasih telah memberikan penilaian dan masukan untuk kegiatan
+          pelatihan.
         </p>
-        <button
-          className={`${btnOutline} mt-5`}
-          onClick={() => {
-            setTerkirim(false);
-            setRating(0);
-            setKomentar("");
-          }}
-        >
-          Isi evaluasi lain
-        </button>
       </Card>
     );
   }
@@ -1067,71 +1161,221 @@ function Evaluasi() {
     <>
       <SectionTitle
         title="Evaluasi Kegiatan"
-        desc="Berikan penilaian dan saran untuk pelatihan yang sudah diikuti."
+        desc="Berikan penilaian dan masukan terhadap pelaksanaan kegiatan pelatihan."
       />
+
       <Card className="w-full max-w-3xl">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (rating > 0) setTerkirim(true);
-          }}
-          className="space-y-6"
-        >
-          <fieldset>
-            <legend className="mb-2 text-sm font-semibold text-storm-800">
-              Penilaian keseluruhan
-            </legend>
-            <div className="flex flex-wrap items-center gap-1">
-              {[1, 2, 3, 4, 5].map((n) => (
-                <button
-                  type="button"
-                  key={n}
-                  onClick={() => setRating(n)}
-                  aria-label={`${n} bintang`}
-                  aria-pressed={rating === n}
-                  className="rounded-md p-0.5 transition hover:scale-110"
-                >
-                  <Star
-                    size={30}
-                    className={
-                      n <= rating
-                        ? "fill-amber-400 text-amber-400"
-                        : "text-storm-200"
-                    }
-                  />
-                </button>
+        <div className="mb-6 border-b border-storm-100 pb-5">
+          <h3 className="text-xl font-bold text-storm-800">
+            
+          </h3>
+
+          <p className="mt-3 text-sm leading-6 text-storm-500">
+            Kami ingin mengetahui pengalaman Bapak/Ibu selama mengikuti
+            kegiatan pelatihan melalui beberapa pertanyaan berikut. Penilaian
+            dan masukan Anda akan menjadi bahan evaluasi untuk meningkatkan
+            kualitas pelatihan berikutnya.
+          </p>
+
+          <div className="mt-4 rounded-lg bg-storm-50 p-4 text-sm text-storm-700">
+            <p className="font-semibold">Petunjuk Skala Penilaian:</p>
+            <p>1 = Tidak Setuju</p>
+            <p>2 = Kurang Setuju</p>
+            <p>3 = Cukup</p>
+            <p>4 = Setuju</p>
+            <p>5 = Sangat Setuju</p>
+          </div>
+        </div>
+
+        <form onSubmit={kirimEvaluasi} className="space-y-7">
+          {/* PILIH PELATIHAN */}
+          <div>
+            <label className="mb-1.5 block text-sm font-medium text-storm-700">
+              Pilih Pelatihan <span className="text-red-500">*</span>
+            </label>
+
+            <select
+              required
+              value={pelatihanId}
+              onChange={(e) => setPelatihanId(e.target.value)}
+              className={inputClass}
+              disabled={loading || daftarPelatihan.length === 0}
+            >
+              <option value="">
+                {loading ? "Mengambil data pelatihan..." : "Pilih pelatihan"}
+              </option>
+
+              {daftarPelatihan.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.nama_pelatihan}
+                </option>
               ))}
-              {rating > 0 && (
-                <span className="ml-2 text-sm text-storm-600">{rating}/5</span>
-              )}
-            </div>
-            {rating === 0 && (
-              <p className="mt-2 text-xs text-storm-500">
-                Pilih jumlah bintang sebelum mengirim.
+            </select>
+
+            {!loading && daftarPelatihan.length === 0 && (
+              <p className="mt-1 text-sm text-amber-600">
+                Belum ada data pelatihan yang tersedia.
               </p>
             )}
-          </fieldset>
-
-          <div>
-            <label
-              htmlFor="komentar-evaluasi"
-              className="mb-2 block text-sm font-semibold text-storm-800"
-            >
-              Saran dan komentar
-            </label>
-            <textarea
-              id="komentar-evaluasi"
-              value={komentar}
-              onChange={(e) => setKomentar(e.target.value)}
-              rows={4}
-              placeholder="Tuliskan saran atau komentar Anda"
-              className={`${inputClass} resize-y`}
-            />
           </div>
 
-          <button type="submit" disabled={rating === 0} className={btnPrimary}>
-            <ClipboardCheck size={16} />
-            Kirim evaluasi
+          {/* IDENTITAS PESERTA */}
+          <div className="space-y-4">
+            <h4 className="font-semibold text-storm-800">
+              Identitas Peserta
+            </h4>
+
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-storm-700">
+                Nama Lengkap <span className="text-red-500">*</span>
+              </label>
+              <input
+                required
+                value={nama}
+                onChange={(e) => setNama(e.target.value)}
+                className={inputClass}
+                placeholder="Masukkan nama lengkap"
+              />
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-storm-700">
+                Usia <span className="text-red-500">*</span>
+              </label>
+              <input
+                required
+                type="number"
+                min="18"
+                max="100"
+                value={usia}
+                onChange={(e) => setUsia(e.target.value)}
+                className={inputClass}
+                placeholder="Masukkan usia"
+              />
+            </div>
+          </div>
+
+          <div className="border-t border-storm-100" />
+
+          {/* PENILAIAN SKALA 1-5 */}
+          <div className="space-y-6">
+            <div>
+              <h4 className="font-semibold text-storm-800">
+                Penilaian Kegiatan
+              </h4>
+              <p className="mt-1 text-sm text-storm-500">
+                Pilih satu angka yang sesuai dengan pendapat Bapak/Ibu.
+              </p>
+            </div>
+
+            {pertanyaan.map((item, index) => (
+              <fieldset key={index} className="border-b border-storm-100 pb-5">
+                <legend className="mb-3 text-sm font-medium leading-6 text-storm-800">
+                  {index + 1}. {item}{" "}
+                  <span className="text-red-500">*</span>
+                </legend>
+
+                <div className="flex flex-wrap gap-3">
+                  {[1, 2, 3, 4, 5].map((angka) => (
+                    <label
+                      key={angka}
+                      className={`flex h-11 w-11 cursor-pointer items-center justify-center rounded-lg border text-sm font-semibold transition ${
+                        penilaian[index + 1] === angka
+                          ? "border-storm-500 bg-storm-500 text-white"
+                          : "border-storm-200 bg-white text-storm-700 hover:border-storm-400"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name={`pertanyaan-${index + 1}`}
+                        value={angka}
+                        required
+                        checked={penilaian[index + 1] === angka}
+                        onChange={() =>
+                          setPenilaian((prev) => ({
+                            ...prev,
+                            [index + 1]: angka,
+                          }))
+                        }
+                        className="sr-only"
+                      />
+                      {angka}
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+            ))}
+          </div>
+
+          <div className="border-t border-storm-100" />
+
+          {/* PERTANYAAN ISIAN */}
+          <div className="space-y-5">
+            <h4 className="font-semibold text-storm-800">
+              Umpan Balik dan Saran
+            </h4>
+
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-storm-700">
+                14. Bagian materi pelatihan yang paling menarik (disukai)
+                menurut Bapak/Ibu <span className="text-red-500">*</span>
+              </label>
+              <textarea
+                required
+                rows={3}
+                value={materiMenarik}
+                onChange={(e) => setMateriMenarik(e.target.value)}
+                className={`${inputClass} resize-y`}
+                placeholder="Tuliskan materi yang paling menarik menurut Anda"
+              />
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-storm-700">
+                15. Silakan tuliskan umpan balik atau komentar lain terkait
+                pelaksanaan pelatihan ini
+                <span className="text-red-500"> *</span>
+              </label>
+              <textarea
+                required
+                rows={4}
+                value={komentar}
+                onChange={(e) => setKomentar(e.target.value)}
+                className={`${inputClass} resize-y`}
+                placeholder="Tuliskan umpan balik atau komentar Anda"
+              />
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-storm-700">
+                16. Tuliskan pelatihan selanjutnya yang Anda butuhkan untuk
+                pengembangan kompetensi Anda sebagai guru
+                <span className="text-red-500"> *</span>
+              </label>
+              <textarea
+                required
+                rows={4}
+                value={pelatihanSelanjutnya}
+                onChange={(e) => setPelatihanSelanjutnya(e.target.value)}
+                className={`${inputClass} resize-y`}
+                placeholder="Tuliskan kebutuhan pelatihan selanjutnya"
+              />
+            </div>
+          </div>
+
+          {pesan && (
+            <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700">
+              {pesan}
+            </div>
+          )}
+
+          <button
+            type="submit"
+            disabled={mengirim || loading || daftarPelatihan.length === 0}
+            className={`${btnPrimary} w-full sm:w-auto`}
+          >
+            <Send size={16} />
+            {mengirim ? "Mengirim..." : "Kirim Evaluasi"}
           </button>
         </form>
       </Card>
